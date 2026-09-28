@@ -1,7 +1,7 @@
 # Next session
 
 - Branch: main, tracking origin/main.
-- Last commit: see `git log -1`. The public overview now steps the decision engine one step at a time.
+- Last commit: see `git log -1`. The README and the public pages explain the rehearsal in ordinary language, and the overview still steps the decision engine one step at a time.
 - Remote: https://github.com/SohamSa/training-continuity (public). The browser demonstration is https://sohamsa.github.io/training-continuity/. Do not touch siliconpulse-ai.
 - Python: 3.14.4 virtual environment at `.venv`.
 - Commands that passed: `python -m pytest` (31 passed) and `apps/web` `npm run build`. A local public-demo browser pass stepped the opening story, approved a checkpoint, finished the healthy-workload story, and checked that return stays undefined until the accounting form is complete.

@@ -43,25 +43,25 @@ export function Desk({
 
   return (
     <section className="desk">
-      <p className="eyebrow">Operations desk · synthetic GPU hall</p>
-      <h1>One training job can hold a hall of accelerators.</h1>
+      <p className="eyebrow">A rehearsal for a data-center owner</p>
+      <h1>When one machine stops, the whole job waits.</h1>
       <p className="lede">
-        A synchronized pre-training job does not lose one chip. It loses the step. The checkpoint you can actually restore is the only progress you can defend, and a preventive action taken on a healthy burst can cost more useful work than the fault it was meant to catch.
-        TrainingContinuity runs that decision in front of you, on a simulated hall of {cluster ? cluster.accelerator_count.toLocaleString() : "tens of thousands of"} accelerators.
+        Think of a relay race where the baton cannot move until every runner finishes the same leg. The runners here are accelerator chips, the special processors that do the heavy math inside a data center. If one runner stops, the race stops, even while the rest of the building is still powered and cooled.
+        This page rehearses that moment in a simulated hall of {cluster ? cluster.accelerator_count.toLocaleString() : "tens of thousands of"} chips. It is a practice floor. It is not connected to a building you own.
       </p>
 
       <div className="problems">
         <article>
           <h2>The stall</h2>
-          <p>When one placed accelerator stops, the job stops with it. The other hosts are still powered. They are not making the next training step.</p>
+          <p>One chip in the job stops, and the job stops with it. The other machines are still on. They are not producing the next piece of work. You are paying for a building that is waiting.</p>
         </article>
         <article>
-          <h2>The exposure</h2>
-          <p>Progress that exists only in memory is not progress you can restart from. An incomplete or in-flight checkpoint cannot be used. Age of the last verified save is the exposure.</p>
+          <h2>The unsaved work</h2>
+          <p>Work that lives only in the machine’s memory is like a document you never saved. A half-finished save cannot be reopened. The only progress you can defend is the last complete save, and the gap since that save is what you stand to lose.</p>
         </article>
         <article>
           <h2>The false alarm</h2>
-          <p>A static temperature limit can quarantine a healthy workload shift. The paired run on the same faults shows when that action preserves less work than doing nothing disruptive.</p>
+          <p>A busy spell makes chips warmer, the way a kitchen heats up during the dinner rush. A rule that shuts a machine down just because it is warm can throw away more work than the breakdown it was meant to prevent.</p>
         </article>
       </div>
 
@@ -77,22 +77,22 @@ export function Desk({
           <label>
             How the decision is taken
             <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}>
-              <option value="manual">You approve the high-impact action</option>
-              <option value="automated">Compare two policies on the same faults</option>
+              <option value="manual">You approve the serious action</option>
+              <option value="automated">Compare two ways on the same breakdown</option>
             </select>
           </label>
           <button type="button" onClick={() => onPlay(selected, mode)} disabled={playing}>
             {playing ? "The hall is moving" : "Run this story live"}
           </button>
         </div>
-        <p className="muted">{items.find((item) => item.id === selected)?.summary ?? "The opening story is a cooling fault that becomes visible before the accelerator stops. The run will wait for your approval."}</p>
+        <p className="muted">{items.find((item) => item.id === selected)?.summary ?? "The opening rehearsal is a chip that runs hotter and hotter before it stops, like an engine gauge climbing. The run will pause and ask you whether to save the work."}</p>
       </div>
 
       <div className="hall-wrap">
         <div className="hall-head">
-          <h2>Placed accelerators</h2>
+          <h2>Chips in this job</h2>
           <p>
-            {live ? `Step ${live.step + 1} of ${live.steps}. Job ${live.job_state}. ${live.abstain ? "The evidence is not enough to name a cause." : `Leading read: ${live.hypothesis.replaceAll("_", " ")}.`}` : "The engine is about to step the opening story. The floor updates as each step is computed."}
+            {live ? `Step ${live.step + 1} of ${live.steps}. The job is ${live.job_state}. ${live.abstain ? "The readings are not enough to name a cause." : `Best reading: ${live.hypothesis.replaceAll("_", " ")}.`}` : "The opening rehearsal is about to start. The chips update as each step is computed."}
           </p>
         </div>
         <div className="floor" role="img" aria-label="Placed accelerators in the simulated job">
@@ -107,8 +107,8 @@ export function Desk({
           <span />
           <p>
             {cluster
-              ? `${cluster.quiescent_accelerator_count.toLocaleString()} other accelerators in the same hall — ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} hosts, ${cluster.fabric_domain_count} fabric domains. Counted, not painted one by one. This page is not attached to them.`
-              : "The rest of the hall is a counted population. This page is not attached to those accelerators."}
+              ? `${cluster.quiescent_accelerator_count.toLocaleString()} other chips in the same hall — ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} machines, ${cluster.fabric_domain_count} network neighborhoods. Counted, the way a warehouse counts boxes on the back shelves. They are not drawn one by one, and this page is not plugged into them.`
+              : "The rest of the hall is counted, the way a warehouse counts boxes on the back shelves. This page is not plugged into those machines."}
           </p>
         </div>
         <div className="spark" aria-label="Useful progress across the steps computed so far">
@@ -116,7 +116,7 @@ export function Desk({
             <i key={`${frame.step}-${index}`} style={{ height: `${Math.max(8, (frame.useful_new / maxUseful) * 100)}%` }} title={`Step ${frame.step + 1}: useful ${frame.useful_new.toFixed(2)}`} />
           ))}
         </div>
-        <p className="muted">The bars are useful new progress of this virtual job. They are not a fleet measurement and they are not savings.</p>
+        <p className="muted">The bars are finished work in this practice job. They are a rehearsal score, not a reading from a building you operate, and they are not money saved.</p>
       </div>
 
       <div className="grid">
@@ -145,7 +145,7 @@ export function Desk({
             <button type="button" onClick={() => onDecide("approve")} disabled={playing}>Approve and continue the run</button>
             <button type="button" onClick={() => onDecide("reject")} disabled={playing}>Reject and continue the run</button>
           </div>
-          <p className="muted">Approving runs the same story forward from this precondition. Rejecting records that the action was not taken. Neither one touches a physical accelerator.</p>
+          <p className="muted">Approve, and the rehearsal continues from this moment. Reject, and the move is recorded as not taken. Neither button plugs into a machine in a real building.</p>
         </div>
       ) : null}
 
@@ -170,9 +170,9 @@ function Comparison({ run, presentation, onCompare, playing }: { run: RunView | 
   if (branches.length === 0) {
     return (
       <div className="panel">
-        <h2>Same faults, two policies</h2>
-        <p>Automated mode runs the paired policies on one fault schedule. The difference in useful progress is what the return panel prices. It does not price the whole industry, and it does not price a hall this simulation did not step device by device.</p>
-        <button type="button" onClick={onCompare} disabled={playing || !run}>Compare policies on this story</button>
+        <h2>Two ways, one breakdown</h2>
+        <p>Choose “Compare two ways” to play the same situation twice, like giving two managers the same incident. The difference in finished work is what the return panel can price. The price uses the chips in this job. It does not put a price on every chip in the hall, and it does not put a price on the industry.</p>
+        <button type="button" onClick={onCompare} disabled={playing || !run}>Compare two ways on this rehearsal</button>
       </div>
     );
   }
@@ -180,8 +180,8 @@ function Comparison({ run, presentation, onCompare, playing }: { run: RunView | 
   const delta = run?.comparison?.delta_second_minus_first?.useful_new;
   return (
     <div className="panel">
-      <h2>Same faults, two policies</h2>
-      <p>These branches share the exogenous fault schedule. The numbers are synthetic results for this scenario.</p>
+      <h2>Two ways, one breakdown</h2>
+      <p>These two reactions faced the same scripted problem. The numbers are the score of this rehearsal.</p>
       <div className="compare">
         {branches.map((branch) => (
           <div key={branch.policy}>
@@ -242,11 +242,11 @@ function ReturnPanel({ token, run, live, presentation }: { token: string; run: R
 
   return (
     <form className="panel roi" onSubmit={submit}>
-      <h2>What a difference in useful work is worth to you</h2>
+      <h2>What the saved work would be worth, using your own numbers</h2>
       <p>
-        The engine converts the useful-step difference with one visible formula: useful steps × step length in seconds ÷ 3600 × accelerators in this job.
-        {accelerators !== undefined ? ` This job has ${accelerators.toLocaleString()} placed accelerators.` : ""}
-        {" "}The other accelerators in the hall are not multiplied in. There is no default rate on this page. A blank form leaves return undefined. Zero investment leaves return undefined. The result, when one exists, is an assumption-based simulation estimate, not money already saved.
+        Think of two ways of handling the same breakdown. One way finishes more of the job. The page turns that difference into hours of chip time with one formula: useful steps × length of a step in seconds ÷ 3600 × chips in this job.
+        {accelerators !== undefined ? ` This job uses ${accelerators.toLocaleString()} chips.` : ""}
+        {" "}The other chips in the hall are left out of the multiplication. You type the hourly rate, the currency, what that rate includes, what the estimate covers, the time horizon, and what you would invest. An empty form leaves the return blank. An investment of zero leaves the return blank, because dividing by zero is not a real return. When a number appears, it is an assumption-based simulation estimate: a what-if on this rehearsal, using the prices you typed. It is not cash already in an account.
       </p>
       <div className="roi-grid">
         <label>Accelerator-hour rate<input name="gpu_hour_rate" inputMode="decimal" value={rate} onChange={(event) => setRate(event.target.value)} autoComplete="off" /></label>
@@ -258,7 +258,7 @@ function ReturnPanel({ token, run, live, presentation }: { token: string; run: R
         <label>Operating cost beyond the investment, if you have one<input name="incremental_cost" inputMode="decimal" value={extra} onChange={(event) => setExtra(event.target.value)} autoComplete="off" /></label>
       </div>
       <button type="submit" disabled={delta === undefined || delta === null}>Estimate from this comparison</button>
-      {delta === undefined || delta === null ? <p className="muted">Run the paired comparison first. Manual approval alone does not produce the two-policy difference.</p> : null}
+      {delta === undefined || delta === null ? <p className="muted">Play “Compare two ways” first. Approving a single action does not produce the side-by-side difference.</p> : null}
       {error ? <p role="alert">{error}</p> : null}
       {estimate ? <EstimateView estimate={estimate} presentation={presentation} /> : null}
     </form>
@@ -289,8 +289,8 @@ function checkpointLine(live: LiveFrame | undefined, run: RunView | null) {
     const item = live.checkpoint;
     return `${item.state.replaceAll("_", " ")} at progress ${item.progress}. Shards ${item.shards_present}/${item.shards_expected}.`;
   }
-  if (verified) return "A verified save is on the record.";
-  return "No verified save yet. That gap is the exposure.";
+  if (verified) return "A complete save is on the record.";
+  return "No complete save yet. Anything since the last complete save is what you would have to do again.";
 }
 
 function tone(gpu: { functional: boolean; quarantined: boolean; temp: number | null }) {

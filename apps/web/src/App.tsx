@@ -25,17 +25,17 @@ type Session = { token: string; role: string; username: string };
 
 const LINKS = [
   ["/", "Overview"],
-  ["/stories", "Stories"],
-  ["/dependencies", "Dependencies"],
-  ["/devices", "Devices"],
-  ["/incidents", "Incidents"],
-  ["/checkpoints", "Checkpoints"],
-  ["/recovery", "Recovery"],
-  ["/audit", "Audit"],
-  ["/experiments", "Experiments"],
-  ["/data", "Data"],
-  ["/models", "Models"],
-  ["/monitoring", "Monitoring"],
+  ["/stories", "Rehearsals"],
+  ["/dependencies", "Who moves together"],
+  ["/devices", "Chip charts"],
+  ["/incidents", "What went wrong"],
+  ["/checkpoints", "Saves"],
+  ["/recovery", "Your decision"],
+  ["/audit", "Paper trail"],
+  ["/experiments", "Two reactions"],
+  ["/data", "Dictionary"],
+  ["/models", "Learned helper"],
+  ["/monitoring", "Sensor health"],
 ] as const;
 
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
@@ -139,8 +139,8 @@ export function App() {
       </nav>
       <main id="content">
         <p className="banner">{PUBLIC_DEMO
-          ? "The decision engine is running in this browser. The hall on the overview advances one step at a time. Approvals, policy comparisons, the catalog, and the held-out model execute when you open them. Hidden simulator truth is not on this page."
-          : "GPU cluster research. The simulated cluster holds tens of thousands of accelerators. Detailed traces cover the placed ranks. Those accelerators are not attached to this process."}</p>
+          ? "This page is a practice floor for the moment a data-center job has to stop or restart. It loads the decision engine in your browser and moves the rehearsal one step at a time. Nothing in a real building is plugged in. The scripted cause of each story stays off this page."
+          : "A practice floor for hardware trouble during a large training job. The simulated hall holds tens of thousands of chips. Detailed charts cover the chips in the job. Those chips are not plugged into this computer."}</p>
         {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
@@ -212,14 +212,15 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
   }
   return (
     <section>
-      <h1>Guided stories</h1>
-      <label>Mode <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">Manual approval</option><option value="automated">Automated simulation policy</option></select></label>
+      <h1>The eight rehearsals</h1>
+      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, or a shutdown rule that does more harm than the fault. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
+      <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
       <div className="grid">
         {items.map((item) => (
           <article className="card" key={item.id}>
             <h2>{item.title}</h2>
             <p>{item.summary}</p>
-            <button type="button" onClick={() => run(item.id)}>Run through the engine</button>
+            <button type="button" onClick={() => run(item.id)}>Play this rehearsal</button>
           </article>
         ))}
       </div>
@@ -229,17 +230,17 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
 }
 
 function Dependencies({ run }: { run: RunView | null }) {
-  if (!run?.jobs) return <Empty text="Run a story to see the job's closure. Unaffected capacity stays out of this view." />;
+  if (!run?.jobs) return <Empty text="Play a rehearsal on the overview first. This page then shows which chips are in the job together." />;
   return (
     <section>
-      <h1>Dependency explorer</h1>
-      {run.cluster ? <p>The closure below is the placed ranks inside a cluster of {run.cluster.accelerator_count.toLocaleString()} accelerators. The quiescent population is not listed device by device.</p> : null}
+      <h1>Who has to move together</h1>
+      <p>A job like this is a choir. These are the singers in the current song. The rest of the hall is still there, counted, and left off this list because they are not in this song.</p>
       {Object.entries(run.jobs).map(([jobId, job]) => (
         <article className="panel" key={jobId}>
           <h2>{jobId}</h2>
-          <p>Capability {job.capability}. State {job.state}.</p>
-          <ul>{job.rank_gpu.map((gpu, rank) => <li key={gpu}>Rank {rank} → {gpu}{job.dropped?.includes(rank) ? " (removed from the active membership)" : ""}</li>)}</ul>
-          <p>Open incident scopes: {(run.incidents ?? []).map((item) => item.scope).join(", ") || "none"}</p>
+          <p>How this job is allowed to restart: {job.capability.replaceAll("_", " ")}. Right now it is {job.state}.</p>
+          <ul>{job.rank_gpu.map((gpu, rank) => <li key={gpu}>Seat {rank} is chip {gpu}{job.dropped?.includes(rank) ? " (taken out of the active group)" : ""}</li>)}</ul>
+          <p>Open problem areas: {(run.incidents ?? []).map((item) => item.scope).join(", ") || "none"}</p>
         </article>
       ))}
     </section>
@@ -248,7 +249,7 @@ function Dependencies({ run }: { run: RunView | null }) {
 
 function Devices({ run, presentation }: { run: RunView | null; presentation: boolean }) {
   const [selected, setSelected] = useState("");
-  if (!run?.gpus) return <Empty text="No device series yet." />;
+  if (!run?.gpus) return <Empty text="Play a rehearsal first. This page then shows the chips that have their own temperature and power history." />;
   const ids = Object.keys(run.gpus);
   const current = selected || ids[0];
   const gpu = run.gpus[current];
@@ -256,13 +257,12 @@ function Devices({ run, presentation }: { run: RunView | null; presentation: boo
   const max = Math.max(...series.map((point) => point.gpu_temp_c ?? 0), 1);
   return (
     <section>
-      <h1>Device investigation</h1>
-      <p className="muted">These are the accelerators with individual traces. The rest of the cluster is the quiescent population.</p>
+      <h1>The chips with their own chart</h1>
+      <p>Only the chips in the job get a personal chart, the way a coach films the players on the field and counts the rest of the stadium. Pick one chip. The bars are its recent temperature in this rehearsal.</p>
       <label>Accelerator <select value={current} onChange={(event) => setSelected(event.target.value)}>{ids.map((id) => <option key={id}>{id}</option>)}</select></label>
       <div className="panel">
-        <p>Family {gpu.family}. Phase {gpu.phase}. Fan speed {gpu.fan_speed_ratio === null ? "unsupported" : "reported"}.</p>
-        <p>Hypothesis context is observed. Hidden simulator state is not shown here.</p>
-        {!presentation ? <p>Latest reported temperature {gpu.gpu_temp_c?.toFixed(1) ?? "unavailable"} C. Residual {gpu.residual_ewma?.toFixed(2) ?? "unavailable"}.</p> : <p>Temperature is being watched against the nominal envelope.</p>}
+        <p>Chip family {gpu.family}. Stretch of work: {gpu.phase}. Fan speed {gpu.fan_speed_ratio === null ? "is not available in this rehearsal, so it stays blank" : "is being reported"}. The cause named on the other pages comes from readings like these. The scripted answer key stays off this page.</p>
+        {!presentation ? <p>Latest reported temperature {gpu.gpu_temp_c?.toFixed(1) ?? "unavailable"} C. How far that sits from the chip’s normal pattern: {gpu.residual_ewma?.toFixed(2) ?? "unavailable"}.</p> : <p>Temperature is being watched against the range this chip is expected to stay inside.</p>}
         {!presentation ? (
           <div className="bars" aria-label="Recent reported temperature">
             {series.map((point) => <div key={point.step} className="bar" style={{ width: `${((point.gpu_temp_c ?? 0) / max) * 100}%` }} title={`step ${point.step}`} />)}
@@ -274,11 +274,12 @@ function Devices({ run, presentation }: { run: RunView | null; presentation: boo
 }
 
 function Incidents({ run }: { run: RunView | null }) {
-  if (!run) return <Empty text="No incident is open." />;
+  if (!run) return <Empty text="Play a rehearsal first. This page then shows the problem the page grouped together, and its best reading of the cause." />;
   return (
     <section>
-      <h1>Incident workspace</h1>
-      <p>{run.hypotheses?.abstain ? `Abstaining: ${run.hypotheses.abstain_reason || "evidence is not sufficient"}` : `Leading hypothesis: ${run.hypotheses?.leading_mechanism}`}</p>
+      <h1>What went wrong, in one pile</h1>
+      <p>Several alarms that share a cause belong in one pile, the way several dark rooms on one tripped breaker are one electrical problem. If the readings are too thin or too late, the page says it does not know, instead of inventing a cause.</p>
+      <p>{run.hypotheses?.abstain ? `Not guessing: ${run.hypotheses.abstain_reason || "the readings are not enough"}` : `Best reading of the cause: ${(run.hypotheses?.leading_mechanism ?? "unknown").replaceAll("_", " ")}`}</p>
       <ul>{(run.hypotheses?.alternatives ?? []).map((item) => <li key={item.mechanism}>{item.mechanism} · {item.cause_family}</li>)}</ul>
       {(run.incidents ?? []).length === 0 ? <Empty text="No grouped incident was opened." /> : (
         <table><thead><tr><th>Scope</th><th>Opened</th><th>State</th></tr></thead><tbody>
@@ -290,24 +291,26 @@ function Incidents({ run }: { run: RunView | null }) {
 }
 
 function Checkpoints({ run }: { run: RunView | null }) {
-  if (!run?.checkpoints?.length) return <Empty text="No checkpoint has been recorded." />;
+  if (!run?.checkpoints?.length) return <Empty text="Play a rehearsal first. Saves appear here once the job writes one." />;
   return (
     <section>
-      <h1>Checkpoint explorer</h1>
+      <h1>The saves you could reopen</h1>
+      <p>A save is a snapshot of the job, like saving a document. “Verified usable” means every piece arrived and the save can be reopened. A save still being written, or a save missing pieces, cannot be used to restart.</p>
       <table><thead><tr><th>Id</th><th>Progress</th><th>State</th><th>Shards</th></tr></thead><tbody>
         {run.checkpoints.map((item) => <tr key={item.checkpoint_id}><td>{item.checkpoint_id}</td><td>{item.progress}</td><td>{item.state}</td><td>{item.shards_present}/{item.shards_expected}</td></tr>)}
       </tbody></table>
-      <p className="muted">An in-flight or incomplete save cannot be used for recovery.</p>
+      <p className="muted">Shards are the pieces of the save. If the pieces present are fewer than the pieces expected, the save is incomplete.</p>
     </section>
   );
 }
 
 function Recovery({ session, run, onDecide }: { session: Session; run: RunView | null; onDecide: (decision: "approve" | "reject") => void }) {
-  if (!run) return <Empty text="There is no recovery decision yet." />;
+  if (!run) return <Empty text="Play a rehearsal first. If the story needs a person to approve a serious action, the question appears here and on the overview." />;
   const pending = run.pending_action;
   return (
     <section>
-      <h1>Recovery planner</h1>
+      <h1>The decision waiting for a person</h1>
+      <p>Serious moves, such as saving early or restarting the job, wait for a yes or a no. Approving continues the rehearsal from that moment. Rejecting records that the move was not taken. Neither button touches a machine in a real building.</p>
       <p>{run.narrative}</p>
       {pending ? (
         <div className="panel">
@@ -319,7 +322,7 @@ function Recovery({ session, run, onDecide }: { session: Session; run: RunView |
           </div>
           {session.role === "viewer" || session.role === "investigator" ? <p className="muted">This role cannot approve a high-impact action.</p> : null}
         </div>
-      ) : <p>No action is waiting. Automated policy decisions are labeled as automated, not as human approvals.</p>}
+      ) : <p>Nothing is waiting. When the rehearsal decides by itself, that decision is labeled automatic. It is not recorded as a person’s approval.</p>}
       <ul>{(run.actions ?? []).map((action) => <li key={`${action.action_type}-${action.step}`}>{action.action_type} · {action.state} · {action.reason}</li>)}</ul>
     </section>
   );
@@ -332,10 +335,11 @@ function AuditView({ session, run }: { session: Session; run: RunView | null }) 
     if (!run?.run_id) return;
     audit(session.token, run.run_id).then((payload) => setEvents(payload.events)).catch((reason: Error) => setError(reason.message));
   }, [session.token, run?.run_id]);
-  if (!run?.run_id) return <Empty text="Audit entries appear after a run." />;
+  if (!run?.run_id) return <Empty text="The log appears after you play a rehearsal." />;
   return (
     <section>
-      <h1>Action audit</h1>
+      <h1>Who decided what</h1>
+      <p>This is the paper trail for the rehearsal: the story that was played, and each time a person approved or rejected a serious move.</p>
       {error ? <p role="alert">{error}</p> : null}
       {events.length === 0 ? <Empty text="No audit events yet." /> : (
         <table><thead><tr><th>Actor</th><th>Action</th><th>Detail</th></tr></thead><tbody>
@@ -347,17 +351,17 @@ function AuditView({ session, run }: { session: Session; run: RunView | null }) 
 }
 
 function Experiments({ run, presentation }: { run: RunView | null; presentation: boolean }) {
-  if (!run?.comparison) return <Empty text="Run an automated story to compare policies on the same exogenous faults." />;
+  if (!run?.comparison) return <Empty text="On the overview, choose “Compare two ways” and play a rehearsal. This page then shows the two reactions side by side on the same breakdown." />;
   return (
     <section>
-      <h1>Experiment comparison</h1>
-      <p>Counterfactual paired worlds: {run.comparison.counterfactual ? "yes" : "no"}. Exogenous faults stay aligned.</p>
+      <h1>Two ways of handling the same breakdown</h1>
+      <p>Both columns face the same scripted problem, the way two managers are given the same incident report. The one that keeps more finished work is the better reaction for this rehearsal. The numbers are from the practice floor.</p>
       {presentation ? <p>The decision story is available in the narrative. Benchmark numbers are hidden in presentation mode.</p> : (
-        <table><thead><tr><th>Policy</th><th>Useful progress</th><th>Recomputation</th><th>Interruption seconds</th></tr></thead><tbody>
+        <table><thead><tr><th>Way of reacting</th><th>Finished work</th><th>Work repeated</th><th>Seconds the job was stopped</th></tr></thead><tbody>
           {run.comparison.branches.map((branch) => <tr key={branch.policy}><td>{branch.policy}</td><td>{branch.useful_new.toFixed(2)}</td><td>{branch.recomputation.toFixed(2)}</td><td>{branch.interruption_seconds.toFixed(1)}</td></tr>)}
         </tbody></table>
       )}
-      {!presentation && run.comparison.delta_second_minus_first ? <p>Difference in useful progress (second minus first): {run.comparison.delta_second_minus_first.useful_new.toFixed(2)}. A negative value means the second policy preserved less work.</p> : null}
+      {!presentation && run.comparison.delta_second_minus_first ? <p>Finished-work difference, second way minus first: {run.comparison.delta_second_minus_first.useful_new.toFixed(2)}. A negative number means the second way kept less of the job.</p> : null}
     </section>
   );
 }
@@ -370,12 +374,13 @@ function DataView({ session }: { session: Session }) {
   }, [session.token]);
   return (
     <section>
-      <h1>Data explorer</h1>
+      <h1>The dictionary of readings</h1>
+      <p>This is the list of measurements the rehearsal knows how to talk about. A window total is the same reading added up over time, the way “sales this week” is not a new cash register. A measurement the rehearsal does not have stays blank. It is not filled in as zero.</p>
       {error ? <p role="alert">{error}</p> : null}
       {!counts ? <p role="status">Loading catalog…</p> : (
         <div className="panel">
           <p>Unique concepts {String(counts.unique_concepts)}. Aliases {String(counts.aliases)}. Window aggregations {String(counts.window_aggregations)}.</p>
-          <p className="muted">Window aggregations are not additional independent measurements. Unsupported metrics stay null.</p>
+          <p className="muted">Repeated totals over a time window are not extra independent measurements. Unsupported readings stay blank.</p>
         </div>
       )}
     </section>
@@ -389,18 +394,22 @@ function Models({ session, presentation }: { session: Session; presentation: boo
     models(session.token).then(setReport).catch((reason: Error) => setError(reason.message));
   }, [session.token]);
   if (error) return <p role="alert">{error}</p>;
-  if (!report) return <p role="status">Loading model registry…</p>;
   return (
     <section>
-      <h1>Model and evaluation registry</h1>
-      <p>Operational default: {report.operational_default.replaceAll("_", " ")}.</p>
-      <p>The evaluator-only oracle is {report.oracle.available_to_operators ? "exposed" : "not an operator path"}.</p>
-      {presentation || !report.trained_report ? <p>{report.trained_report?.note ?? "No trained report has been written yet."}</p> : (
-        <div className="panel">
-          <p>Held-out average precision, model {report.trained_report.model_average_precision.toFixed(3)}, residual baseline {report.trained_report.baseline_average_precision.toFixed(3)}.</p>
-          <p>Beats baseline: {report.trained_report.beats_baseline ? "yes" : "no"}.</p>
-          <p className="muted">{report.trained_report.note}</p>
-        </div>
+      <h1>Did a learned helper beat the simple rule?</h1>
+      <p>A learned helper was trained on rehearsals and then scored on rehearsals it had not seen, the way a new hire is tested on cases they did not study. If it does not beat the simple rule, the simple rule stays in charge. The answer key that knows the scripted cause is kept off this page.</p>
+      {!report ? <p role="status">Scoring the helper in this browser. The first visit loads the math libraries, so this can take a minute.</p> : (
+        <>
+          <p>The rule in charge: {report.operational_default.replaceAll("_", " ")}.</p>
+          <p>The answer key is {report.oracle.available_to_operators ? "visible here" : "kept off the operator pages"}.</p>
+          {presentation || !report.trained_report ? <p>{report.trained_report?.note ?? "No trained report has been written yet."}</p> : (
+            <div className="panel">
+              <p>On the cases it had not seen, the learned helper scored {report.trained_report.model_average_precision.toFixed(3)}. The simple heat-pattern rule scored {report.trained_report.baseline_average_precision.toFixed(3)}. Higher is a better ranking of the risky moments.</p>
+              <p>Beats the simple rule: {report.trained_report.beats_baseline ? "yes" : "no"}.</p>
+              <p className="muted">{report.trained_report.note}</p>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
@@ -416,16 +425,17 @@ function MonitoringView({ session }: { session: Session }) {
   }, [session.token]);
   return (
     <section>
-      <h1>Monitoring health</h1>
+      <h1>Are the sensors keeping up?</h1>
+      <p>A decision is only as fresh as the readings behind it. This page says whether those readings are late, dropped, or waiting in a queue. The plugs for real chips, networks, and building systems are listed below and stay unplugged. This rehearsal does not reset a machine.</p>
       {!data ? <p role="status">Loading collector status…</p> : data.collectors.map((collector) => (
         <article className="panel" key={collector.id}>
           <p>{collector.id}. Lag {collector.lag_steps}. Queue {collector.queue_depth}. Dropped {collector.dropped_count}. {collector.degraded ? "Degraded" : "Not degraded"}.</p>
           <p className="muted">{data.note}</p>
         </article>
       ))}
-      <h2>Adapters</h2>
+      <h2>Plugs for real buildings</h2>
       <ul>{hardware.map((item) => <li key={item.name}>{item.name}: {item.connected ? "connected" : "unavailable"}{item.reason ? `. ${item.reason}` : ""}</li>)}</ul>
-      {session.role === "administrator" ? <TruthButton token={session.token} onResult={setTruthNote} /> : <p className="muted">Latent truth stays on the administrator evaluator path.</p>}
+      {session.role === "administrator" ? <TruthButton token={session.token} onResult={setTruthNote} /> : <p className="muted">The scripted cause, the answer key of the rehearsal, stays with an administrator. It is not on this public page.</p>}
       {truthNote ? <p>{truthNote}</p> : null}
     </section>
   );

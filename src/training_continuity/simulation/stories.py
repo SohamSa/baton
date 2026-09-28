@@ -6,8 +6,8 @@ from training_continuity.simulation.engine import ScenarioConfig, compare_polici
 
 STORIES: dict[str, dict] = {
     "gradual_warning": {
-        "title": "Gradual warning, then a controlled recovery",
-        "summary": "Cooling degradation is visible in the thermal residual before the accelerator stops. An extra verified checkpoint is requested. Recovery uses that save.",
+        "title": "The heat creeps up before a machine stops",
+        "summary": "One chip runs hotter than it should, the way an engine temperature gauge climbs before a car stalls. The page asks you to save the work, then restart from that save.",
         "primary_policy": "risk_aware",
         "comparison": ["reactive", "risk_aware"],
         "config": {
@@ -33,8 +33,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "abrupt_failure": {
-        "title": "Abrupt failure without a predictive warning",
-        "summary": "The process stops without a thermal precursor. The gain, when there is one, comes from a shorter supported recovery, not from foresight.",
+        "title": "A machine stops with no warning",
+        "summary": "The work stops the way a light bulb pops, with no flicker first. Any gain comes from a shorter restart the job is allowed to do, not from predicting the pop.",
         "primary_policy": "capability_aware",
         "comparison": ["reactive", "capability_aware"],
         "config": {
@@ -59,8 +59,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "shared_infrastructure": {
-        "title": "Shared power domain, one incident",
-        "summary": "Several accelerators on one feed show the same power-limit drop. They are grouped as one incident. Accelerators on the other feed are not pulled in.",
+        "title": "One power feed, one problem",
+        "summary": "Several chips on the same power feed sag together, like every light on one circuit dimming at once. They are treated as one incident. Chips on the other feed stay out of it.",
         "primary_policy": "combined",
         "comparison": ["combined"],
         "config": {
@@ -86,8 +86,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "healthy_workload_shift": {
-        "title": "A healthy workload shift is not a fault",
-        "summary": "Utilization and temperature rise together inside the nominal envelope. The combined policy does not quarantine the accelerator.",
+        "title": "A busy spell is not a breakdown",
+        "summary": "The job works harder and the chips get warmer, the way a kitchen heats up during the dinner rush. They stay inside the normal range, so the page leaves them in service.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -102,8 +102,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "incomplete_checkpoint": {
-        "title": "An incomplete checkpoint is refused",
-        "summary": "A save that loses shards is not usable. Recovery falls back to the older verified checkpoint.",
+        "title": "A half-finished save is refused",
+        "summary": "A save that is missing pieces is treated like a document with the last pages torn out. The restart uses the older complete save.",
         "primary_policy": "reactive",
         "comparison": ["reactive"],
         "config": {
@@ -128,8 +128,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "unsupported_local_recovery": {
-        "title": "Localized recovery is unsupported",
-        "summary": "Dropping one rank from a strictly synchronized job is rejected. Coordinated restart is the supported alternative.",
+        "title": "You cannot drop one singer from this choir",
+        "summary": "This job must move as one group. Removing a single chip and carrying on is refused. The allowed move is to restart the group together.",
         "primary_policy": "force_reconfigure",
         "comparison": ["force_reconfigure"],
         "config": {
@@ -155,8 +155,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "stale_telemetry": {
-        "title": "Stale telemetry lowers confidence",
-        "summary": "Collector lag hides the recent samples. The system abstains instead of inventing a diagnosis.",
+        "title": "Late sensors mean we do not guess",
+        "summary": "The readings arrive late, like a thermometer from last week. The page says the evidence is not enough, instead of inventing a cause.",
         "primary_policy": "combined",
         "comparison": ["combined"],
         "config": {
@@ -182,8 +182,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "harmful_preventive": {
-        "title": "A preventive policy can do worse",
-        "summary": "A static temperature limit quarantines a healthy burst. The paired reactive run keeps making progress. The comparison shows the loss.",
+        "title": "Shutting down a healthy rush can cost more",
+        "summary": "A fixed temperature rule pulls a healthy busy chip out of service. The paired run that waits for a real fault keeps more of the work. The comparison shows the loss.",
         "primary_policy": "static_threshold",
         "comparison": ["reactive", "static_threshold"],
         "config": {

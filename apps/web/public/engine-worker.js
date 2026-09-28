@@ -13,7 +13,7 @@ const ready = (async () => {
   status("Loading the decision engine into this browser.");
   pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.0/full/" });
   const base = self.location.pathname.replace(/engine-worker\.js$/, "");
-  const response = await fetch(base + "browser-engine.json");
+  const response = await fetch(base + "browser-engine.json?pack=4");
   if (!response.ok) throw new Error("The engine source did not load.");
   const pack = await response.json();
   pyodide.FS.mkdirTree("/shims");

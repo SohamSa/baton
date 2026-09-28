@@ -1288,22 +1288,24 @@ def narrative(result: dict, presentation: bool) -> str:
     pending = result.get("pending_action")
     if presentation:
         if pending:
-            return "A high-impact action is waiting for a person. It applies to the affected ranks inside the GPU cluster, not to the quiescent population."
+            return "A serious move is waiting for a person. It applies to the chips in the job. The rest of the hall stays counted and is left alone."
         if mechanism == "unknown":
-            return "The evidence from the affected accelerators was not good enough for a cause. The rest of the cluster was not treated as failed."
+            return "The readings from the chips in the job were not enough to name a cause. The rest of the hall was not treated as failed."
         if mechanism == "workload_shift":
-            return "The pattern matches a workload change. No disruptive action was taken."
+            return "The pattern matches a busy spell. No chip was pulled out of the job."
         if newest:
-            return f"A verified checkpoint ({newest}) is part of the decision record. Recovery can use only a save that reached verified-usable."
-        return "The decision used observed evidence and the job's declared recovery capability."
+            return f"A complete save ({newest}) is on the record. A restart can use only a save that is complete."
+        return "The decision used the readings and the kind of restart this job is allowed to do."
     useful = result["metrics"]["useful_new"]
     cluster = result.get("cluster") or {}
     count = cluster.get("accelerator_count")
-    scope = f"GPU cluster of {count} accelerators. " if count else ""
+    scope = f"A simulated hall of {count} chips. " if count else ""
+    cause = str(mechanism).replace("_", " ")
     return (
-        f"{scope}Synthetic result for {result['policy']}: leading hypothesis {mechanism}. "
-        f"Useful new progress {useful:.2f} steps. "
-        + (f"Newest verified checkpoint {newest}." if newest else "No verified checkpoint.")
+        f"{scope}This rehearsal followed the {result['policy'].replace('_', ' ')} reaction. "
+        f"Best reading of the cause: {cause}. "
+        f"Finished work: {useful:.2f} steps. "
+        + (f"Newest complete save: {newest}." if newest else "No complete save yet.")
     )
 
 
