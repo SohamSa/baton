@@ -1,8 +1,8 @@
 # TrainingContinuity
 
-Open the public demonstration: https://sohamsa.github.io/training-continuity/
+Open the project: https://sohamsa.github.io/training-continuity/
 
-That page loads in the browser. It does not ask you to install Python, start a terminal, or sign in. Stories, approvals, checkpoints, and comparisons on that page are results produced by this project's engine and published with the site. Hidden simulator truth and administrator access are not included.
+That single page is the product. It loads the decision engine in the browser and runs each story, approval, comparison, catalog query, and held-out model check when you open it. There is no install step, no terminal, and no second address to check.
 
 TrainingContinuity studies hardware-related disruption during distributed pre-training on a simulated GPU cluster of 32,768 accelerators. Individual traces cover the ranks placed in the incident. The other accelerators remain the quiescent population of that same cluster. This process is not attached to those accelerators, and a local display GPU is not enrolled in the cluster.
 
@@ -12,47 +12,9 @@ The deployment modeled here is a single organization. Physical GPU, fabric, and 
 
 ## What you can run
 
-- Eight guided stories, each executed by the simulation engine in manual or automated mode.
-- Checkpoint eligibility checks that reject incomplete, corrupt, unreachable, or not-yet-verified saves.
-- Strict synchronized jobs that stall when a required rank fails, and an explicit reconfigurable profile that may restart a smaller data-parallel membership from a verified checkpoint.
-- Rule-based operational decisions. A trained logistic model is served for comparison and, on the checked synthetic holdout, does not beat the residual baseline, so it is not the default policy.
-- Optional currency accounting that stays undefined until a complete user-supplied configuration is provided.
+On the page, open Stories. Each story runs in the decision engine when you choose it. Manual mode waits for an approval on that same page. Automated mode compares policies on that same run. The other sections show the cluster, checkpoints, audit, catalog, held-out model, and monitoring for the engine running in the browser.
 
-## Local setup (Windows)
-
-Python 3.11 or newer is required. This workspace was verified with Python 3.14.4.
-
-```powershell
-cd C:\Users\Admin\Downloads\training-continuity
-powershell -ExecutionPolicy Bypass -File .\scripts\dev.ps1
-$env:PYTHONPATH = "src"
-.\.venv\Scripts\python.exe -m uvicorn training_continuity.asgi:app --host 127.0.0.1 --port 8000
-```
-
-In a second terminal:
-
-```powershell
-cd apps\web
-npm install
-npm run dev
-```
-
-`scripts\dev.ps1` writes fresh random passwords to `.local\dev-credentials.txt`. That file is gitignored. There is no published administrator password. Sign in with one of those accounts. A role chosen in the browser is not authentication.
-
-Health check: `GET http://127.0.0.1:8000/api/v1/health`
-
-Sample story: sign in as the investigator, open Stories, and run **Gradual warning, then a controlled recovery** in manual mode. An approver account must approve the high-impact action.
-
-PostgreSQL is defined in `docker-compose.yml` (`postgres:16`). The verified local path uses SQLite. See `docs/quickstart.md`.
-
-## Tests
-
-```powershell
-$env:PYTHONPATH = "src"
-.\.venv\Scripts\python.exe -m pytest
-cd apps\web
-npm run build
-```
+The eight stories cover a gradual warning, an abrupt failure, a shared power domain, a healthy workload shift, an incomplete checkpoint, an unsupported local recovery, stale monitoring, and a preventive policy that does worse.
 
 ## Layout
 

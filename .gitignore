@@ -24,3 +24,4 @@ htmlcov/
 dev-credentials.txt
 auth-secret.txt
 apps/web/public/demo-bundle.json
+apps/web/public/browser-engine.json

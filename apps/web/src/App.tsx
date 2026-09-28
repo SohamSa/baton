@@ -17,6 +17,7 @@ import {
   stories,
   truth,
 } from "./api";
+import { startEngine, subscribeEngine } from "./browserEngine";
 
 type Session = { token: string; role: string; username: string };
 
@@ -46,10 +47,20 @@ export function App() {
   const [run, setRun] = useState<RunView | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [engineMessage, setEngineMessage] = useState("");
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    if (!PUBLIC_DEMO) return;
+    const stop = subscribeEngine(setEngineMessage);
+    startEngine().catch((reason: Error) => setError(reason.message));
+    return () => {
+      stop();
+    };
+  }, []);
 
   if (!session) {
     return <Login onSuccess={setSession} />;
@@ -76,10 +87,11 @@ export function App() {
       </nav>
       <main id="content">
         <p className="banner">{PUBLIC_DEMO
-          ? "Public demonstration. Open a story and the page shows the result computed by this project's engine. No account, terminal, or attached GPU cluster is required. Administrator access and hidden simulator truth are not included."
+          ? "This page runs the project's decision engine in your browser. Stories, approvals, comparisons, the catalog, and the held-out model all execute when you open them. Nothing else has to be started. Hidden simulator truth is not included."
           : "GPU cluster research. The simulated cluster holds tens of thousands of accelerators. Detailed traces cover the placed ranks. Those accelerators are not attached to this process."}</p>
+        {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
-        {loading ? <p role="status">Loading…</p> : null}
+        {loading ? <p role="status">Running the decision engine.</p> : null}
         <Routes>
           <Route path="/" element={<Overview run={run} presentation={presentation} />} />
           <Route path="/stories" element={<Stories session={session} setRun={setRun} setError={setError} setLoading={setLoading} />} />

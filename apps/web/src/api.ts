@@ -1,26 +1,13 @@
+import { engineCall, startEngine } from "./browserEngine";
+
 export type Role = "viewer" | "investigator" | "approver" | "administrator";
 
 const API = "http://127.0.0.1:8000";
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
 
-type DemoBundle = {
-  stories: { id: string; title: string; summary: string; primary_policy: string }[];
-  runs: Record<string, { manual: RunView; automated: RunView; approved: RunView | null; rejected: RunView | null }>;
-  catalog: { counts: Record<string, number | Record<string, number>> };
-  models: ModelReport;
-  monitoring: Monitoring;
-  adapters: Adapter[];
-};
+type StoredRun = RunView & { storyId: string; mode: "manual" | "automated"; approvals: { action_id?: string; decision: string; precondition_hash: string; actor: string }[] };
 
-const openRuns = new Map<string, RunView & { storyId: string; mode: "manual" | "automated" }>();
-
-function loadBundle(): Promise<DemoBundle> {
-  const url = `${import.meta.env.BASE_URL}demo-bundle.json`;
-  return fetch(url).then((response) => {
-    if (!response.ok) throw new ApiError(response.status, "The public demonstration data did not load.");
-    return response.json() as Promise<DemoBundle>;
-  });
-}
+const openRuns = new Map<string, StoredRun>();
 
 function present(view: RunView, presentation: boolean): RunView {
   if (!presentation) return { ...view, presentation: false };
@@ -71,18 +58,18 @@ export function login(username: string, password: string) {
 }
 
 export function stories(token: string) {
-  if (PUBLIC_DEMO) return loadBundle().then((bundle) => ({ stories: bundle.stories }));
+  if (PUBLIC_DEMO) {
+    return startEngine().then(() => engineCall<{ stories: { id: string; title: string; summary: string; primary_policy: string }[] }>("stories"));
+  }
   return request<{ stories: { id: string; title: string; summary: string; primary_policy: string }[] }>("/api/v1/stories", token);
 }
 
 export async function startStory(token: string, id: string, mode: "manual" | "automated") {
   if (PUBLIC_DEMO) {
-    const bundle = await loadBundle();
-    const source = bundle.runs[id]?.[mode];
-    if (!source) throw new ApiError(404, "That story is not in the public demonstration.");
+    const view = await engineCall<RunView>("run", { story_id: id, mode, approvals: [] });
     const runId = `${id}:${mode}:${crypto.randomUUID()}`;
-    openRuns.set(runId, { ...structuredClone(source), run_id: runId, storyId: id, mode });
-    return { run_id: runId, status: source.status };
+    openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, approvals: [] });
+    return { run_id: runId, status: view.status };
   }
   return request<{ run_id: string; status: string }>(`/api/v1/stories/${id}/runs`, token, {
     method: "POST",
@@ -106,12 +93,11 @@ export async function approve(token: string, id: string, decision: "approve" | "
     if ((current.pending_action.precondition_hash ?? "") !== preconditionHash) {
       throw new ApiError(409, "The preconditions changed, so this approval was not applied.");
     }
-    const bundle = await loadBundle();
-    const next = decision === "approve" ? bundle.runs[current.storyId]?.approved : bundle.runs[current.storyId]?.rejected;
-    if (!next) throw new ApiError(409, "This story has no matching engine result for that decision.");
-    const view = { ...structuredClone(next), run_id: id, storyId: current.storyId, mode: current.mode };
-    openRuns.set(id, view);
-    return view;
+    const approvals = [...current.approvals, { action_id: current.pending_action.action_id, decision, precondition_hash: preconditionHash, actor: "public visitor" }];
+    const view = await engineCall<RunView>("run", { story_id: current.storyId, mode: "manual", approvals });
+    const stored = { ...view, run_id: id, storyId: current.storyId, mode: current.mode, approvals };
+    openRuns.set(id, stored);
+    return stored;
   }
   return request<RunView>(`/api/v1/runs/${id}/approvals`, token, {
     method: "POST",
@@ -120,22 +106,22 @@ export async function approve(token: string, id: string, decision: "approve" | "
 }
 
 export function catalog(token: string) {
-  if (PUBLIC_DEMO) return loadBundle().then((bundle) => bundle.catalog);
+  if (PUBLIC_DEMO) return engineCall<{ counts: Record<string, number | Record<string, number>> }>("catalog");
   return request<{ counts: Record<string, number | Record<string, number>> }>("/api/v1/catalog", token);
 }
 
 export function models(token: string) {
-  if (PUBLIC_DEMO) return loadBundle().then((bundle) => bundle.models);
+  if (PUBLIC_DEMO) return engineCall<ModelReport>("train");
   return request<ModelReport>("/api/v1/models", token);
 }
 
 export function monitoring(token: string) {
-  if (PUBLIC_DEMO) return loadBundle().then((bundle) => bundle.monitoring);
+  if (PUBLIC_DEMO) return engineCall<Monitoring>("monitoring");
   return request<Monitoring>("/api/v1/monitoring", token);
 }
 
 export function adapters() {
-  if (PUBLIC_DEMO) return loadBundle().then((bundle) => ({ adapters: bundle.adapters }));
+  if (PUBLIC_DEMO) return engineCall<{ adapters: Adapter[] }>("adapters");
   return request<{ adapters: Adapter[] }>("/api/v1/adapters", null);
 }
 

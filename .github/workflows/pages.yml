@@ -20,12 +20,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install locked Python dependencies
-        run: pip install -r requirements.lock.txt
-      - name: Build public demonstration from the engine
-        run: python scripts/build_demo_bundle.py
-        env:
-          PYTHONPATH: src
+      - name: Pack the engine for the browser
+        run: python scripts/stage_browser_engine.py
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
