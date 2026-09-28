@@ -1,7 +1,7 @@
 # Next session
 
 - Branch: main, tracking origin/main.
-- Last commit: 74e829a Record the verified commit and the remaining Postgres check.
+- Last commit: d223a64 Record the private repository URL. If a later commit exists, `git log -1` is authoritative.
 - Remote: https://github.com/SohamSa/training-continuity (private). Do not touch siliconpulse-ai.
 - Python: 3.14.4 virtual environment at `.venv`.
 - Commands that passed: `python -m pytest` (27 passed) and `apps/web` `npm run build`.
