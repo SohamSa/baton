@@ -212,7 +212,7 @@ function Stories({ session, setRun, setError, setLoading }: { session: Session; 
           </article>
         ))}
       </div>
-      {items.length === 0 ? <Empty text="No stories were returned." /> : null}
+      {items.length === 0 ? <Empty text="The decision engine is preparing the story list." /> : null}
     </section>
   );
 }

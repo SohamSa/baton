@@ -65,6 +65,7 @@ def op_train(payload):
     })
 `);
   status("The decision engine is ready in this browser.");
+  self.postMessage({ type: "ready" });
 })();
 
 ready.catch((error) => {
