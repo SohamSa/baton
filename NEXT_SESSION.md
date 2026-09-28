@@ -2,7 +2,7 @@
 
 - Branch: main, tracking origin/main.
 - Last commit: d223a64 Record the private repository URL. If a later commit exists, `git log -1` is authoritative.
-- Remote: https://github.com/SohamSa/training-continuity (private). Do not touch siliconpulse-ai.
+- Remote: https://github.com/SohamSa/training-continuity (public). Do not touch siliconpulse-ai.
 - Python: 3.14.4 virtual environment at `.venv`.
 - Commands that passed: `python -m pytest` (27 passed) and `apps/web` `npm run build`.
 - Commands not run successfully: Docker Compose and PostgreSQL. `docker info` failed because `npipe:////./pipe/dockerDesktopLinuxEngine` was missing. Browser click-through was not available.
