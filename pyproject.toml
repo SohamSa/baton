@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "training-continuity"
+version = "0.1.0"
+description = "Synthetic research platform for studying checkpoint protection and capability-aware recovery during distributed pre-training."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.32",
+  "pydantic>=2.10",
+  "sqlalchemy>=2.0.36",
+  "alembic>=1.14",
+  "psycopg[binary]>=3.2",
+  "numpy>=2.1",
+  "pandas>=2.2",
+  "pyarrow>=18",
+  "duckdb>=1.1",
+  "scikit-learn>=1.5",
+  "httpx>=0.28",
+  "python-multipart>=0.0.18",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3"]
+
+[project.scripts]
+training-continuity = "training_continuity.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

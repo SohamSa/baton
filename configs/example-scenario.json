@@ -1,0 +1,8 @@
+{
+  "scenario_id": "example-small",
+  "seed": 11,
+  "steps": 40,
+  "checkpoint_interval": 20,
+  "capability": "strict_sync",
+  "notes": "Stories in src/training_continuity/simulation/stories.py are the executable scenarios. This file documents a small shape. It is not a second simulator."
+}
