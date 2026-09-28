@@ -123,9 +123,31 @@ export async function approve(token: string, id: string, decision: "approve" | "
   });
 }
 
+export type CatalogColumn = { name: string; brief: string; in_final: boolean; impact: string };
+export type CatalogTable = {
+  id: string;
+  title: string;
+  plain: string;
+  real_world: string;
+  joins_on: string;
+  column_count: number;
+  columns: CatalogColumn[];
+};
+export type DecisionColumn = { name: string; source: string; purpose: string; impact: string };
+export type CatalogAtlas = {
+  synthetic: boolean;
+  table_count: number;
+  column_count: number;
+  mapping: string;
+  tables: CatalogTable[];
+  decision_columns: DecisionColumn[];
+  decision_plain: string;
+};
+
 export function catalog(token: string) {
-  if (PUBLIC_DEMO) return engineCall<{ counts: Record<string, number | Record<string, number>> }>("catalog");
-  return request<{ counts: Record<string, number | Record<string, number>> }>("/api/v1/catalog", token);
+  const shape = {} as { counts: Record<string, number | Record<string, number>>; atlas: CatalogAtlas };
+  if (PUBLIC_DEMO) return engineCall<typeof shape>("catalog");
+  return request<typeof shape>("/api/v1/catalog", token);
 }
 
 export function models(token: string) {

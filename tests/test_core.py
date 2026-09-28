@@ -8,6 +8,7 @@ import pytest
 
 from training_continuity.accounting.economics import assumption_estimate, evaluate_economics
 from training_continuity.accounting.ledger import Ledger
+from training_continuity.catalog.atlas import catalog_atlas
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
 from training_continuity.checkpoints import eligibility, select_restore_checkpoint
 from training_continuity.domain.enums import CheckpointState
@@ -38,6 +39,33 @@ def test_catalog_counts_and_contracts():
         assert field.consumer
         assert field.role in {"observed", "derived", "training_label", "latent_truth", "control_input", "audit"}
         assert field.leakage in {"none", "decision_time_safe", "label", "forbidden"}
+
+
+def test_catalog_atlas_maps_every_table_and_keeps_the_answer_key_out():
+    fields = build_catalog()
+    atlas = catalog_atlas(fields)
+    assert {table["id"] for table in atlas["tables"]} == {field.entity for field in fields}
+    assert atlas["table_count"] == len(atlas["tables"])
+    assert atlas["column_count"] == len(fields)
+    marked = {
+        (table["id"], column["name"])
+        for table in atlas["tables"]
+        for column in table["columns"]
+        if column["in_final"]
+    }
+    assert ("features", "residual_ewma") in marked
+    assert ("checkpoints", "state") in marked
+    assert ("training_jobs", "state") not in marked
+    for field in fields:
+        if field.leakage == "forbidden" or field.role in {"latent_truth", "training_label"}:
+            assert (field.entity, field.name) not in marked
+    for table in atlas["tables"]:
+        assert table["plain"] and table["real_world"] and table["joins_on"] and table["columns"]
+        for column in table["columns"]:
+            assert column["brief"] and column["impact"]
+    decision_names = {item["name"] for item in atlas["decision_columns"]}
+    assert "power_limit_ratio" in decision_names
+    assert "vulnerability" not in decision_names
     fan = next(field for field in fields if field.name == "fan_speed_ratio")
     assert "null" in fan.null_semantics
     latent = [field for field in fields if field.role == "latent_truth"]

@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 
 from training_continuity import ORGANIZATION_MODE, PRODUCT_CLAIM, __version__
 from training_continuity.adapters.registry import ADAPTERS
+from training_continuity.catalog.atlas import catalog_atlas
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
 from training_continuity.persistence.db import enable_sqlite_fk, make_session_factory
 from training_continuity.persistence.orm import (
@@ -168,7 +169,12 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
     @app.get("/api/v1/catalog")
     def catalog(_: UserRow = Depends(actor)):
         fields = build_catalog()
-        return {"counts": catalog_counts(fields), "fields": [field.to_dict() for field in fields], "synthetic": True}
+        return {
+            "counts": catalog_counts(fields),
+            "atlas": catalog_atlas(fields),
+            "fields": [field.to_dict() for field in fields],
+            "synthetic": True,
+        }
 
     @app.get("/api/v1/models")
     def models(_: UserRow = Depends(actor)):

@@ -28,7 +28,7 @@ Paired policies share exogenous fault onsets. The healthy-workload story shows a
 
 ## Product
 
-Required views are present in `apps/web`. The overview is a live practice floor written for an owner who does not already know the vocabulary: the engine advances one step at a time, the chips in the job update on the page, and a serious action can be approved there. Each menu page carries a plain-language explanation. Automated mode compares two reactions on the same script. Return on investment is computed by `assumption_estimate` only after the caller supplies a complete accounting configuration. Blank fields and a zero investment leave it undefined. A computed figure is labeled an assumption-based simulation estimate. Presentation mode hides the score numbers. Hardware adapters render as unavailable. Eight rehearsals are defined in `simulation/stories.py` and executed by `run_scenario`, including one step at a time through `ScenarioRun`.
+Required views are present in `apps/web`. The overview is a live practice floor written for an owner who does not already know the vocabulary: the engine advances one step at a time, the chips in the job update on the page, and a serious action can be approved there. Each menu page carries a plain-language explanation. The Data catalog page (`/#/data`, menu label “Data catalog”) is filled by `catalog_atlas` in `src/training_continuity/catalog/atlas.py` from the field list in `dictionary.py`: 58 tables, 431 columns, a short decision table, and buttons for 10, 20, 30, or all tables. Latent-truth and training-label columns stay off that short list. Automated mode compares two reactions on the same script. Return on investment is computed by `assumption_estimate` only after the caller supplies a complete accounting configuration. Blank fields and a zero investment leave it undefined. A computed figure is labeled an assumption-based simulation estimate. Presentation mode hides the score numbers. Hardware adapters render as unavailable. Eight rehearsals are defined in `simulation/stories.py` and executed by `run_scenario`, including one step at a time through `ScenarioRun`.
 
 ## Not verified here
 
@@ -37,6 +37,6 @@ Required views are present in `apps/web`. The overview is a live practice floor 
 
 ## Verification recorded
 
-- `python -m pytest`: 31 passed, one Starlette deprecation warning about `httpx` and `TestClient`.
+- `python -m pytest`: 32 passed, one Starlette deprecation warning about `httpx` and `TestClient`.
 - `npm run build` in `apps/web`: `tsc --noEmit` and Vite production build succeeded.
-- Local browser, public-demo mode at `http://127.0.0.1:5173/training-continuity/`: the opening rehearsal stepped to a save approval; the menu pages for rehearsals, dictionary, learned helper, sensor health, and who-moves-together showed the plain-language introductions; an earlier pass confirmed an empty accounting form leaves return undefined and a completed form returns an assumption-based simulation estimate.
+- Local browser, public-demo mode at `http://127.0.0.1:5173/training-continuity/#/data`: the catalog showed 58 drawers and 431 columns, the decision table had 15 rows including `gpu_temp_c`, the 10 and 30 buttons changed the drawer count, and opening Buildings showed the `site_id` column. An earlier pass stepped the opening rehearsal, checked the other menu introductions, and confirmed an empty accounting form leaves return undefined.

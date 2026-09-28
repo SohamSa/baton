@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import {
   Adapter,
+  CatalogAtlas,
   LiveFrame,
   ModelReport,
   Monitoring,
@@ -33,7 +34,7 @@ const LINKS = [
   ["/recovery", "Your decision"],
   ["/audit", "Paper trail"],
   ["/experiments", "Two reactions"],
-  ["/data", "Dictionary"],
+  ["/data", "Data catalog"],
   ["/models", "Learned helper"],
   ["/monitoring", "Sensor health"],
 ] as const;
@@ -367,21 +368,77 @@ function Experiments({ run, presentation }: { run: RunView | null; presentation:
 }
 
 function DataView({ session }: { session: Session }) {
+  const [atlas, setAtlas] = useState<CatalogAtlas | null>(null);
   const [counts, setCounts] = useState<Record<string, number | Record<string, number>> | null>(null);
+  const [shown, setShown] = useState<number | "all">("all");
   const [error, setError] = useState("");
   useEffect(() => {
-    catalog(session.token).then((payload) => setCounts(payload.counts)).catch((reason: Error) => setError(reason.message));
+    catalog(session.token)
+      .then((payload) => {
+        setCounts(payload.counts);
+        setAtlas(payload.atlas);
+      })
+      .catch((reason: Error) => setError(reason.message));
   }, [session.token]);
+  const tables = atlas ? (shown === "all" ? atlas.tables : atlas.tables.slice(0, shown)) : [];
   return (
     <section>
-      <h1>The dictionary of readings</h1>
-      <p>This is the list of measurements the rehearsal knows how to talk about. A window total is the same reading added up over time, the way “sales this week” is not a new cash register. A measurement the rehearsal does not have stays blank. It is not filled in as zero.</p>
+      <h1>The data catalog</h1>
+      <p>This is the filing cabinet. Each drawer is a table. A row is one fact. A shared tag, usually a chip name or a job name plus the step, is how a temperature is laid next to the job it belongs to.</p>
       {error ? <p role="alert">{error}</p> : null}
-      {!counts ? <p role="status">Loading catalog…</p> : (
-        <div className="panel">
-          <p>Unique concepts {String(counts.unique_concepts)}. Aliases {String(counts.aliases)}. Window aggregations {String(counts.window_aggregations)}.</p>
-          <p className="muted">Repeated totals over a time window are not extra independent measurements. Unsupported readings stay blank.</p>
-        </div>
+      {!atlas || !counts ? <p role="status">Loading the catalog…</p> : (
+        <>
+          <p>{atlas.mapping}</p>
+          <p>Unique concepts {String(counts.unique_concepts)}. Second names for the same reading {String(counts.aliases)}. Window totals {String(counts.window_aggregations)}. Drawers {atlas.table_count}. Columns across every drawer {atlas.column_count}.</p>
+          <h2>The only columns that change a reaction</h2>
+          <p>{atlas.decision_plain}</p>
+          <table>
+            <thead>
+              <tr><th>Column</th><th>Drawer</th><th>What it is</th><th>What changes if it is included</th></tr>
+            </thead>
+            <tbody>
+              {atlas.decision_columns.map((column) => (
+                <tr key={`${column.source}.${column.name}`}>
+                  <td><code>{column.name}</code></td>
+                  <td>{column.source}</td>
+                  <td>{column.purpose}</td>
+                  <td>{column.impact}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h2>Every drawer</h2>
+          <p>Choose how many drawers to open. All of them are defined. The ones past the choice are still in the cabinet.</p>
+          <div className="catalog-tools">
+            {[10, 20, 30, "all"].map((choice) => (
+              <button key={String(choice)} type="button" aria-pressed={shown === choice} onClick={() => setShown(choice as number | "all")}>
+                {choice === "all" ? `All ${atlas.table_count}` : String(choice)}
+              </button>
+            ))}
+          </div>
+          {tables.map((table) => (
+            <details key={table.id} className="panel drawer">
+              <summary>{table.title} · {table.column_count} columns</summary>
+              <p>{table.plain}</p>
+              <p>In a real hall this drawer would be filled by: {table.real_world}</p>
+              <p>Rows are tied to the rest of the cabinet by: {table.joins_on}.</p>
+              <table>
+                <thead>
+                  <tr><th>Column</th><th>What it is</th><th>What changes if it is included</th></tr>
+                </thead>
+                <tbody>
+                  {table.columns.map((column) => (
+                    <tr key={`${table.id}.${column.name}`}>
+                      <td><code>{column.name}</code>{column.in_final ? " · in the short list" : ""}</td>
+                      <td>{column.brief}</td>
+                      <td>{column.impact}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </details>
+          ))}
+        </>
       )}
     </section>
   );

@@ -13,7 +13,7 @@ const ready = (async () => {
   status("Loading the decision engine into this browser.");
   pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.0/full/" });
   const base = self.location.pathname.replace(/engine-worker\.js$/, "");
-  const response = await fetch(base + "browser-engine.json?pack=4");
+  const response = await fetch(base + "browser-engine.json?pack=5");
   if (!response.ok) throw new Error("The engine source did not load.");
   const pack = await response.json();
   pyodide.FS.mkdirTree("/shims");
@@ -29,6 +29,7 @@ sys.path.insert(0, "/shims")
 sys.path.insert(0, "/pkg")
 from training_continuity.accounting.economics import assumption_estimate
 from training_continuity.adapters.registry import ADAPTERS
+from training_continuity.catalog.atlas import catalog_atlas
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
 from training_continuity.simulation.engine import ScenarioRun, compare_policies, public_view
 from training_continuity.simulation.stories import STORIES, list_stories, story_config
@@ -76,7 +77,8 @@ def op_economics(payload):
     return json.dumps(assumption_estimate(data.get("config") or {}, data["useful_delta_steps"], data["step_seconds"], data["accelerators_in_job"]))
 
 def op_catalog():
-    return json.dumps({"counts": catalog_counts(build_catalog()), "synthetic": True})
+    fields = build_catalog()
+    return json.dumps({"counts": catalog_counts(fields), "atlas": catalog_atlas(fields), "synthetic": True})
 
 def op_adapters():
     return json.dumps({"adapters": ADAPTERS})

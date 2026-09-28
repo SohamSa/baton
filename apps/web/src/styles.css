@@ -91,6 +91,9 @@ main { padding: 1.25rem 1.5rem 3rem; max-width: 1240px; }
 .roi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.7rem; margin: 0.8rem 0; }
 .estimate { margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--line); }
 .tape { margin: 1rem 0 0; padding-left: 1.2rem; color: var(--muted); }
+.catalog-tools { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.8rem 0; }
+.drawer { margin: 0.45rem 0; }
+.drawer summary { cursor: pointer; }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem; vertical-align: top; }
 [role="alert"] { color: var(--danger); }
