@@ -1,8 +1,8 @@
 # Next session
 
-- Branch: main
-- Last commit: 1faa5f5 Document the synthetic scope, verification, and operator setup.
-- Remote: create private `SohamSa/training-continuity` if this file still says the push is pending. Do not touch `siliconpulse-ai`.
+- Branch: main, tracking origin/main.
+- Last commit: 74e829a Record the verified commit and the remaining Postgres check.
+- Remote: https://github.com/SohamSa/training-continuity (private). Do not touch siliconpulse-ai.
 - Python: 3.14.4 virtual environment at `.venv`.
 - Commands that passed: `python -m pytest` (27 passed) and `apps/web` `npm run build`.
 - Commands not run successfully: Docker Compose and PostgreSQL. `docker info` failed because `npipe:////./pipe/dockerDesktopLinuxEngine` was missing. Browser click-through was not available.
