@@ -31,6 +31,7 @@ class Ledger:
     checkpoint_overhead_seconds: float = 0.0
     useful_new: float = 0.0
     recomputation: float = 0.0
+    quiescent_accelerator_seconds: float = 0.0
     dropped_observations: int = 0
     steps_accounted: int = 0
 
@@ -81,6 +82,7 @@ class Ledger:
             "monitoring_cpu_seconds": self.monitoring_cpu_seconds,
             "monitoring_bytes": self.monitoring_bytes,
             "dropped_observations": self.dropped_observations,
+            "quiescent_accelerator_seconds": self.quiescent_accelerator_seconds,
             "goodput_per_wall_second": self.goodput(self.steps_accounted * self.step_seconds),
             "denominator": "wall_clock_seconds",
             "note": "Recomputation is excluded from useful_new. Checkpoint overhead is inside the wall-clock denominator and is not added again.",

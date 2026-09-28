@@ -1,6 +1,6 @@
 # Product
 
-A large pre-training job often advances only when its ranks finish the same step. If one accelerator, host, link, or shared power or cooling domain fails, the synchronized group can stop. Restoring progress depends on a checkpoint that is complete, compatible, reachable, and already verified. Some faults leave a trail in temperature, power, or errors. Others do not. Acting on a healthy workload change can waste as much time as a missed warning.
+A pre-training job on a large GPU cluster advances only when its ranks finish the same step. TrainingContinuity places that problem in a simulated cluster of 32,768 accelerators: 256 racks, 4,096 hosts, and 8 accelerators on each host. The operator investigates the placed ranks. The other accelerators stay in the quiescent population and are not drawn as if each one had a full sensor history.
 
 TrainingContinuity lets a person walk through that decision with synthetic evidence:
 

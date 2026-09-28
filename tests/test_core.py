@@ -354,6 +354,27 @@ def test_hypotheses_are_not_hard_coded_and_passwords_are_hashed():
         transition_action(ActionState.proposed, ActionState.succeeded)
 
 
+def test_research_world_is_a_gpu_cluster_of_tens_of_thousands():
+    cfg = ScenarioConfig(scenario_id="cluster-scale", seed=1, steps=4, checkpoint_interval=100)
+    assert cfg.cluster_gpu_count == 32768
+    run = run_scenario(cfg, "reactive")
+    cluster = run["cluster"]
+    assert cluster["accelerator_count"] >= 10_000
+    assert cluster["accelerator_count"] == 32768
+    assert cluster["attached"] is False
+    assert cluster["detailed_accelerator_count"] + cluster["quiescent_accelerator_count"] == 32768
+    assert cluster["detailed_accelerator_count"] < 100
+    assert cluster["host_count"] == 4096
+    assert cluster["rack_count"] == 256
+    assert run["ledger_errors"] == []
+    assert run["metrics"]["useful_new"] == 4
+    expected_quiescent = cluster["quiescent_accelerator_count"] * cfg.step_seconds * cfg.steps
+    assert run["metrics"]["quiescent_accelerator_seconds"] == pytest.approx(expected_quiescent)
+    shared = run_story("shared_infrastructure")
+    assert shared["cluster"]["accelerator_count"] == 32768
+    assert {item["scope"] for item in shared["incidents"]} == {"power-r0-h0"}
+
+
 def test_queue_backpressure_is_visible():
     from training_continuity.generation.queue import BoundedQueue
 

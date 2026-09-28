@@ -87,6 +87,10 @@ MECHANISM_OF_CAUSE = {
     "unknown": "unknown",
 }
 
+CLUSTER_ACCELERATORS = 32768
+CLUSTER_GPUS_PER_HOST = 8
+CLUSTER_HOSTS_PER_RACK = 16
+
 OBS_KEYS = {
     "observation_id",
     "entity_id",
@@ -155,6 +159,7 @@ class ScenarioConfig(BaseModel):
     corrupt_progress: list[int] = Field(default_factory=list)
     heterogeneous: bool = False
     spare_count: int = 0
+    cluster_gpu_count: int = CLUSTER_ACCELERATORS
     firmware_event_at: int | None = None
     maintenance_window: list[int] | None = None
     blackout: list[int] | None = None
@@ -233,6 +238,7 @@ class World:
     truth: list[dict]
     faults: list[dict]
     admin: list[dict]
+    cluster: dict
 
 
 def build_world(cfg: ScenarioConfig) -> World:
@@ -288,6 +294,7 @@ def build_world(cfg: ScenarioConfig) -> World:
             profile=profile,
             spare=True,
         )
+    placed = [gpu.gpu_id for gpu in gpus.values() if not gpu.spare]
     return World(
         gpus=gpus,
         jobs=jobs,
@@ -301,7 +308,42 @@ def build_world(cfg: ScenarioConfig) -> World:
         truth=[],
         faults=[],
         admin=[],
+        cluster=cluster_layout(cfg, placed),
     )
+
+
+def cluster_layout(cfg: ScenarioConfig, placed_ids: list[str]) -> dict:
+    """Inventory for one GPU cluster. Individual physics stays on the placed ranks."""
+    placed = len(placed_ids)
+    if cfg.cluster_gpu_count < placed:
+        raise ValueError("cluster_gpu_count is smaller than the detailed placement")
+    if cfg.cluster_gpu_count % CLUSTER_GPUS_PER_HOST != 0:
+        raise ValueError("cluster_gpu_count must fill 8-accelerator hosts")
+    hosts = cfg.cluster_gpu_count // CLUSTER_GPUS_PER_HOST
+    if hosts % CLUSTER_HOSTS_PER_RACK != 0:
+        raise ValueError("cluster hosts must fill 16-host racks")
+    racks = hosts // CLUSTER_HOSTS_PER_RACK
+    quiescent = cfg.cluster_gpu_count - placed
+    return {
+        "synthetic": True,
+        "subject": "gpu_cluster",
+        "accelerator_count": cfg.cluster_gpu_count,
+        "detailed_accelerator_count": placed,
+        "quiescent_accelerator_count": quiescent,
+        "gpus_per_host": CLUSTER_GPUS_PER_HOST,
+        "hosts_per_rack": CLUSTER_HOSTS_PER_RACK,
+        "host_count": hosts,
+        "rack_count": racks,
+        "fabric_domain_count": max(1, racks // 8),
+        "profile_id": "northspan-n8",
+        "attached": False,
+        "placed_ids": placed_ids,
+        "note": (
+            "The synchronized job sits in this GPU cluster. Individual thermal, power, and error traces "
+            "are kept for the placed ranks. The other accelerators stay in the quiescent population of the same cluster. "
+            "This process is not attached to those accelerators."
+        ),
+    }
 
 
 def _equilibrium(profile: dict, util: float, coolant: float, r_multiplier: float) -> float:
@@ -854,7 +896,12 @@ def _account(world: World, cfg: ScenarioConfig, ledger: Ledger) -> None:
         if mode == "checkpoint":
             checkpoint_sum += 1
     ledger.note_step(jobs_interrupted=interrupted, checkpoint_fraction_sum=checkpoint_sum)
-    ledger.add_monitoring(0.01 * cfg.step_seconds * len(world.gpus), 240 * len(world.gpus))
+    quiescent_hosts = world.cluster["quiescent_accelerator_count"] // CLUSTER_GPUS_PER_HOST
+    ledger.quiescent_accelerator_seconds += world.cluster["quiescent_accelerator_count"] * cfg.step_seconds
+    ledger.add_monitoring(
+        0.01 * cfg.step_seconds * (len(world.gpus) + quiescent_hosts),
+        240 * len(world.gpus) + 64 * quiescent_hosts,
+    )
 
 
 def _execute(world: World, cfg: ScenarioConfig, job: Job, decision: dict, step: int, mode: str, approvals: list[dict]) -> str | None:
@@ -1090,6 +1137,7 @@ def run_scenario(cfg: ScenarioConfig, policy_name: str = "reactive", mode: str =
             for job in world.jobs.values()
         },
         "metrics": metrics,
+        "cluster": {key: value for key, value in world.cluster.items() if key != "placed_ids"},
         "timeline": _timeline(world),
         "provenance": {
             "synthetic": True,
@@ -1173,17 +1221,20 @@ def narrative(result: dict, presentation: bool) -> str:
     pending = result.get("pending_action")
     if presentation:
         if pending:
-            return "A high-impact action is waiting for a person. The synthetic run did not execute it."
+            return "A high-impact action is waiting for a person. It applies to the affected ranks inside the GPU cluster, not to the quiescent population."
         if mechanism == "unknown":
-            return "The evidence was not good enough for a cause. The system abstained instead of inventing one."
+            return "The evidence from the affected accelerators was not good enough for a cause. The rest of the cluster was not treated as failed."
         if mechanism == "workload_shift":
             return "The pattern matches a workload change. No disruptive action was taken."
         if newest:
             return f"A verified checkpoint ({newest}) is part of the decision record. Recovery can use only a save that reached verified-usable."
         return "The decision used observed evidence and the job's declared recovery capability."
     useful = result["metrics"]["useful_new"]
+    cluster = result.get("cluster") or {}
+    count = cluster.get("accelerator_count")
+    scope = f"GPU cluster of {count} accelerators. " if count else ""
     return (
-        f"Synthetic result for {result['policy']}: leading hypothesis {mechanism}. "
+        f"{scope}Synthetic result for {result['policy']}: leading hypothesis {mechanism}. "
         f"Useful new progress {useful:.2f} steps. "
         + (f"Newest verified checkpoint {newest}." if newest else "No verified checkpoint.")
     )

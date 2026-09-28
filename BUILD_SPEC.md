@@ -1,6 +1,6 @@
 # Implementation contract
 
-TrainingContinuity is a new repository. It is not a branch or copy of any earlier project. The product is a CPU-only synthetic environment for studying observable evidence, checkpoint protection, and capability-aware recovery during distributed pre-training.
+TrainingContinuity is a new repository. It is not a branch or copy of any earlier project. The product is a research application whose subject is a GPU cluster of 32,768 accelerators. It is not a branch or copy of any earlier project. Detailed device physics covers the placed ranks. The remaining accelerators are the quiescent population of the same cluster. The process does not attach to those accelerators.
 
 ## Boundaries
 

@@ -15,7 +15,7 @@ from pydantic import BaseModel
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from training_continuity import ORGANIZATION_MODE, __version__
+from training_continuity import ORGANIZATION_MODE, PRODUCT_CLAIM, __version__
 from training_continuity.adapters.registry import ADAPTERS
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
 from training_continuity.persistence.db import enable_sqlite_fk, make_session_factory
@@ -143,7 +143,9 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
             "product": "TrainingContinuity",
             "synthetic": True,
             "organization_mode": ORGANIZATION_MODE,
-            "claim": "Reproducible synthetic environment for checkpoint protection and capability-aware recovery. Not a measurement of a real fleet.",
+            "claim": PRODUCT_CLAIM,
+            "cluster_accelerators": 32768,
+            "cluster_attached": False,
             "currency_enabled_by_default": False,
         }
 

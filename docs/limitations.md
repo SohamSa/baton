@@ -2,7 +2,10 @@
 
 Works locally:
 
-- Synthetic worlds, eight engine-backed stories, checkpoint rejection, approvals, audit, rule policies, a trained model that lost to the baseline, Parquet resume, and the React build.
+- A simulated GPU cluster of 32,768 accelerators, with detailed traces for the placed ranks and a counted quiescent population for the rest.
+- Eight engine-backed stories, checkpoint rejection, approvals, audit, rule policies, a trained model that lost to the baseline, Parquet resume, and the React build.
+
+The cluster is the research population. This process does not open a device handle to those accelerators. A display GPU on the workstation, if one is present, is outside the cluster.
 
 Simulated:
 

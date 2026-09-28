@@ -35,8 +35,12 @@ const LINKS = [
   ["/monitoring", "Monitoring"],
 ] as const;
 
+const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
+
 export function App() {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<Session | null>(
+    PUBLIC_DEMO ? { token: "public", role: "approver", username: "public visitor" } : null,
+  );
   const [presentation, setPresentation] = useState(false);
   const [theme, setTheme] = useState("dark");
   const [run, setRun] = useState<RunView | null>(null);
@@ -68,10 +72,12 @@ export function App() {
         <button type="button" onClick={() => setTheme((value) => (value === "dark" ? "light" : "dark"))}>
           {theme === "dark" ? "Light theme" : "Dark theme"}
         </button>
-        <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>
+        {PUBLIC_DEMO ? null : <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>}
       </nav>
       <main id="content">
-        <p className="banner">Synthetic demonstration. No real fleet was measured, and no hardware adapter is connected.</p>
+        <p className="banner">{PUBLIC_DEMO
+          ? "Public demonstration. Open a story and the page shows the result computed by this project's engine. No account, terminal, or attached GPU cluster is required. Administrator access and hidden simulator truth are not included."
+          : "GPU cluster research. The simulated cluster holds tens of thousands of accelerators. Detailed traces cover the placed ranks. Those accelerators are not attached to this process."}</p>
         {error ? <p role="alert">{error}</p> : null}
         {loading ? <p role="status">Loading…</p> : null}
         <Routes>
@@ -109,7 +115,7 @@ function Login({ onSuccess }: { onSuccess: (session: Session) => void }) {
   return (
     <main>
       <h1>TrainingContinuity</h1>
-      <p className="banner">Synthetic research workspace for checkpoint protection and capability-aware recovery.</p>
+      <p className="banner">Research workspace for hardware disruption inside a large GPU pre-training cluster.</p>
       <form className="panel" onSubmit={submit}>
         <label>Username<br /><input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" /></label>
         <label>Password<br /><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" /></label>
@@ -131,11 +137,20 @@ function Overview({ run, presentation }: { run: RunView | null; presentation: bo
       <h1>{run.story?.title ?? "Training overview"}</h1>
       <p>{run.narrative}</p>
       <div className="grid">
+        <article className="card"><h2>GPU cluster</h2><p>{run.cluster ? `${run.cluster.accelerator_count.toLocaleString()} accelerators` : "Cluster size is on the run"}</p><p className="muted">{run.cluster?.attached ? "Attached" : "Not attached to this process"}</p></article>
         <article className="card"><h2>Job state</h2><p>{Object.values(run.jobs ?? {}).map((job) => job.state).join(", ") || "Unknown"}</p></article>
         <article className="card"><h2>Hypothesis</h2><p>{run.hypotheses?.abstain ? "Abstaining" : run.hypotheses?.leading_mechanism}</p></article>
         <article className="card"><h2>Checkpoint</h2><p>{run.checkpoints?.some((item) => item.state === "verified_usable") ? "A verified save is on record" : "No verified save"}</p></article>
         <article className="card"><h2>Decision</h2><p>{run.pending_action ? "Waiting for a person" : run.status}</p></article>
       </div>
+      {run.cluster ? (
+        <div className="panel">
+          <h2>Cluster membership</h2>
+          <p>{run.cluster.rack_count.toLocaleString()} racks, {run.cluster.host_count.toLocaleString()} hosts, {run.cluster.gpus_per_host} accelerators per host, {run.cluster.fabric_domain_count} fabric domains.</p>
+          <p>Detailed traces: {run.cluster.detailed_accelerator_count.toLocaleString()} placed accelerators. Quiescent population: {run.cluster.quiescent_accelerator_count.toLocaleString()}.</p>
+          <p className="muted">{run.cluster.note}</p>
+        </div>
+      ) : null}
       {!presentation && run.metrics ? (
         <div className="panel">
           <h2>Synthetic measurements</h2>
@@ -195,6 +210,7 @@ function Dependencies({ run }: { run: RunView | null }) {
   return (
     <section>
       <h1>Dependency explorer</h1>
+      {run.cluster ? <p>The closure below is the placed ranks inside a cluster of {run.cluster.accelerator_count.toLocaleString()} accelerators. The quiescent population is not listed device by device.</p> : null}
       {Object.entries(run.jobs).map(([jobId, job]) => (
         <article className="panel" key={jobId}>
           <h2>{jobId}</h2>
@@ -218,6 +234,7 @@ function Devices({ run, presentation }: { run: RunView | null; presentation: boo
   return (
     <section>
       <h1>Device investigation</h1>
+      <p className="muted">These are the accelerators with individual traces. The rest of the cluster is the quiescent population.</p>
       <label>Accelerator <select value={current} onChange={(event) => setSelected(event.target.value)}>{ids.map((id) => <option key={id}>{id}</option>)}</select></label>
       <div className="panel">
         <p>Family {gpu.family}. Phase {gpu.phase}. Fan speed {gpu.fan_speed_ratio === null ? "unsupported" : "reported"}.</p>

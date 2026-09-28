@@ -1,6 +1,10 @@
 # TrainingContinuity
 
-TrainingContinuity is a local, CPU-only research application for studying hardware-related disruption during distributed pre-training. It generates a synthetic cluster, separates hidden simulator state from the observations an operator can see, and compares recovery policies on paired virtual worlds.
+Open the public demonstration: https://sohamsa.github.io/training-continuity/
+
+That page loads in the browser. It does not ask you to install Python, start a terminal, or sign in. Stories, approvals, checkpoints, and comparisons on that page are results produced by this project's engine and published with the site. Hidden simulator truth and administrator access are not included.
+
+TrainingContinuity studies hardware-related disruption during distributed pre-training on a simulated GPU cluster of 32,768 accelerators. Individual traces cover the ranks placed in the incident. The other accelerators remain the quiescent population of that same cluster. This process is not attached to those accelerators, and a local display GPU is not enrolled in the cluster.
 
 The honest claim is narrow: this is a reproducible synthetic environment for studying how observable hardware evidence, checkpoint protection, and capability-aware recovery can preserve useful pre-training progress. It does not measure a real fleet, predict every failure, or report savings.
 

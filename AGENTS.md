@@ -3,6 +3,8 @@
 This repository is TrainingContinuity. Do not modify, fork, or push to SohamSa/siliconpulse-ai.
 
 - The backend in `src/training_continuity` is the only decision engine. Do not reimplement simulation or policy in `apps/web`.
+- The research subject is a GPU cluster of tens of thousands of accelerators. Detailed traces cover the placed ranks. Do not describe the quiescent population as individually instrumented.
+- Do not attach this process to a physical accelerator, and do not enroll a local display GPU as a cluster member.
 - Operator responses must not include latent truth. Evaluator truth is administrator-only and labeled.
 - Do not add default currency rates, ROI headlines, or claims about a real company or fleet.
 - Do not emit numeric NVIDIA Xid codes. Symptom codes in the simulator are fictional `TC-SYM-*` identifiers.
