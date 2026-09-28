@@ -30,6 +30,7 @@ from training_continuity.persistence.orm import (
     UserRow,
 )
 from training_continuity.security import hash_password, issue_token, read_token, verify_password
+from training_continuity.accounting.economics import assumption_estimate
 from training_continuity.simulation.stories import list_stories, run_story
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -44,6 +45,13 @@ class StoryRunBody(BaseModel):
     mode: str = "automated"
     presentation: bool = False
     approvals: list[dict] = []
+
+
+class EconomicsBody(BaseModel):
+    config: dict
+    useful_delta_steps: float
+    step_seconds: float
+    accelerators_in_job: int
 
 
 class ApprovalBody(BaseModel):
@@ -172,6 +180,10 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
             "oracle": {"available_to_operators": False, "label": "evaluator_only"},
             "synthetic": True,
         }
+
+    @app.post("/api/v1/economics")
+    def economics(body: EconomicsBody, _: UserRow = Depends(actor)):
+        return assumption_estimate(body.config, body.useful_delta_steps, body.step_seconds, body.accelerators_in_job)
 
     @app.get("/api/v1/monitoring")
     def monitoring(_: UserRow = Depends(actor)):

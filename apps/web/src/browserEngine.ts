@@ -1,6 +1,6 @@
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
 
-type Pending = { resolve: (value: unknown) => void; reject: (error: Error) => void };
+type Pending = { resolve: (value: unknown) => void; reject: (error: Error) => void; onFrame?: (frame: unknown) => void };
 
 let worker: Worker | null = null;
 let ready: Promise<void> | null = null;
@@ -25,7 +25,7 @@ export function subscribeEngine(listener: (message: string) => void) {
 export function startEngine(): Promise<void> {
   if (!PUBLIC_DEMO) return Promise.resolve();
   if (ready) return ready;
-  worker = new Worker(`${import.meta.env.BASE_URL}engine-worker.js?engine=2`);
+  worker = new Worker(`${import.meta.env.BASE_URL}engine-worker.js?engine=3`);
   ready = new Promise((resolve, reject) => {
     worker!.onmessage = (event: MessageEvent) => {
       const data = event.data as { type: string; id?: number; message?: string; value?: unknown };
@@ -35,6 +35,10 @@ export function startEngine(): Promise<void> {
         resolve();
       }
       if (data.type === "fatal") reject(new Error(data.message || "The decision engine failed to start."));
+      if (data.type === "frame") {
+        if (data.id != null) pending.get(data.id)?.onFrame?.(data.value);
+        return;
+      }
       if (data.id == null) return;
       const job = pending.get(data.id);
       if (!job) return;
@@ -47,12 +51,19 @@ export function startEngine(): Promise<void> {
   return ready;
 }
 
-export async function engineCall<T>(op: string, payload?: unknown): Promise<T> {
-  await startEngine();
-  const id = nextId;
-  nextId += 1;
-  return new Promise((resolve, reject) => {
-    pending.set(id, { resolve: (value) => resolve(value as T), reject });
+let tail: Promise<void> = Promise.resolve();
+
+export async function engineCall<T>(op: string, payload?: unknown, onFrame?: (frame: unknown) => void): Promise<T> {
+  const task = tail.then(() => invoke<T>(op, payload, onFrame));
+  tail = task.then(() => undefined, () => undefined);
+  return task;
+}
+
+function invoke<T>(op: string, payload: unknown, onFrame?: (frame: unknown) => void): Promise<T> {
+  return startEngine().then(() => new Promise((resolve, reject) => {
+    const id = nextId;
+    nextId += 1;
+    pending.set(id, { resolve: (value) => resolve(value as T), reject, onFrame });
     worker!.postMessage({ id, op, payload });
-  });
+  }));
 }

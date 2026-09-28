@@ -1,7 +1,8 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
 import {
   Adapter,
+  LiveFrame,
   ModelReport,
   Monitoring,
   RunView,
@@ -18,6 +19,7 @@ import {
   truth,
 } from "./api";
 import { startEngine, subscribeEngine } from "./browserEngine";
+import { Desk } from "./Desk";
 
 type Session = { token: string; role: string; username: string };
 
@@ -45,9 +47,49 @@ export function App() {
   const [presentation, setPresentation] = useState(false);
   const [theme, setTheme] = useState("dark");
   const [run, setRun] = useState<RunView | null>(null);
+  const [frames, setFrames] = useState<LiveFrame[]>([]);
+  const [playing, setPlaying] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [engineMessage, setEngineMessage] = useState("");
+  const opened = useRef(false);
+
+  async function play(id: string, mode: "manual" | "automated") {
+    setPlaying(true);
+    setError("");
+    setFrames([]);
+    try {
+      const started = await startStory(session?.token ?? "public", id, mode, (frame) => {
+        setFrames((current) => [...current, frame]);
+      });
+      let view = await getRun(session?.token ?? "public", started.run_id, false);
+      for (let attempt = 0; view.status === "queued" && attempt < 40; attempt += 1) {
+        await new Promise((resolve) => window.setTimeout(resolve, 250));
+        view = await getRun(session?.token ?? "public", started.run_id, false);
+      }
+      setRun({ ...view, run_id: started.run_id });
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Run failed");
+    } finally {
+      setPlaying(false);
+    }
+  }
+
+  async function decide(decision: "approve" | "reject") {
+    if (!session || !run?.pending_action || !run.run_id) return;
+    setPlaying(true);
+    setError("");
+    setFrames([]);
+    try {
+      const next = await approve(session.token, run.run_id, decision, run.pending_action.precondition_hash ?? "", (frame) => {
+        setFrames((current) => [...current, frame]);
+      });
+      setRun({ ...next, run_id: run.run_id });
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "The decision was rejected");
+    } finally {
+      setPlaying(false);
+    }
+  }
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -55,9 +97,19 @@ export function App() {
 
   useEffect(() => {
     if (!PUBLIC_DEMO) return;
+    let cancel = false;
     const stop = subscribeEngine(setEngineMessage);
-    startEngine().catch((reason: Error) => setError(reason.message));
+    startEngine()
+      .then(() => {
+        if (cancel || opened.current) return;
+        opened.current = true;
+        void play("gradual_warning", "manual");
+      })
+      .catch((reason: Error) => {
+        if (!cancel) setError(reason.message);
+      });
     return () => {
+      cancel = true;
       stop();
     };
   }, []);
@@ -87,19 +139,19 @@ export function App() {
       </nav>
       <main id="content">
         <p className="banner">{PUBLIC_DEMO
-          ? "This page runs the project's decision engine in your browser. Stories, approvals, comparisons, the catalog, and the held-out model all execute when you open them. Nothing else has to be started. Hidden simulator truth is not included."
+          ? "The decision engine is running in this browser. The hall on the overview advances one step at a time. Approvals, policy comparisons, the catalog, and the held-out model execute when you open them. Hidden simulator truth is not on this page."
           : "GPU cluster research. The simulated cluster holds tens of thousands of accelerators. Detailed traces cover the placed ranks. Those accelerators are not attached to this process."}</p>
         {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
-        {loading ? <p role="status">Running the decision engine.</p> : null}
+        {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
         <Routes>
-          <Route path="/" element={<Overview run={run} presentation={presentation} />} />
-          <Route path="/stories" element={<Stories session={session} setRun={setRun} setError={setError} setLoading={setLoading} />} />
+          <Route path="/" element={<Desk token={session.token} run={run} frames={frames} playing={playing} presentation={presentation} onPlay={play} onDecide={decide} />} />
+          <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
           <Route path="/dependencies" element={<Dependencies run={run} />} />
           <Route path="/devices" element={<Devices run={run} presentation={presentation} />} />
           <Route path="/incidents" element={<Incidents run={run} />} />
           <Route path="/checkpoints" element={<Checkpoints run={run} />} />
-          <Route path="/recovery" element={<Recovery session={session} run={run} setRun={setRun} setError={setError} />} />
+          <Route path="/recovery" element={<Recovery session={session} run={run} onDecide={decide} />} />
           <Route path="/audit" element={<AuditView session={session} run={run} />} />
           <Route path="/experiments" element={<Experiments run={run} presentation={presentation} />} />
           <Route path="/data" element={<DataView session={session} />} />
@@ -142,39 +194,7 @@ function Empty({ text }: { text: string }) {
   return <p className="panel">{text}</p>;
 }
 
-function Overview({ run, presentation }: { run: RunView | null; presentation: boolean }) {
-  if (!run) return <Empty text="No run yet. Open Stories and execute one through the engine." />;
-  return (
-    <section>
-      <h1>{run.story?.title ?? "Training overview"}</h1>
-      <p>{run.narrative}</p>
-      <div className="grid">
-        <article className="card"><h2>GPU cluster</h2><p>{run.cluster ? `${run.cluster.accelerator_count.toLocaleString()} accelerators` : "Cluster size is on the run"}</p><p className="muted">{run.cluster?.attached ? "Attached" : "Not attached to this process"}</p></article>
-        <article className="card"><h2>Job state</h2><p>{Object.values(run.jobs ?? {}).map((job) => job.state).join(", ") || "Unknown"}</p></article>
-        <article className="card"><h2>Hypothesis</h2><p>{run.hypotheses?.abstain ? "Abstaining" : run.hypotheses?.leading_mechanism}</p></article>
-        <article className="card"><h2>Checkpoint</h2><p>{run.checkpoints?.some((item) => item.state === "verified_usable") ? "A verified save is on record" : "No verified save"}</p></article>
-        <article className="card"><h2>Decision</h2><p>{run.pending_action ? "Waiting for a person" : run.status}</p></article>
-      </div>
-      {run.cluster ? (
-        <div className="panel">
-          <h2>Cluster membership</h2>
-          <p>{run.cluster.rack_count.toLocaleString()} racks, {run.cluster.host_count.toLocaleString()} hosts, {run.cluster.gpus_per_host} accelerators per host, {run.cluster.fabric_domain_count} fabric domains.</p>
-          <p>Detailed traces: {run.cluster.detailed_accelerator_count.toLocaleString()} placed accelerators. Quiescent population: {run.cluster.quiescent_accelerator_count.toLocaleString()}.</p>
-          <p className="muted">{run.cluster.note}</p>
-        </div>
-      ) : null}
-      {!presentation && run.metrics ? (
-        <div className="panel">
-          <h2>Synthetic measurements</h2>
-          <p>Useful new progress {run.metrics.useful_new.toFixed(2)} steps. Recomputation {run.metrics.recomputation.toFixed(2)}. Interruption {run.metrics.job_interruption_seconds.toFixed(1)} seconds.</p>
-          <p className="muted">These figures are computed for this virtual run. They are not fleet results or savings.</p>
-        </div>
-      ) : null}
-    </section>
-  );
-}
-
-function Stories({ session, setRun, setError, setLoading }: { session: Session; setRun: (run: RunView) => void; setError: (value: string) => void; setLoading: (value: boolean) => void }) {
+function Stories({ session, play, setError }: { session: Session; play: (id: string, mode: "manual" | "automated") => Promise<void>; setError: (value: string) => void }) {
   const [items, setItems] = useState<{ id: string; title: string; summary: string }[]>([]);
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const navigate = useNavigate();
@@ -182,21 +202,12 @@ function Stories({ session, setRun, setError, setLoading }: { session: Session; 
     stories(session.token).then((payload) => setItems(payload.stories)).catch((reason: Error) => setError(reason.message));
   }, [session.token, setError]);
   async function run(id: string) {
-    setLoading(true);
     setError("");
     try {
-      const started = await startStory(session.token, id, mode);
-      let view = await getRun(session.token, started.run_id, false);
-      for (let attempt = 0; view.status === "queued" && attempt < 40; attempt += 1) {
-        await new Promise((resolve) => window.setTimeout(resolve, 250));
-        view = await getRun(session.token, started.run_id, false);
-      }
-      setRun({ ...view, run_id: started.run_id });
+      await play(id, mode);
       navigate("/");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Run failed");
-    } finally {
-      setLoading(false);
     }
   }
   return (
@@ -291,19 +302,9 @@ function Checkpoints({ run }: { run: RunView | null }) {
   );
 }
 
-function Recovery({ session, run, setRun, setError }: { session: Session; run: RunView | null; setRun: (run: RunView) => void; setError: (value: string) => void }) {
+function Recovery({ session, run, onDecide }: { session: Session; run: RunView | null; onDecide: (decision: "approve" | "reject") => void }) {
   if (!run) return <Empty text="There is no recovery decision yet." />;
-  const current = run;
-  const pending = current.pending_action;
-  async function decide(decision: "approve" | "reject") {
-    if (!pending || !current.run_id) return;
-    try {
-      const next = await approve(session.token, current.run_id, decision, pending.precondition_hash ?? "");
-      setRun({ ...next, run_id: current.run_id });
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "The decision was rejected");
-    }
-  }
+  const pending = run.pending_action;
   return (
     <section>
       <h1>Recovery planner</h1>
@@ -313,8 +314,8 @@ function Recovery({ session, run, setRun, setError }: { session: Session; run: R
           <p>{pending.action_type} on {pending.scope}</p>
           <p>{pending.reason}</p>
           <div className="row">
-            <button type="button" onClick={() => decide("approve")} disabled={session.role === "viewer" || session.role === "investigator"}>Approve</button>
-            <button type="button" onClick={() => decide("reject")} disabled={session.role === "viewer" || session.role === "investigator"}>Reject</button>
+            <button type="button" onClick={() => onDecide("approve")} disabled={session.role === "viewer" || session.role === "investigator"}>Approve</button>
+            <button type="button" onClick={() => onDecide("reject")} disabled={session.role === "viewer" || session.role === "investigator"}>Reject</button>
           </div>
           {session.role === "viewer" || session.role === "investigator" ? <p className="muted">This role cannot approve a high-impact action.</p> : null}
         </div>

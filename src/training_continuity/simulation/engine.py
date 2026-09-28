@@ -1062,38 +1062,53 @@ def _restart(world, cfg, job, step, use_spare: bool) -> tuple[bool, str]:
     return True, f"restored_{chosen['checkpoint_id']}"
 
 
-def run_scenario(cfg: ScenarioConfig, policy_name: str = "reactive", mode: str = "automated", approvals: list[dict] | None = None, oracle: bool = False) -> dict:
-    if oracle:
-        policy = OraclePolicy()
-    else:
-        policy = POLICIES[policy_name]
-    world = build_world(cfg)
-    faults = schedule_faults(cfg, world)
-    world.faults = faults
-    if cfg.firmware_event_at is not None:
-        world.admin.append({"kind": "firmware", "step": cfg.firmware_event_at, "target": "job-0"})
-    ledger = Ledger(cfg.step_seconds)
-    approvals = approvals or []
-    status = "completed"
-    pending = None
-    for step in range(cfg.steps):
-        _apply_faults(world, faults, step)
+class ScenarioRun:
+    """One scenario advanced a step at a time by the same loop as a full run."""
+
+    def __init__(self, cfg: ScenarioConfig, policy_name: str, mode: str, approvals: list[dict] | None, oracle: bool = False):
+        self.cfg = cfg
+        self.mode = mode
+        self.approvals = approvals or []
+        self.oracle = oracle
+        self.policy = OraclePolicy() if oracle else POLICIES[policy_name]
+        self.world = build_world(cfg)
+        self.faults = schedule_faults(cfg, self.world)
+        self.world.faults = self.faults
+        if cfg.firmware_event_at is not None:
+            self.world.admin.append({"kind": "firmware", "step": cfg.firmware_event_at, "target": "job-0"})
+        self.ledger = Ledger(cfg.step_seconds)
+        self.status = "completed"
+        self.pending = None
+        self.snap = None
+        self.index = 0
+        self.finished = False
+
+    def advance(self) -> dict:
+        if self.finished:
+            return self.frame()
+        if self.index >= self.cfg.steps:
+            self.finished = True
+            return self.frame()
+        step = self.index
+        world = self.world
+        cfg = self.cfg
+        _apply_faults(world, self.faults, step)
         _physics(world, cfg, step)
         _emit(world, cfg, step)
         for job in world.jobs.values():
             _advance_job(world, cfg, job, step)
         primary = world.jobs["job-0"]
-        if oracle:
-            snap = _snapshot(world, cfg, step, primary, policy.heartbeat_timeout)
-            decision = policy.choose_with_truth(snap, {"faults": faults})
+        if self.oracle:
+            snap = _snapshot(world, cfg, step, primary, self.policy.heartbeat_timeout)
+            decision = self.policy.choose_with_truth(snap, {"faults": self.faults})
         else:
-            snap = _snapshot(world, cfg, step, primary, policy.heartbeat_timeout)
-            decision = policy.choose(snap)
-        decision["policy"] = policy.name
+            snap = _snapshot(world, cfg, step, primary, self.policy.heartbeat_timeout)
+            decision = self.policy.choose(snap)
+        decision["policy"] = self.policy.name
         decision["eligible"] = snap["eligible_checkpoint_id"] or ""
         _group_incidents(world, snap, step)
-        outcome = _execute(world, cfg, primary, decision, step, mode, approvals)
-        _account(world, cfg, ledger)
+        outcome = _execute(world, cfg, primary, decision, step, self.mode, self.approvals)
+        _account(world, cfg, self.ledger)
         world.truth.append(
             {
                 "step": step,
@@ -1102,21 +1117,66 @@ def run_scenario(cfg: ScenarioConfig, policy_name: str = "reactive", mode: str =
                 "functional": {gpu.gpu_id: gpu.functional for gpu in world.gpus.values()},
             }
         )
+        self.snap = snap
+        self.index += 1
         if outcome == "awaiting_approval":
-            status = "awaiting_approval"
-            pending = world.actions[-1]
-            break
-    for incident in world.incidents:
-        incident["abstain_reason"] = snap["hypotheses"].get("abstain_reason", "") if snap["hypotheses"].get("abstain") else ""
-    metrics = _metrics(world, ledger)
-    return {
+            self.status = "awaiting_approval"
+            self.pending = world.actions[-1]
+            self.finished = True
+        elif self.index >= cfg.steps:
+            self.finished = True
+        return self.frame()
+
+    def frame(self) -> dict:
+        world = self.world
+        job = world.jobs["job-0"]
+        hypotheses = (self.snap or {}).get("hypotheses") or {}
+        latest = world.checkpoints[-1] if world.checkpoints else None
+        return {
+            "done": self.finished,
+            "step": max(self.index - 1, 0),
+            "steps": self.cfg.steps,
+            "step_seconds": self.cfg.step_seconds,
+            "job_state": job.state,
+            "progress": job.progress,
+            "useful_new": job.useful_new,
+            "recomputation": job.recomputation,
+            "hypothesis": hypotheses.get("leading_mechanism", "unknown"),
+            "abstain": bool(hypotheses.get("abstain")),
+            "incident_scopes": [item["scope"] for item in world.incidents],
+            "checkpoint": None
+            if latest is None
+            else {"state": latest["state"], "progress": latest["progress"], "shards_present": latest["shards_present"], "shards_expected": latest["shards_expected"]},
+            "pending": self.pending is not None,
+            "cluster": {key: value for key, value in world.cluster.items() if key != "placed_ids"},
+            "accelerators": [
+                {
+                    "id": gpu.gpu_id,
+                    "temp": None if gpu.spare else round(gpu.temp_c, 2),
+                    "functional": gpu.functional,
+                    "quarantined": gpu.quarantined,
+                    "spare": gpu.spare,
+                }
+                for gpu in world.gpus.values()
+            ],
+        }
+
+    def result(self) -> dict:
+        world = self.world
+        cfg = self.cfg
+        snap = self.snap or {"hypotheses": {}, "gpus": {}}
+        for incident in world.incidents:
+            incident["abstain_reason"] = snap["hypotheses"].get("abstain_reason", "") if snap["hypotheses"].get("abstain") else ""
+        metrics = _metrics(world, self.ledger)
+        return {
         "synthetic": True,
         "scenario_id": cfg.scenario_id,
         "story_id": cfg.story_id,
-        "policy": policy.name,
-        "mode": mode,
-        "status": status,
-        "pending_action": pending,
+        "policy": self.policy.name,
+        "mode": self.mode,
+        "status": self.status,
+        "step_seconds": cfg.step_seconds,
+        "pending_action": self.pending,
         "actions": world.actions,
         "checkpoints": world.checkpoints,
         "incidents": world.incidents,
@@ -1147,14 +1207,21 @@ def run_scenario(cfg: ScenarioConfig, policy_name: str = "reactive", mode: str =
         },
         "evaluator": {
             "truth_namespace": True,
-            "faults": faults,
+            "faults": self.faults,
             "trace": world.truth,
             "label": "evaluator-only latent truth",
         },
-        "ledger_errors": ledger.conservation_errors(ledger.steps_accounted),
+        "ledger_errors": self.ledger.conservation_errors(self.ledger.steps_accounted),
         "observations": world.observations,
         "logs": world.logs,
     }
+
+
+def run_scenario(cfg: ScenarioConfig, policy_name: str = "reactive", mode: str = "automated", approvals: list[dict] | None = None, oracle: bool = False) -> dict:
+    session = ScenarioRun(cfg, policy_name, mode, approvals, oracle)
+    while not session.finished:
+        session.advance()
+    return session.result()
 
 
 def _metrics(world: World, ledger: Ledger) -> dict:

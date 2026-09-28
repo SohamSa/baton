@@ -28,15 +28,15 @@ Paired policies share exogenous fault onsets. The healthy-workload story shows a
 
 ## Product
 
-Required views are present in `apps/web`: overview, stories, dependencies, devices, incidents, checkpoints, recovery, audit, experiments, data, models, and monitoring. Presentation mode hides benchmark numbers. Hardware adapters render as unavailable. Eight stories are defined in `simulation/stories.py` and executed by `run_scenario`.
+Required views are present in `apps/web`. The overview is a live operations desk: the engine advances one step at a time, the placed accelerators update on the page, and a high-impact action can be approved there. Automated mode compares policies on the same faults. Return on investment is computed by `assumption_estimate` only after the caller supplies a complete accounting configuration. Blank fields and a zero investment leave it undefined. A computed figure is labeled an assumption-based simulation estimate. Presentation mode hides benchmark numbers. Hardware adapters render as unavailable. Eight stories are defined in `simulation/stories.py` and executed by `run_scenario`, including one step at a time through `ScenarioRun`.
 
 ## Not verified here
 
-- Browser click-through. No browser automation tool was available in this session. The frontend production build succeeded.
 - PostgreSQL and `docker compose` were not executed. `docker info` failed because the Docker Desktop engine pipe was not running.
 - A clean clone on another machine was not performed.
 
 ## Verification recorded
 
-- `python -m pytest`: 27 passed, one Starlette deprecation warning about `httpx` and `TestClient`.
+- `python -m pytest`: 31 passed, one Starlette deprecation warning about `httpx` and `TestClient`.
 - `npm run build` in `apps/web`: `tsc --noEmit` and Vite production build succeeded.
+- Local browser, public-demo mode at `http://127.0.0.1:5173/training-continuity/`: the opening story stepped to a checkpoint approval, approving it produced a verified save and a later decision, the healthy-workload story finished at step 40 with hypothesis workload shift, an empty accounting form left return undefined, and a completed form returned an assumption-based simulation estimate.

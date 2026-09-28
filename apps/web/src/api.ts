@@ -64,9 +64,27 @@ export function stories(token: string) {
   return request<{ stories: { id: string; title: string; summary: string; primary_policy: string }[] }>("/api/v1/stories", token);
 }
 
-export async function startStory(token: string, id: string, mode: "manual" | "automated") {
+export type LiveFrame = {
+  done: boolean;
+  step: number;
+  steps: number;
+  step_seconds: number;
+  job_state: string;
+  progress: number;
+  useful_new: number;
+  recomputation: number;
+  hypothesis: string;
+  abstain: boolean;
+  incident_scopes: string[];
+  checkpoint: { state: string; progress: number; shards_present: number; shards_expected: number } | null;
+  pending: boolean;
+  accelerators: { id: string; temp: number | null; functional: boolean; quarantined: boolean; spare: boolean }[];
+  cluster?: RunView["cluster"];
+};
+
+export async function startStory(token: string, id: string, mode: "manual" | "automated", onFrame?: (frame: LiveFrame) => void) {
   if (PUBLIC_DEMO) {
-    const view = await engineCall<RunView>("run", { story_id: id, mode, approvals: [] });
+    const view = await engineCall<RunView>("run", { story_id: id, mode, approvals: [] }, (frame) => onFrame?.(frame as LiveFrame));
     const runId = `${id}:${mode}:${crypto.randomUUID()}`;
     openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, approvals: [] });
     return { run_id: runId, status: view.status };
@@ -86,7 +104,7 @@ export function getRun(token: string, id: string, presentation: boolean) {
   return request<RunView>(`/api/v1/runs/${id}?presentation=${presentation}`, token);
 }
 
-export async function approve(token: string, id: string, decision: "approve" | "reject", preconditionHash: string) {
+export async function approve(token: string, id: string, decision: "approve" | "reject", preconditionHash: string, onFrame?: (frame: LiveFrame) => void) {
   if (PUBLIC_DEMO) {
     const current = openRuns.get(id);
     if (!current?.pending_action) throw new ApiError(409, "No action is awaiting approval.");
@@ -94,7 +112,7 @@ export async function approve(token: string, id: string, decision: "approve" | "
       throw new ApiError(409, "The preconditions changed, so this approval was not applied.");
     }
     const approvals = [...current.approvals, { action_id: current.pending_action.action_id, decision, precondition_hash: preconditionHash, actor: "public visitor" }];
-    const view = await engineCall<RunView>("run", { story_id: current.storyId, mode: "manual", approvals });
+    const view = await engineCall<RunView>("run", { story_id: current.storyId, mode: "manual", approvals }, (frame) => onFrame?.(frame as LiveFrame));
     const stored = { ...view, run_id: id, storyId: current.storyId, mode: current.mode, approvals };
     openRuns.set(id, stored);
     return stored;
@@ -118,6 +136,33 @@ export function models(token: string) {
 export function monitoring(token: string) {
   if (PUBLIC_DEMO) return engineCall<Monitoring>("monitoring");
   return request<Monitoring>("/api/v1/monitoring", token);
+}
+
+export type EconomicsEstimate = {
+  currency_enabled: boolean;
+  roi: number | null;
+  net_benefit: number | null;
+  benefit?: number;
+  investment_cost?: number;
+  reason: string;
+  label: string | null;
+  missing?: string[];
+  useful_delta_gpu_hours?: number;
+  conversion?: string;
+  useful_delta_steps?: number;
+  step_seconds?: number;
+  accelerators_in_the_job?: number;
+};
+
+export function estimateEconomics(
+  token: string,
+  body: { config: Record<string, string | number>; useful_delta_steps: number; step_seconds: number; accelerators_in_job: number },
+) {
+  if (PUBLIC_DEMO) return engineCall<EconomicsEstimate>("economics", body);
+  return request<EconomicsEstimate>("/api/v1/economics", token, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
 }
 
 export function adapters() {
@@ -178,6 +223,7 @@ export type RunView = {
   timeline?: { entity_id: string; step: number; gpu_temp_c: number | null; power_draw_w: number | null }[];
   gpus?: Record<string, { gpu_temp_c: number | null; power_draw_w: number | null; residual_ewma: number | null; family: string; phase: string; fan_speed_ratio: number | null }>;
   provenance?: { seed: number; config_hash: string };
+  step_seconds?: number;
   cluster?: {
     accelerator_count: number;
     detailed_accelerator_count: number;

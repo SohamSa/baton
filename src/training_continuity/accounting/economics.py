@@ -81,3 +81,22 @@ def evaluate_economics(config: dict[str, Any] | None, useful_delta_steps: float,
         "wall_hours_context": wall_hours,
         "useful_delta_steps_context": useful_delta_steps,
     }
+
+
+def assumption_estimate(config: dict[str, Any] | None, useful_delta_steps: float, step_seconds: float, accelerators_in_job: int) -> dict:
+    """Turn a simulated useful-work delta into an estimate using only caller-supplied rates.
+
+    The hour conversion is useful_delta_steps * step_seconds / 3600 * accelerators_in_the_job.
+    """
+    hours = float(useful_delta_steps) * float(step_seconds) / 3600.0 * float(accelerators_in_job)
+    filled = dict(config or {})
+    filled["enabled"] = True
+    filled["benefit_basis"] = "gpu_hour_rate_times_useful_step_hours"
+    filled["useful_delta_gpu_hours"] = hours
+    result = evaluate_economics(filled, float(useful_delta_steps), hours)
+    result["useful_delta_gpu_hours"] = hours
+    result["conversion"] = "useful_delta_steps * step_seconds / 3600 * accelerators_in_the_job"
+    result["accelerators_in_the_job"] = accelerators_in_job
+    result["step_seconds"] = step_seconds
+    result["useful_delta_steps"] = useful_delta_steps
+    return result

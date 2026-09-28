@@ -6,7 +6,7 @@ import copy
 
 import pytest
 
-from training_continuity.accounting.economics import evaluate_economics
+from training_continuity.accounting.economics import assumption_estimate, evaluate_economics
 from training_continuity.accounting.ledger import Ledger
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
 from training_continuity.checkpoints import eligibility, select_restore_checkpoint
@@ -297,6 +297,50 @@ def test_ledger_conservation_and_no_double_counted_progress():
     assert run["metrics"]["useful_new"] == 12
     assert run["metrics"]["recomputation"] == 0
     assert "utilization" not in run["metrics"]["note"]
+
+
+def test_stepwise_playback_matches_a_full_run():
+    from training_continuity.simulation.engine import ScenarioRun
+    from training_continuity.simulation.stories import story_config
+
+    cfg = story_config("healthy_workload_shift")
+    full = run_scenario(cfg, "combined", mode="manual")
+    session = ScenarioRun(cfg, "combined", "manual", [])
+    frames = []
+    while not session.finished:
+        frames.append(session.advance())
+    stepped = session.result()
+    assert frames[-1]["done"] is True
+    assert len(frames) == cfg.steps
+    assert frames[0]["cluster"]["accelerator_count"] == 32768
+    assert frames[0]["cluster"]["attached"] is False
+    assert stepped["metrics"]["useful_new"] == full["metrics"]["useful_new"]
+    assert stepped["status"] == full["status"]
+    assert stepped["hypotheses"]["leading_mechanism"] == full["hypotheses"]["leading_mechanism"]
+    assert frames[-1]["useful_new"] == full["jobs"]["job-0"]["useful_new"]
+
+
+def test_assumption_estimate_converts_useful_steps_and_stays_undefined_until_complete():
+    partial = assumption_estimate({"gpu_hour_rate": 4}, 10, 5, 4)
+    assert partial["roi"] is None
+    assert partial["useful_delta_gpu_hours"] == pytest.approx(10 * 5 / 3600 * 4)
+    full = assumption_estimate(
+        {
+            "gpu_hour_rate": 4,
+            "currency": "USD",
+            "cost_basis": "owner-supplied incremental",
+            "scope": "this simulated job",
+            "horizon": "this scenario",
+            "investment_cost": 100,
+        },
+        10,
+        5,
+        4,
+    )
+    hours = 10 * 5 / 3600 * 4
+    assert full["label"] == "assumption-based simulation estimate"
+    assert full["benefit"] == pytest.approx(4 * hours)
+    assert full["roi"] == pytest.approx((4 * hours - 100) / 100)
 
 
 def test_economics_stays_undefined_without_a_complete_configuration():

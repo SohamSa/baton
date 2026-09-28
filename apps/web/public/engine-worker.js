@@ -27,10 +27,14 @@ const ready = (async () => {
 import sys
 sys.path.insert(0, "/shims")
 sys.path.insert(0, "/pkg")
+from training_continuity.accounting.economics import assumption_estimate
 from training_continuity.adapters.registry import ADAPTERS
 from training_continuity.catalog.dictionary import build_catalog, catalog_counts
-from training_continuity.simulation.stories import list_stories, run_story
+from training_continuity.simulation.engine import ScenarioRun, compare_policies, public_view
+from training_continuity.simulation.stories import STORIES, list_stories, story_config
 import json
+
+_live = {}
 
 def publish(view):
     cleaned = dict(view)
@@ -41,10 +45,35 @@ def publish(view):
 def op_stories():
     return json.dumps({"stories": list_stories(), "synthetic": True})
 
-def op_run(payload):
+def op_begin(payload):
     data = json.loads(payload)
-    view = run_story(data["story_id"], mode=data["mode"], approvals=data.get("approvals") or [])
+    spec = STORIES[data["story_id"]]
+    cfg = story_config(data["story_id"])
+    run = ScenarioRun(cfg, spec["primary_policy"], data["mode"], data.get("approvals") or [])
+    _live.clear()
+    _live.update(run=run, spec=spec, cfg=cfg, story_id=data["story_id"], mode=data["mode"], approvals=list(data.get("approvals") or []))
+    return "ok"
+
+def op_tick():
+    frame = _live["run"].advance()
+    if frame["done"]:
+        result = _live["run"].result()
+        view = public_view(result, presentation=False)
+        view["story"] = {"id": _live["story_id"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"]}
+        view["approvals"] = _live["approvals"]
+        view["operator_view"] = True
+        _live["view"] = publish(view)
+    return json.dumps(frame)
+
+def op_finish():
+    view = dict(_live["view"])
+    if _live["mode"] == "automated":
+        view["comparison"] = compare_policies(_live["cfg"], _live["spec"]["comparison"])
     return json.dumps(publish(view))
+
+def op_economics(payload):
+    data = json.loads(payload)
+    return json.dumps(assumption_estimate(data.get("config") or {}, data["useful_delta_steps"], data["step_seconds"], data["accelerators_in_job"]))
 
 def op_catalog():
     return json.dumps({"counts": catalog_counts(build_catalog()), "synthetic": True})
@@ -98,12 +127,34 @@ self.onmessage = async (event) => {
       status("Running held-out model training in this browser.");
       await pyodide.loadPackage(["numpy", "scikit-learn"]);
     }
-    if (op === "run") status("Running this story in the decision engine.");
     pyodide.globals.set("payload_json", JSON.stringify(payload || {}));
-    const names = { stories: "op_stories()", run: "op_run(payload_json)", catalog: "op_catalog()", adapters: "op_adapters()", train: "op_train(payload_json)" };
+    if (op === "run") {
+      status("The hall is advancing one step at a time.");
+      pyodide.runPython("op_begin(payload_json)");
+      let view = null;
+      for (;;) {
+        const frame = JSON.parse(String(pyodide.runPython("op_tick()")));
+        self.postMessage({ type: "frame", id, value: frame });
+        if (frame.done) {
+          status(payload && payload.mode === "automated" ? "Comparing the paired policies on the same faults." : "The run has reached a decision.");
+          view = JSON.parse(String(pyodide.runPython("op_finish()")));
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 70));
+      }
+      runs += 1;
+      status("The run is on the desk.");
+      self.postMessage({ type: "result", id, value: view });
+      return;
+    }
+    if (op === "economics") {
+      const value = JSON.parse(String(pyodide.runPython("op_economics(payload_json)")));
+      self.postMessage({ type: "result", id, value });
+      return;
+    }
+    const names = { stories: "op_stories()", catalog: "op_catalog()", adapters: "op_adapters()", train: "op_train(payload_json)" };
     const raw = pyodide.runPython(names[op]);
     const value = JSON.parse(raw);
-    if (op === "run") runs += 1;
     if (op === "train") trained = value;
     self.postMessage({ type: "result", id, value });
   } catch (error) {

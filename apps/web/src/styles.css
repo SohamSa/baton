@@ -47,7 +47,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 nav { border-right: 1px solid var(--line); padding: 1rem; display: flex; flex-direction: column; gap: 0.35rem; }
 nav a { text-decoration: none; padding: 0.35rem 0.4rem; border-radius: 6px; }
 nav a[aria-current="page"] { background: var(--panel); }
-main { padding: 1.25rem 1.5rem 3rem; max-width: 1100px; }
+main { padding: 1.25rem 1.5rem 3rem; max-width: 1240px; }
 .banner { background: var(--panel); border: 1px solid var(--line); padding: 0.6rem 0.8rem; border-radius: 8px; margin-bottom: 1rem; }
 .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; }
@@ -56,6 +56,41 @@ main { padding: 1.25rem 1.5rem 3rem; max-width: 1100px; }
 .status { color: var(--ok); }
 .warn { color: var(--warn); }
 .danger { color: var(--danger); }
+.eyebrow { letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-size: 0.78rem; margin-bottom: 0.2rem; }
+.lede { font-size: 1.12rem; max-width: 68rem; }
+.desk h1 { margin-top: 0.2rem; max-width: 40rem; }
+.problems { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin: 1rem 0; }
+.problems article { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 10px; padding: 0.9rem 1rem; }
+.problems article:nth-child(2) { border-top-color: var(--warn); }
+.problems article:nth-child(3) { border-top-color: var(--danger); }
+.controls label, .roi label { display: flex; flex-direction: column; gap: 0.25rem; }
+.controls select, .roi input { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 0.4rem 0.55rem; min-width: 12rem; }
+.hall-wrap { margin: 1rem 0; }
+.hall-head { display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; }
+.floor { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 0.55rem; margin: 0.6rem 0; }
+.cell { min-height: 72px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; padding: 0.55rem 0.7rem; border: 1px solid var(--line); background: #16324a; }
+.cell span { font-size: 0.78rem; letter-spacing: 0.04em; }
+.cell strong { font-size: 1.35rem; font-weight: 650; }
+.cell.cool { background: #14344a; }
+.cell.warm { background: #6a4a16; }
+.cell.hot { background: #7a3030; }
+.cell.held { background: #3d2a55; outline: 2px solid var(--warn); }
+.cell.down { background: #2a3036; color: var(--muted); }
+:root[data-theme="light"] .cell.cool { background: #d7e7f5; }
+:root[data-theme="light"] .cell.warm { background: #f3ddb0; }
+:root[data-theme="light"] .cell.hot { background: #f3c1c1; }
+:root[data-theme="light"] .cell.held { background: #e4d7f3; }
+:root[data-theme="light"] .cell.down { background: #e7e2da; }
+.quiescent { display: grid; grid-template-columns: 18px 1fr; gap: 0.7rem; align-items: center; }
+.quiescent span { height: 42px; border-radius: 8px; background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px); }
+.spark { display: flex; align-items: flex-end; gap: 3px; height: 72px; margin-top: 0.8rem; }
+.spark i { display: block; flex: 1; background: var(--accent); border-radius: 3px 3px 0 0; min-width: 4px; }
+.decision { border-color: var(--warn); }
+.compare { display: flex; flex-direction: column; gap: 0.65rem; }
+.compare .bar { height: 14px; }
+.roi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.7rem; margin: 0.8rem 0; }
+.estimate { margin-top: 0.8rem; padding-top: 0.6rem; border-top: 1px solid var(--line); }
+.tape { margin: 1rem 0 0; padding-left: 1.2rem; color: var(--muted); }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem; vertical-align: top; }
 [role="alert"] { color: var(--danger); }
@@ -64,4 +99,6 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
 @media (max-width: 800px) {
   .shell { grid-template-columns: 1fr; }
   nav { border-right: 0; border-bottom: 1px solid var(--line); }
+  .problems { grid-template-columns: 1fr; }
+  .hall-head { flex-direction: column; }
 }
