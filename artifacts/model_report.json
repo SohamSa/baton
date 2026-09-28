@@ -1,0 +1,37 @@
+{
+  "synthetic": true,
+  "feature_contract": [
+    "residual_ewma",
+    "freshness_steps",
+    "util",
+    "power_limit_ratio",
+    "support_count"
+  ],
+  "horizon_steps": 8,
+  "split": "scenario_id hash, not row shuffle",
+  "train_rows": 260,
+  "val_rows": 26,
+  "test_rows": 26,
+  "model_average_precision": 0.3346551120448179,
+  "baseline_average_precision": 0.41454662575986106,
+  "brier": 0.39465985389454683,
+  "beats_baseline": false,
+  "default_operational_policy": "rule_based",
+  "note": "Average precision is not a calibrated failure time. The oracle is not a serving model.",
+  "medians": [
+    0.04883006989439323,
+    0.0,
+    0.5482292902211027,
+    1.0,
+    10.0
+  ],
+  "coefficients": [
+    -0.5642670661951338,
+    0.0,
+    0.9140574472195593,
+    1.7347688900222178,
+    -0.19924498759932302
+  ],
+  "intercept": -0.22521458911557532,
+  "censored_rows_excluded": 168
+}
