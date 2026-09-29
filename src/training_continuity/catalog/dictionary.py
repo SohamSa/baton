@@ -119,6 +119,11 @@ FACILITY_SIGNALS = [
     ("feed_current_a", "A", False, "Power-feed current."),
     ("humidity_ratio", "ratio", False, "Relative humidity analog."),
     ("shared_alarm", "flag", False, "Shared facility alarm bit."),
+    ("facility_power_mw", "MW", False, "Total facility electrical power draw across IT and cooling."),
+    ("substation_cap_mw", "MW", False, "Contractual utility grid substation power delivery cap."),
+    ("facility_pue", "ratio", False, "Power usage effectiveness ratio (total facility power / IT power)."),
+    ("idle_stall_power_mw", "MW", False, "Unproductive electrical power drawn by the cluster while stalled."),
+    ("power_ramp_rate_mw_s", "MW/s", False, "Transient rate of change of electrical power demand (di/dt proxy)."),
 ]
 
 PROGRESS_SIGNALS = [

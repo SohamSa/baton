@@ -345,13 +345,15 @@ function PhysicalCascade({
     : "ok";
 
   const tier = failureLevel?.tier ?? "Chip Level";
-  const isHallOrigin = tier.includes("Datacenter");
+  const isHallOrigin = tier.includes("Datacenter") || tier.includes("Facility") || tier.includes("Substation");
   const isRackOrigin = tier.includes("Rack");
   const isNodeOrigin = tier.includes("Node");
   const isSubsystemOrigin = !isHallOrigin && !isRackOrigin && !isNodeOrigin;
 
   let subsystemTitle = "Accelerator Silicon";
-  if (tier.includes("Test") || tier.includes("Qualification")) {
+  if (tier.includes("Power") || tier.includes("Substation")) {
+    subsystemTitle = "Substation Power Feed";
+  } else if (tier.includes("Test") || tier.includes("Qualification")) {
     subsystemTitle = "Canary Test Gate";
   } else if (tier.includes("Silicon") || tier.includes("Die")) {
     subsystemTitle = "Silicon Die & Package";

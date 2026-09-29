@@ -1392,6 +1392,336 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   word-break: break-word;
 }
 
+/* =========================================================================
+   Compute Footprint, Grid Megawatts & Energy Continuity Styles
+   ========================================================================= */
 
+.footprint-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.footprint-header h1 {
+  margin: 0.2rem 0 0.5rem;
+}
 
+/* KPI Cards */
+.footprint-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.footprint-kpi-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.footprint-kpi-card.kpi-ok {
+  border-left: 4px solid var(--ok);
+}
+.footprint-kpi-card.kpi-danger {
+  border-left: 4px solid var(--danger);
+  background: linear-gradient(135deg, rgba(240, 160, 160, 0.08) 0%, var(--panel) 100%);
+}
+.footprint-kpi-card.kpi-warn {
+  border-left: 4px solid var(--warn);
+}
+.footprint-kpi-card.kpi-info {
+  border-left: 4px solid var(--accent);
+}
 
+/* Power Cliff Panel & Substation Gauge */
+.power-cliff-panel {
+  border-top: 3px solid #ffaa44;
+}
+.power-cap-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: rgba(255, 170, 68, 0.15);
+  color: #ffaa44;
+  border: 1px solid #ffaa44;
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+}
+.gauge-container {
+  margin: 1.2rem 0 1rem;
+  background: #090e14;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.2rem;
+}
+.gauge-track {
+  display: flex;
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #151d27;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.gauge-fill-idle {
+  background: rgba(140, 155, 175, 0.6);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-right: 1px solid rgba(0, 0, 0, 0.3);
+}
+.gauge-fill-active {
+  background: linear-gradient(90deg, #1f77b4 0%, #2ca02c 70%, #ffaa44 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-right: 2px solid #ff4444;
+}
+.gauge-fill-headroom {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+}
+.gauge-markers {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.marker-active {
+  color: #2ca02c;
+  font-weight: 700;
+}
+.marker-cap {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.surge-explanation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+@media (max-width: 768px) {
+  .surge-explanation {
+    grid-template-columns: 1fr;
+  }
+}
+.surge-col {
+  background: #0d1520;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+.surge-col strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--text);
+}
+.surge-col p {
+  margin: 0;
+  color: var(--muted);
+}
+.col-highlight {
+  border-color: rgba(44, 160, 44, 0.4);
+  background: rgba(44, 160, 44, 0.06);
+}
+.col-highlight strong {
+  color: #68d391;
+}
+
+/* Operating Modes Table */
+.footprint-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+}
+.footprint-table th {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.footprint-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.mode-row-ok td {
+  background: rgba(31, 78, 121, 0.04);
+}
+.mode-row-danger td {
+  background: rgba(240, 160, 160, 0.05);
+}
+.cost-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.cost-pill.tone-ok {
+  background: rgba(44, 160, 44, 0.15);
+  color: #68d391;
+}
+.cost-pill.tone-danger {
+  background: rgba(240, 160, 160, 0.2);
+  color: var(--danger);
+}
+
+/* Ghost Megawatt Calculator */
+.ghost-calc-panel {
+  border-top: 3px solid var(--accent);
+}
+.calc-inputs-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.2rem;
+  background: #0d1520;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.calc-inputs-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.calc-inputs-row input {
+  background: #090e14;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.45rem 0.65rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 700;
+}
+.calc-inputs-row input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+.calc-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.calc-result-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.calc-result-box span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.calc-result-box strong {
+  font-size: 1.3rem;
+  color: var(--text);
+}
+.calc-result-box small {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.calc-result-box.result-danger {
+  border-left: 4px solid var(--danger);
+  background: linear-gradient(135deg, rgba(240, 160, 160, 0.08) 0%, var(--panel) 100%);
+}
+.calc-result-box.result-danger strong {
+  color: var(--danger);
+}
+.calc-result-box.result-highlight {
+  border-left: 4px solid var(--ok);
+  background: linear-gradient(135deg, rgba(44, 160, 44, 0.08) 0%, var(--panel) 100%);
+}
+.calc-result-box.result-highlight strong {
+  color: #68d391;
+}
+.calc-takeaway {
+  margin-top: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(31, 78, 121, 0.2);
+  border: 1px solid rgba(77, 171, 247, 0.3);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #d0ebff;
+}
+
+/* 3D Parallelism Topology Grid */
+.topology-panel {
+  border-top: 3px solid #9b59b6;
+}
+.topology-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.topology-card {
+  background: #0d1520;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.topo-dim {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #c084fc;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.4rem;
+}
+.topo-metric {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--muted);
+  gap: 0.5rem;
+}
+.topo-metric strong {
+  color: var(--text);
+  text-align: right;
+}
+.topo-failure {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  line-height: 1.35;
+}

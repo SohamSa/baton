@@ -393,6 +393,50 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Canary stress isolation testing with automated warm-spare promotion",
         },
     },
+    "power_cliff": {
+        "title": "The substation power cliff",
+        "summary": "A simultaneous heavy GEMM launch across 32,768 chips causes an instantaneous 16-megawatt surge, sagging electrical feeds. The footprint-aware policy correlates circuit topology to distinguish power sags from chip failures, protecting the facility breaker.",
+        "primary_policy": "combined",
+        "comparison": ["combined"],
+        "config": {
+            "scenario_id": "story-power-cliff",
+            "seed": 21,
+            "steps": 40,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 20,
+            "workload": [
+                {"start": 0, "util": 0.45, "phase": "steady"},
+                {"start": 12, "util": 0.98, "phase": "surge_burst"},
+            ],
+            "scripted_faults": [
+                {
+                    "fault_id": "power-cliff-trip",
+                    "target_type": "power_domain",
+                    "target_id": "power-r0-h0",
+                    "cause": "physical_hardware",
+                    "mechanism": "power_interruption",
+                    "onset": 15,
+                    "severity": 0.65,
+                    "fail_mode": "none",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "di/dt Power Ramp Pacing & Electrical Breaker Squeeze",
+            "problem": "Simultaneous kernel execution across 32,768 GPUs causes massive 15-20MW current surges (di/dt) in under 50ms, tripping substation circuit breakers or inducing voltage sags that brown-out entire server rows.",
+            "solution": "Implement software-managed kernel launch micro-staggering (5-10ms pacing) and topology-aware power domain smoothing to prevent utility breaker trips.",
+            "hardware_takeaway": "Equip rack busbars with sub-cycle high-speed voltage transient logging and link PDU power telemetry directly into the cluster scheduler.",
+            "roi_impact": "Prevents catastrophic facility-wide blackout events that take hours of manual substation reset and re-commissioning, saving millions in downtime.",
+        },
+        "failure_level": {
+            "tier": "Facility Power & Substation Level",
+            "component": "Substation Breaker & Rack Busbar Feed",
+            "blast_radius": "Instantaneous 16MW surge sags voltage -> Multiple server rows brown-out -> Facility breaker trip risk",
+            "redundancy_strategy": "Software power ramp pacing (micro-staggered launch) with rack-level peak shaving batteries (BBU)",
+        },
+    },
 }
 
 

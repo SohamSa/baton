@@ -174,6 +174,14 @@ def test_revolving_door_canary_qualification_story():
     assert delta > 0
 
 
+def test_power_cliff_substation_surge_story():
+    result = run_story("power_cliff")
+    assert result["status"] == "completed"
+    assert result["story"]["failure_level"]["tier"] == "Facility Power & Substation Level"
+    assert "Instantaneous 16MW surge" in result["story"]["failure_level"]["blast_radius"]
+    assert result["hypotheses"]["leading_mechanism"] == "power_interruption"
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 
