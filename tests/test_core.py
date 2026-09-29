@@ -224,6 +224,15 @@ def test_cold_plate_torque_fracture_story():
     assert result["story"]["owner_playbook"]["title"].startswith("Cradle-to-Grave Digital Passport")
 
 
+def test_silent_subthreshold_cliff_story():
+    result = run_story("silent_subthreshold_cliff")
+    assert result["status"] == "completed"
+    assert result["story"]["failure_level"]["tier"] == "Silicon Physics & AI Telemetry Level"
+    assert "Sub-Threshold" in result["story"]["failure_level"]["component"]
+    assert "Vmargin collapse" in result["story"]["failure_level"]["blast_radius"]
+    assert result["story"]["owner_playbook"]["title"].startswith("Silicon-Context AI Anomaly Detection")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 

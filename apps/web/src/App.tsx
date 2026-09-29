@@ -21,6 +21,7 @@ import {
   truth,
 } from "./api";
 import { startEngine, subscribeEngine } from "./browserEngine";
+import { AnomalyView } from "./AnomalyView";
 import { BoardView } from "./BoardView";
 import { Desk } from "./Desk";
 import { FootprintView } from "./FootprintView";
@@ -39,6 +40,7 @@ const LINKS = [
   ["/silicon", "Silicon dies"],
   ["/lineage", "Silicon lineage"],
   ["/passport", "Chip passport"],
+  ["/anomalies", "AI anomalies"],
   ["/yield", "Test & yield"],
   ["/mcm", "MCM packaging"],
   ["/boards", "Board diagnostics"],
@@ -187,6 +189,7 @@ export function App() {
           <Route path="/boards" element={<BoardView run={run} presentation={presentation} />} />
           <Route path="/racks" element={<RackView run={run} presentation={presentation} />} />
           <Route path="/passport" element={<PassportView run={run} presentation={presentation} />} />
+          <Route path="/anomalies" element={<AnomalyView run={run} presentation={presentation} />} />
           <Route path="/footprint" element={<FootprintView run={run} presentation={presentation} />} />
           <Route path="/dependencies" element={<Dependencies run={run} />} />
           <Route path="/devices" element={<Devices run={run} presentation={presentation} />} />
@@ -263,8 +266,8 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
   }
   return (
     <section>
-      <h1>The sixteen rehearsals</h1>
-      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, a shutdown rule that does more harm than the fault, a silent straggler die dragging down the hall, the revolving door trap where a repaired node relapses into an immediate crash, the substation power cliff where an unmanaged launch surge trips facility breakers, the fractured microbump where automated MCM test sequencing isolates a cracked interposer lane and triggers self-repair without scrapping a $28,000 package, the wafer lot contagion where feed-forward silicon lineage tracks a manufacturing defect forward and cordons sibling dies before rolling crashes stall the cluster, the innocent chip on a dying board where baseboard VRM diagnostics correlate the chip's clean history to fix a power rail defect instead of falsely scrapping a good $30,000 processor, the rack thermal shadow where real-time spatial elevation monitoring across all 16 shelves detects a cooling manifold valve pinch and initiates preemptive checkpointing and manifold flushing before 32 GPUs overheat simultaneously, or the cold plate torque fracture where full cradle-to-grave manufacturing and integration history isolates an out-of-spec mounting torque applied at ODM assembly and cordons 16 sibling nodes at the next save before rolling crashes occur. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
+      <h1>The seventeen rehearsals</h1>
+      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, a shutdown rule that does more harm than the fault, a silent straggler die dragging down the hall, the revolving door trap where a repaired node relapses into an immediate crash, the substation power cliff where an unmanaged launch surge trips facility breakers, the fractured microbump where automated MCM test sequencing isolates a cracked interposer lane and triggers self-repair without scrapping a $28,000 package, the wafer lot contagion where feed-forward silicon lineage tracks a manufacturing defect forward and cordons sibling dies before rolling crashes stall the cluster, the innocent chip on a dying board where baseboard VRM diagnostics correlate the chip's clean history to fix a power rail defect instead of falsely scrapping a good $30,000 processor, the rack thermal shadow where real-time spatial elevation monitoring across all 16 shelves detects a cooling manifold valve pinch and initiates preemptive checkpointing and manifold flushing before 32 GPUs overheat simultaneously, the cold plate torque fracture where full cradle-to-grave manufacturing and integration history isolates an out-of-spec mounting torque applied at ODM assembly and cordons 16 sibling nodes at the next save before rolling crashes occur, or the silent sub-threshold cliff where silicon-context AI anomaly detection tracks real-time Vmargin against the die's factory Vmin curve, predicting an uncorrectable timing fault during collective all-reduce and triggering proactive checkpointing and micro-frequency pacing before Silent Data Corruption aborts training. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
       <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
       <div className="grid">
         {items.map((item) => (

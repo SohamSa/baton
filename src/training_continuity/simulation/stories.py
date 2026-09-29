@@ -652,6 +652,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Cradle-to-grave digital passport correlation with automated assembly batch cordoning at scheduled checkpoint boundaries",
         },
     },
+    "silent_subthreshold_cliff": {
+        "title": "The silent sub-threshold cliff",
+        "summary": "An edge-wafer die running at a nominal 71°C suffers subtle voltage droop under collective all-reduce, collapsing its timing margin. A silicon-blind policy sees no temperature alarms and lets the chip crash with silent data corruption; the silicon-context AI model evaluates real-time Vmargin, predicts the timing violation 60 seconds ahead, and triggers a preemptive checkpoint and micro-clock pacing.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-subthreshold-cliff",
+            "seed": 27,
+            "steps": 45,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "subthreshold-timing-droop",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d1",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 10,
+                    "ramp": 8,
+                    "severity": 0.85,
+                    "hard_fail": 28,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Silicon-Context AI Anomaly Detection & Dynamic Vmin Pacing",
+            "problem": "Edge-of-wafer dies have higher leakage and tighter voltage margins. During collective all-reduce bursts, normal transient voltage droop pushes high-leakage dies past their sub-threshold timing cliff even at safe temperatures (71°C). Generic threshold detectors miss the approaching timing violation until uncorrectable Silent Data Corruption (SDC) poisons model weights or aborts training across 32,768 GPUs.",
+            "solution": "Deploy physics-informed autoencoder inference that combines real-time voltage/temperature telemetry with the chip's factory Vmin and wafer coordinates. Detect Vmargin collapse (< 15 mV), initiate a preemptive weights checkpoint, and apply a temporary 50 MHz micro-frequency pace to restore 35 mV timing headroom without crashing the job.",
+            "hardware_takeaway": "Incorporate per-die factory Vmin and leakage curves into the scheduler's telemetry inference pipeline; configure sub-millisecond core voltage droop monitors on all accelerator rails.",
+            "roi_impact": "Prevents catastrophic multi-day rollbacks from Silent Data Corruption ($500k-$1.5M saved per incident) and slashes false-positive cluster restarts by 98%.",
+        },
+        "failure_level": {
+            "tier": "Silicon Physics & AI Telemetry Level",
+            "component": "Sub-Threshold Dynamic Vmin Timing Cliff",
+            "blast_radius": "Vmargin collapse -> Sub-threshold timing hazard -> Silent Data Corruption (SDC) -> Corrupted checkpoint rolls back 32,768 GPUs by 48 hours ($850k loss)",
+            "redundancy_strategy": "Silicon-context AI margin modeling with automated preemptive checkpointing and dynamic micro-frequency pacing",
+        },
+    },
 }
 
 

@@ -4354,11 +4354,538 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   cursor: not-allowed;
 }
 
-/* ROI Panel */
 .passport-roi-panel {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
 }
+
+/* ==========================================================================
+   AnomalyView: Silicon-Context AI Anomaly Detection & Vmin Physics
+   ========================================================================== */
+
+.anomaly-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.anomaly-header {
+  margin-bottom: 0.5rem;
+}
+
+.anomaly-header h1 {
+  font-size: 1.85rem;
+  margin: 0.3rem 0 0.6rem;
+  color: var(--text);
+}
+
+.anomaly-header .lede {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 950px;
+  line-height: 1.5;
+}
+
+/* KPI Cards */
+.anomaly-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.anomaly-kpi-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.anomaly-kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+.anomaly-kpi-card.kpi-ok::before {
+  background: var(--ok);
+}
+
+.anomaly-kpi-card.kpi-warning::before {
+  background: var(--warn);
+}
+
+.anomaly-kpi-card.kpi-info::before {
+  background: var(--accent);
+}
+
+.anomaly-kpi-card .kpi-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.anomaly-kpi-card .kpi-val {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.anomaly-kpi-card .kpi-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.anomaly-kpi-card .kpi-highlight {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* Selector Bar */
+.anomaly-selector-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+/* Main 2-Column Grid */
+.anomaly-main-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1100px) {
+  .anomaly-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Vmin Curve Panel */
+.vmin-curve-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.vmin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.75rem;
+}
+
+.vmin-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.status-badge-hazard {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+}
+
+.badge-hazard {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  animation: pulse-hot 1.8s infinite;
+}
+
+.badge-safe {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+}
+
+.die-specs-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.6rem;
+}
+
+.spec-pill {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-size: 0.78rem;
+}
+
+.spec-label {
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.curve-diagram-box {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.curve-axis-y {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.curve-axis-x {
+  font-size: 0.7rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-align: right;
+}
+
+.curve-canvas-mock {
+  height: 220px;
+  position: relative;
+  border-left: 2px solid #475569;
+  border-bottom: 2px solid #475569;
+  margin: 0.5rem 0;
+  background: linear-gradient(180deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.3) 100%);
+  overflow: hidden;
+}
+
+.curve-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 0.75rem;
+}
+
+.curve-edge {
+  bottom: 60%;
+  border-top: 2px dashed #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.curve-nominal {
+  bottom: 40%;
+  border-top: 2px dashed #f59e0b;
+}
+
+.curve-golden {
+  bottom: 20%;
+  border-top: 2px dashed #10b981;
+}
+
+.curve-legend-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.85);
+  color: #cbd5e1;
+}
+
+.live-operating-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  box-shadow: 0 0 12px currentColor;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.dot-critical-hazard {
+  background: #ef4444;
+  color: #ef4444;
+  animation: pulse-hot 1.2s infinite;
+}
+
+.dot-safe {
+  background: #10b981;
+  color: #10b981;
+}
+
+.dot-tooltip {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--line);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  pointer-events: none;
+}
+
+.margin-gauges-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.65rem;
+}
+
+.gauge-card {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.gauge-card.card-danger {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.gauge-card.card-ok {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.gauge-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.gauge-val {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 0.2rem 0;
+}
+
+.gauge-sub {
+  font-size: 0.68rem;
+  color: var(--muted);
+}
+
+.pacing-action-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.85rem 1.1rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+
+.btn-pacing-action {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+}
+
+.btn-pacing-action:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
+  transform: translateY(-1px);
+}
+
+.btn-pacing-action:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Latent Space Panel */
+.latent-space-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.latent-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.75rem;
+}
+
+.latent-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.latent-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(14, 165, 233, 0.15);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.latent-canvas-mock {
+  height: 240px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cluster {
+  position: absolute;
+  padding: 0.5rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cluster-gemm {
+  top: 25px;
+  left: 20px;
+  background: rgba(59, 130, 246, 0.18);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.cluster-allreduce {
+  bottom: 30px;
+  left: 45px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.cluster-optimizer {
+  top: 40px;
+  right: 35px;
+  background: rgba(168, 85, 247, 0.18);
+  color: #d8b4fe;
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+.outlier-hazard {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  padding: 0.6rem 0.9rem;
+  border-radius: 24px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.outlier-active {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border: 2px solid #ef4444;
+  animation: pulse-hot 1.4s infinite;
+}
+
+.outlier-resolved {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 2px solid #10b981;
+}
+
+.latent-insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.latent-insights-list strong {
+  color: var(--text);
+}
+
+/* Benchmark Panel */
+.benchmark-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.benchmark-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.benchmark-table-wrapper {
+  overflow-x: auto;
+}
+
+.benchmark-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.benchmark-table th {
+  text-align: left;
+  padding: 0.75rem 0.85rem;
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.benchmark-table td {
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.benchmark-table .row-highlight {
+  background: rgba(14, 165, 233, 0.08);
+}
+
+.text-warn { color: #f59e0b; }
+
+/* ROI Panel */
+.anomaly-roi-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 
 

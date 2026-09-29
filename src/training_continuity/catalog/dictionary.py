@@ -115,6 +115,12 @@ HOST_SIGNALS = [
     ("slt_thermal_margin_c", "C", False, "Thermal margin delta certified during factory System-Level Testing."),
     ("lifecycle_stage", "category", False, "Current lifecycle stage of the chip (foundry, osat, slt, odm, rack_l11, datacenter_l12)."),
     ("warranty_liability_tier", "category", False, "Supplier tier responsible for hardware defect warranty credit."),
+    ("ai_anomaly_score", "score", False, "Inferred anomaly probability score (0-1) from silicon-context autoencoder."),
+    ("dynamic_vmin_mv", "mV", False, "Dynamic minimum operating voltage threshold at current temperature and clock."),
+    ("voltage_margin_mv", "mV", False, "Headroom between live core voltage and temperature-adjusted Vmin cliff."),
+    ("thermal_residual_c", "C", False, "Observed junction temperature minus physics-informed silicon digital twin estimate."),
+    ("sdc_hazard_flag", "flag", False, "Flag indicating sub-threshold timing violation risk for Silent Data Corruption."),
+    ("anomaly_classification", "category", False, "Diagnostic classification verdict (nominal_workload_surge, parametric_drift, cooling_degradation, subthreshold_cliff)."),
 ]
 
 FABRIC_SIGNALS = [
