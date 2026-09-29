@@ -351,7 +351,9 @@ function PhysicalCascade({
   const isSubsystemOrigin = !isHallOrigin && !isRackOrigin && !isNodeOrigin;
 
   let subsystemTitle = "Accelerator Silicon";
-  if (tier.includes("Cooling Loop") || tier.includes("Manifold") || tier.includes("Rack Scale")) {
+  if (tier.includes("Integration") || tier.includes("Assembly") || tier.includes("ODM")) {
+    subsystemTitle = "ODM Assembly & Integration";
+  } else if (tier.includes("Cooling Loop") || tier.includes("Manifold") || tier.includes("Rack Scale")) {
     subsystemTitle = "Rack Manifold & Busbar";
   } else if (tier.includes("Power") || tier.includes("Substation")) {
     subsystemTitle = "Substation Power Feed";

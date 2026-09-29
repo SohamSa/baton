@@ -109,6 +109,12 @@ HOST_SIGNALS = [
     ("board_retimer_eye_margin_mv", "mV", False, "Measured eye-diagram voltage margin on high-speed baseboard PCIe/NVLink retimers."),
     ("board_pcb_strain_microstrain", "strain", False, "Mechanical flexure strain on baseboard PCB from cold plate torque."),
     ("fault_domain_verdict", "id", False, "Diagnostic classification verdict isolating fault to silicon, board VRM, retimer, or socket."),
+    ("odm_torque_cnm", "cN·m", False, "Cold-plate screw mounting torque recorded at ODM assembly factory."),
+    ("odm_pcb_strain_ue", "strain", False, "Mechanical PCB flexure strain under cold-plate clamp pressure."),
+    ("odm_assembly_line_id", "id", False, "ODM automated surface-mount assembly line identifier."),
+    ("slt_thermal_margin_c", "C", False, "Thermal margin delta certified during factory System-Level Testing."),
+    ("lifecycle_stage", "category", False, "Current lifecycle stage of the chip (foundry, osat, slt, odm, rack_l11, datacenter_l12)."),
+    ("warranty_liability_tier", "category", False, "Supplier tier responsible for hardware defect warranty credit."),
 ]
 
 FABRIC_SIGNALS = [

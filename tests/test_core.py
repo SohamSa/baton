@@ -215,6 +215,15 @@ def test_rack_thermal_shadow_story():
     assert result["story"]["owner_playbook"]["title"].startswith("Rack-Scale Spatial Telemetry")
 
 
+def test_cold_plate_torque_fracture_story():
+    result = run_story("cold_plate_torque_fracture")
+    assert result["status"] == "completed"
+    assert result["story"]["failure_level"]["tier"] == "ODM Assembly & System Integration Level"
+    assert "Cold Plate" in result["story"]["failure_level"]["component"]
+    assert "380 microstrain" in result["story"]["failure_level"]["blast_radius"]
+    assert result["story"]["owner_playbook"]["title"].startswith("Cradle-to-Grave Digital Passport")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 

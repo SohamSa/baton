@@ -609,6 +609,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Rack-scale spatial elevation monitoring with automated manifold differential pressure telemetry, preemptive checkpointing, and dynamic valve flushing",
         },
     },
+    "cold_plate_torque_fracture": {
+        "title": "The cold plate torque fracture",
+        "summary": "An accelerator with golden wafer test credentials dies abruptly from an HBM channel disconnect induced by mechanical flexure. The digital passport policy correlates the chip's complete history, tracing an out-of-spec 185 cN·m mounting torque at ODM assembly and cordoning 16 sibling nodes at the next save before rolling crashes occur.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-torque-fracture",
+            "seed": 26,
+            "steps": 45,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "torque-strain-pop",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d1",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 10,
+                    "ramp": 8,
+                    "severity": 0.85,
+                    "hard_fail": 28,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Cradle-to-Grave Digital Passport & Assembly Batch Cordoning",
+            "problem": "An uncalibrated pneumatic torque driver at the ODM factory applied 185 cN·m (nominal 140 cN·m) to Socket 2 during cold plate mounting, inducing 380 microstrain on the carrier PCB. Under 700W thermal expansion at 85°C, solder micro-cracks open under HBM channel 3. Reactive policies blame random silicon failure, leaving 16 sibling nodes from ODM Batch #8810 to trigger rolling multi-week cluster crashes.",
+            "solution": "Query the accelerator's Unified Digital Product Passport (ECID -> Foundry Wafer Lot -> OSAT Interposer -> ODM Assembly Line B, Batch #8810). Identify the torque exceedance, assign 100% warranty liability to the ODM, and proactively cordon sibling nodes during the next scheduled checkpoint save without aborting active training.",
+            "hardware_takeaway": "Mandate automated torque telemetry logging and in-situ PCB strain gauges in all accelerator baseboard SMT procurement specifications, tied directly to the chip's digital passport.",
+            "roi_impact": "Recovers $480,000 in automated ODM warranty credits and prevents 3 to 6 secondary cluster stalls ($600,000+ saved) by eliminating integration lot contagion in one proactive sweep.",
+        },
+        "failure_level": {
+            "tier": "ODM Assembly & System Integration Level",
+            "component": "Cold Plate Mounting Torque & PCB Strain",
+            "blast_radius": "Cold Plate Over-Torque -> 380 microstrain cracks HBM micro-bumps -> Sibling integration batch at risk -> Rolling multi-week 32k GPU stalls",
+            "redundancy_strategy": "Cradle-to-grave digital passport correlation with automated assembly batch cordoning at scheduled checkpoint boundaries",
+        },
+    },
 }
 
 
