@@ -165,6 +165,15 @@ def test_silent_straggler_and_die_level_hierarchy():
     assert delta > 0
 
 
+def test_revolving_door_canary_qualification_story():
+    result = run_story("revolving_door")
+    assert result["status"] == "completed"
+    assert result["story"]["failure_level"]["tier"] == "Node Qualification / Test Level"
+    assert "Premature node re-entry" in result["story"]["failure_level"]["blast_radius"]
+    delta = result["comparison"]["delta_second_minus_first"]["useful_new"]
+    assert delta > 0
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 

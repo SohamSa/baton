@@ -1134,5 +1134,264 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   color: var(--ok);
 }
 
+/* =========================================================================
+   Canary Testing, Yield Decisions & RMA Styles
+   ========================================================================= */
+
+.yield-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.yield-header h1 {
+  margin: 0.2rem 0 0.5rem;
+}
+
+/* KPI Cards */
+.yield-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.yield-kpi-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.yield-kpi-card.kpi-ok {
+  border-left: 4px solid var(--ok);
+}
+.yield-kpi-card.kpi-danger {
+  border-left: 4px solid var(--danger);
+  background: linear-gradient(135deg, rgba(240, 160, 160, 0.08) 0%, var(--panel) 100%);
+}
+.yield-kpi-card.kpi-warn {
+  border-left: 4px solid var(--warn);
+}
+.yield-kpi-card.kpi-info {
+  border-left: 4px solid var(--accent);
+}
+
+/* Canary Table */
+.canary-panel {
+  border-top: 3px solid var(--danger);
+}
+.pipeline-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: rgba(240, 160, 160, 0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+}
+.canary-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+}
+.canary-table th {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.canary-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.canary-row-danger td {
+  background: rgba(240, 160, 160, 0.05);
+}
+.score-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+.score-badge.tone-danger {
+  background: rgba(240, 160, 160, 0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+.score-badge.tone-ok {
+  background: rgba(143, 206, 171, 0.15);
+  color: var(--ok);
+  border: 1px solid var(--ok);
+}
+.score-badge.tone-warn {
+  background: rgba(226, 192, 122, 0.2);
+  color: var(--warn);
+  border: 1px solid var(--warn);
+}
+.decision-text {
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+.decision-text.tone-danger { color: var(--danger); }
+.decision-text.tone-ok { color: var(--ok); }
+.decision-text.tone-warn { color: var(--warn); }
+
+/* Yield Binning */
+.yield-binning-panel {
+  border-top: 3px solid var(--accent);
+}
+.yield-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  background: rgba(142, 182, 224, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(142, 182, 224, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+}
+.binning-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+.bin-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.bin-card.bin-ok { border-top: 4px solid var(--ok); }
+.bin-card.bin-warn { border-top: 4px solid var(--warn); }
+.bin-card.bin-danger { border-top: 4px solid var(--danger); }
+.bin-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.bin-head h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.bin-alloc {
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--panel);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--line);
+}
+.bin-spec-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.82rem;
+  background: var(--panel);
+  padding: 0.5rem 0.65rem;
+  border-radius: 6px;
+}
+.bin-spec-row div {
+  display: flex;
+  justify-content: space-between;
+}
+.bin-spec-row span { color: var(--muted); }
+.bin-workload, .bin-rationale {
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+.bin-workload strong, .bin-rationale strong {
+  display: block;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.15rem;
+}
+.bin-workload p, .bin-rationale p {
+  margin: 0;
+}
+
+/* RMA Dossier Generator */
+.rma-panel {
+  border-top: 3px solid var(--warn);
+}
+.rma-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+.rma-select {
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.85rem;
+}
+.copy-rma-btn {
+  background: var(--accent);
+  color: #0b131b;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: opacity 0.2s;
+}
+.copy-rma-btn:hover {
+  opacity: 0.9;
+}
+.dossier-box {
+  background: #090e14;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.dossier-header {
+  background: rgba(31, 78, 121, 0.25);
+  border-bottom: 1px solid var(--line);
+  padding: 0.6rem 0.9rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.dossier-header strong {
+  color: var(--accent);
+  letter-spacing: 0.03em;
+}
+.dossier-header span {
+  color: var(--ok);
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+.dossier-content {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+
 
 

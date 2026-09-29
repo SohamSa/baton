@@ -91,6 +91,10 @@ HOST_SIGNALS = [
     ("page_faults", "count", True, "Host page-fault counter."),
     ("thermal_zone_c", "C", False, "Host inlet or board thermal zone."),
     ("process_restart_count", "count", True, "Training-process restart counter."),
+    ("canary_test_score", "score", False, "Automated qualification stress test score (0-100) before fleet re-entry."),
+    ("canary_test_passed", "flag", False, "Whether the node passed the canary qualification gate."),
+    ("silicon_yield_bin", "id", False, "Silicon yield categorization bin (Bin 1 Gold, Bin 2 Standard, Bin 3 Marginal)."),
+    ("rma_eligible_flag", "flag", False, "Whether telemetry justifies a vendor hardware warranty claim."),
 ]
 
 FABRIC_SIGNALS = [

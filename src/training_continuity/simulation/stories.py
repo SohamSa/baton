@@ -341,6 +341,58 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Fleet-wide outlier die detection with automated rank descheduling at verified checkpoint boundaries",
         },
     },
+    "revolving_door": {
+        "title": "The revolving door trap",
+        "summary": "A repaired node reboots and claims it is ready. A naive rule lets it back into the choir, where it crashes a second time and burns another full restart. The test-aware rule runs a canary trial first, keeping the cluster safe.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-revolving",
+            "seed": 20,
+            "steps": 60,
+            "checkpoint_interval": 20,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "first-cooling-trip",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d0",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 8,
+                    "ramp": 8,
+                    "severity": 0.8,
+                    "hard_fail": 24,
+                    "fail_mode": "recoverable_process",
+                },
+                {
+                    "fault_id": "relapse-fault",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d0",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 36,
+                    "ramp": 6,
+                    "severity": 0.85,
+                    "hard_fail": 46,
+                    "fail_mode": "recoverable_process",
+                },
+            ],
+        },
+        "owner_playbook": {
+            "title": "Automated Canary Qualification & Quarantine Gates",
+            "problem": "Rebooting a failed node and immediately returning it to an active 32k-GPU job often causes an immediate relapse crash, doubling the downtime and wiping out in-flight progress twice.",
+            "solution": "Implement automated canary test gates where recovered nodes must pass a 5-minute isolated synthetic stress loop (thermal slope & all-reduce checks) before promotion back into the pretraining group.",
+            "hardware_takeaway": "Integrate automated canary test harnesses into your cluster scheduler; never allow unvalidated node re-enrollment directly into synchronous gang jobs.",
+            "roi_impact": "Eliminates repeated cluster restarts, saving $100k-$300k per unstable node event.",
+        },
+        "failure_level": {
+            "tier": "Node Qualification / Test Level",
+            "component": "Node Host & Motherboard Re-entry Gate",
+            "blast_radius": "Premature node re-entry causes 2nd cluster-wide stall -> 32,768 GPUs stalled twice ($300k wasted restart burn)",
+            "redundancy_strategy": "Canary stress isolation testing with automated warm-spare promotion",
+        },
+    },
 }
 
 
