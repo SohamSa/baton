@@ -7,6 +7,7 @@ import {
   ModelReport,
   Monitoring,
   RunView,
+  StoryItem,
   adapters,
   approve,
   audit,
@@ -221,7 +222,7 @@ function Empty({ text }: { text: string }) {
 }
 
 function Stories({ session, play, setError }: { session: Session; play: (id: string, mode: "manual" | "automated") => Promise<void>; setError: (value: string) => void }) {
-  const [items, setItems] = useState<{ id: string; title: string; summary: string }[]>([]);
+  const [items, setItems] = useState<StoryItem[]>([]);
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const navigate = useNavigate();
   useEffect(() => {
@@ -243,9 +244,32 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
       <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
       <div className="grid">
         {items.map((item) => (
-          <article className="card" key={item.id}>
-            <h2>{item.title}</h2>
+          <article className="card story-rehearsal-card" key={item.id}>
+            <div className="story-card-top">
+              <h2>{item.title}</h2>
+              {item.failure_level ? (
+                <span className="story-failure-badge">
+                  {item.failure_level.tier}
+                </span>
+              ) : null}
+            </div>
             <p>{item.summary}</p>
+            {item.failure_level ? (
+              <div className="story-failure-details">
+                <div className="story-detail-row">
+                  <span className="detail-tag">Fault Component:</span>
+                  <span>{item.failure_level.component}</span>
+                </div>
+                <div className="story-detail-row">
+                  <span className="detail-tag">Blast Radius:</span>
+                  <span>{item.failure_level.blast_radius}</span>
+                </div>
+                <div className="story-detail-row">
+                  <span className="detail-tag">Redundancy Defense:</span>
+                  <span>{item.failure_level.redundancy_strategy}</span>
+                </div>
+              </div>
+            ) : null}
             <button type="button" onClick={() => run(item.id)}>Play this rehearsal</button>
           </article>
         ))}

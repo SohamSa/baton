@@ -540,3 +540,221 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   cursor: pointer;
 }
 
+/* =========================================================================
+   Failure Hierarchy, Blast Radius, & Redundancy Taxonomy Styles
+   ========================================================================= */
+
+/* Failure Hierarchy Banner on Desk */
+.failure-hierarchy-banner {
+  background: linear-gradient(135deg, rgba(226, 192, 122, 0.08) 0%, rgba(20, 26, 33, 0.85) 100%);
+  border: 1px solid var(--warn);
+  border-left: 4px solid var(--warn);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1.1rem;
+}
+.fh-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 0.65rem;
+}
+.fh-pill {
+  font-size: 0.76rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+  letter-spacing: 0.03em;
+}
+.tier-pill {
+  background: rgba(226, 192, 122, 0.2);
+  color: var(--warn);
+  border: 1px solid rgba(226, 192, 122, 0.4);
+}
+.comp-pill {
+  background: rgba(142, 182, 224, 0.15);
+  color: var(--accent);
+  border: 1px solid rgba(142, 182, 224, 0.3);
+}
+.fh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.85rem;
+}
+.fh-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.fh-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.fh-text {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+
+/* Cascade Origin Markers & Badges */
+.cascade-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.cascade-tier-badge {
+  font-size: 0.74rem;
+  background: rgba(226, 192, 122, 0.18);
+  color: var(--warn);
+  border: 1px solid var(--warn);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.03em;
+}
+.node-head-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.origin-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  background: var(--danger);
+  color: #fff;
+  padding: 0.12rem 0.35rem;
+  border-radius: 4px;
+  animation: pulse-origin 2s infinite ease-in-out;
+}
+@keyframes pulse-origin {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(0.96); }
+}
+.cascade-node.origin-node {
+  border-color: var(--danger);
+  background: rgba(240, 160, 160, 0.08);
+  box-shadow: 0 0 12px rgba(240, 160, 160, 0.2);
+}
+.cascade-blast-explanation {
+  background: rgba(14, 21, 29, 0.8);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
+}
+.blast-title {
+  color: var(--accent);
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+.cascade-blast-explanation p {
+  margin: 0 0 0.6rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.cascade-redundancy-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: baseline;
+  background: rgba(143, 206, 171, 0.08);
+  border: 1px solid rgba(143, 206, 171, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+}
+.redundancy-tag {
+  color: var(--ok);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+/* Playbook Card Updates */
+.playbook-card .playbook-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.playbook-tier-badge {
+  font-size: 0.75rem;
+  background: rgba(142, 182, 224, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(142, 182, 224, 0.3);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+}
+.playbook-redundancy-footer {
+  margin-top: 0.9rem;
+  padding: 0.75rem 0.95rem;
+  background: rgba(143, 206, 171, 0.08);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.playbook-redundancy-footer strong {
+  color: var(--ok);
+  margin-right: 0.35rem;
+}
+
+/* Rehearsals (/stories) page cards */
+.story-rehearsal-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.story-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+.story-card-top h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.story-failure-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(226, 192, 122, 0.2);
+  color: var(--warn);
+  border: 1px solid rgba(226, 192, 122, 0.4);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+.story-failure-details {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  margin: 0.7rem 0 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.story-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+.detail-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+

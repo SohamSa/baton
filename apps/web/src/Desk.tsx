@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { EconomicsEstimate, LiveFrame, OwnerPlaybook, RunView, StoryItem, estimateEconomics, stories } from "./api";
+import { EconomicsEstimate, FailureLevel, LiveFrame, OwnerPlaybook, RunView, StoryItem, estimateEconomics, stories } from "./api";
 
 const REASONS: Record<string, string> = {
   currency_disabled_until_complete_accounting_configuration: "Currency stays off until the accounting configuration is complete.",
@@ -111,10 +111,34 @@ export function Desk({
       </div>
 
       {/* 2. PHYSICAL FAILURE CASCADE */}
-      <PhysicalCascade live={live} cluster={cluster} />
+      <PhysicalCascade live={live} cluster={cluster} failureLevel={currentStory?.failure_level} />
 
       {/* 3. OWNER'S SOLUTION PLAYBOOK */}
-      <PlaybookCard playbook={currentStory?.owner_playbook} />
+      <PlaybookCard playbook={currentStory?.owner_playbook} failureLevel={currentStory?.failure_level} />
+
+      {/* FAILURE HIERARCHY SUMMARY BANNER */}
+      {currentStory?.failure_level ? (
+        <div className="failure-hierarchy-banner">
+          <div className="fh-badge-row">
+            <span className="fh-pill tier-pill">
+              Hierarchy Tier: <strong>{currentStory.failure_level.tier}</strong>
+            </span>
+            <span className="fh-pill comp-pill">
+              Root Cause: <strong>{currentStory.failure_level.component}</strong>
+            </span>
+          </div>
+          <div className="fh-grid">
+            <div className="fh-col">
+              <span className="fh-label">💥 Physical Blast Radius:</span>
+              <p className="fh-text">{currentStory.failure_level.blast_radius}</p>
+            </div>
+            <div className="fh-col">
+              <span className="fh-label">🛡️ Redundancy Architecture:</span>
+              <p className="fh-text">{currentStory.failure_level.redundancy_strategy}</p>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="panel controls">
         <div className="row">
@@ -302,9 +326,11 @@ function BurnTicker({
 function PhysicalCascade({
   live,
   cluster,
+  failureLevel,
 }: {
   live: LiveFrame | undefined;
   cluster: RunView["cluster"] | undefined;
+  failureLevel?: FailureLevel;
 }) {
   const faultyGpu = live?.accelerators?.find(
     (a) => !a.functional || a.quarantined || (a.temp !== null && a.temp >= 70)
@@ -318,66 +344,124 @@ function PhysicalCascade({
       : "hot"
     : "ok";
 
+  const tier = failureLevel?.tier ?? "Chip Level";
+  const isHallOrigin = tier.includes("Datacenter");
+  const isRackOrigin = tier.includes("Rack");
+  const isNodeOrigin = tier.includes("Node");
+  const isSubsystemOrigin = !isHallOrigin && !isRackOrigin && !isNodeOrigin;
+
+  let subsystemTitle = "Accelerator Silicon";
+  if (tier.includes("Storage") || tier.includes("Fabric")) {
+    subsystemTitle = "Storage Fabric";
+  } else if (tier.includes("Mesh")) {
+    subsystemTitle = "Collective Mesh";
+  } else if (tier.includes("Management")) {
+    subsystemTitle = "Management Plane";
+  } else if (tier.includes("Policy") || tier.includes("Threshold")) {
+    subsystemTitle = "Monitoring Policy";
+  } else if (tier.includes("Workload")) {
+    subsystemTitle = "Compute Workload";
+  }
+
   return (
     <div className="panel cascade-panel">
       <div className="cascade-head">
         <div>
-          <span className="eyebrow">Physical Failure Cascade</span>
+          <span className="eyebrow">Physical Failure Cascade & Hierarchy</span>
           <h2>Where the Fire Started & How It Propagates</h2>
         </div>
-        <div className={`cascade-badge ${isStalled ? "stalled-badge" : "healthy-badge"}`}>
-          {isStalled ? "⚠️ ALL-REDUCE BARRIER BLOCKED" : "✓ CLUSTER ADVANCING IN LOCKSTEP"}
+        <div className="cascade-badges">
+          {failureLevel ? (
+            <span className="cascade-tier-badge">
+              Origin Tier: <strong>{failureLevel.tier}</strong>
+            </span>
+          ) : null}
+          <div className={`cascade-badge ${isStalled ? "stalled-badge" : "healthy-badge"}`}>
+            {isStalled ? "⚠️ ALL-REDUCE BARRIER BLOCKED" : "✓ CLUSTER ADVANCING IN LOCKSTEP"}
+          </div>
         </div>
       </div>
       <p className="muted">
-        In distributed pretraining, every single chip must complete the beat before any chip moves forward. Watch how an anomaly in 1 chip halts the entire datacenter hall.
+        In distributed pretraining, every single chip must complete each calculation beat before any chip moves forward. Watch how an anomaly starting at the <strong>{failureLevel?.tier ?? "component level"}</strong> halts the entire datacenter hall.
       </p>
       <div className="cascade-flow">
-        <div className="cascade-node">
-          <span className="node-level">Datacenter Hall</span>
+        {/* Tier 1: Datacenter Hall */}
+        <div className={`cascade-node ${isHallOrigin ? "origin-node" : ""}`}>
+          <div className="node-head-row">
+            <span className="node-level">Datacenter Hall</span>
+            {isHallOrigin ? <span className="origin-badge">ROOT ORIGIN</span> : null}
+          </div>
           <strong>{cluster?.accelerator_count ? cluster.accelerator_count.toLocaleString() : "32,768"} GPUs</strong>
-          <small>{cluster?.rack_count ?? 256} Racks · 1 Facility</small>
+          <small>{cluster?.rack_count ?? 256} Racks · 1 Facility Grid</small>
           <div className={`node-status ${isStalled ? "status-stalled" : "status-ok"}`}>
             {isStalled ? "HALTED (WAITING)" : "COMPUTING"}
           </div>
         </div>
+
         <div className="cascade-arrow">➔</div>
-        <div className="cascade-node">
-          <span className="node-level">Rack</span>
+
+        {/* Tier 2: Rack Level */}
+        <div className={`cascade-node ${isRackOrigin ? "origin-node" : ""}`}>
+          <div className="node-head-row">
+            <span className="node-level">Rack Level</span>
+            {isRackOrigin ? <span className="origin-badge">ROOT ORIGIN</span> : null}
+          </div>
           <strong>Rack 0</strong>
-          <small>128 GPUs · 16 Hosts · 1 Busbar</small>
-          <div className={`node-status ${faultyGpu ? "status-warn" : "status-ok"}`}>
-            {faultyGpu ? "FAULT DETECTED" : "NOMINAL"}
+          <small>{isRackOrigin ? (failureLevel?.component ?? "Rack PDU / Busbar") : "128 GPUs · 16 Hosts · 1 Busbar"}</small>
+          <div className={`node-status ${isRackOrigin || faultyGpu ? "status-warn" : "status-ok"}`}>
+            {isRackOrigin ? "ELECTRICAL FAULT" : faultyGpu ? "IMPACTED BY FAULT" : "NOMINAL"}
           </div>
         </div>
+
         <div className="cascade-arrow">➔</div>
-        <div className="cascade-node">
-          <span className="node-level">Host Node</span>
+
+        {/* Tier 3: Host Node */}
+        <div className={`cascade-node ${isNodeOrigin ? "origin-node" : ""}`}>
+          <div className="node-head-row">
+            <span className="node-level">Host Node</span>
+            {isNodeOrigin ? <span className="origin-badge">ROOT ORIGIN</span> : null}
+          </div>
           <strong>Host 0</strong>
-          <small>8 Accelerator Trays · NVLink</small>
-          <div className={`node-status ${faultyGpu ? "status-warn" : "status-ok"}`}>
-            {faultyGpu ? "THERMAL/PROCESS SPIKE" : "NOMINAL"}
+          <small>{isNodeOrigin ? (failureLevel?.component ?? "Host Motherboard / OS") : "8 Accelerator Trays · NVLink"}</small>
+          <div className={`node-status ${isNodeOrigin || faultyGpu ? "status-warn" : "status-ok"}`}>
+            {isNodeOrigin ? "KERNEL/CRASH FAULT" : faultyGpu ? "HOST DEGRADED" : "NOMINAL"}
           </div>
         </div>
+
         <div className="cascade-arrow">➔</div>
-        <div className={`cascade-node culprit-node ${faultLevel}`}>
-          <span className="node-level">Accelerator Rank</span>
-          <strong>{faultyGpu ? faultyGpu.id : "GPU #0"}</strong>
+
+        {/* Tier 4: Subsystem / Component */}
+        <div className={`cascade-node culprit-node ${faultLevel} ${isSubsystemOrigin ? "origin-node" : ""}`}>
+          <div className="node-head-row">
+            <span className="node-level">{subsystemTitle}</span>
+            {isSubsystemOrigin ? <span className="origin-badge">ROOT ORIGIN</span> : null}
+          </div>
+          <strong>{failureLevel?.component ?? (faultyGpu ? faultyGpu.id : "GPU #0")}</strong>
           <small>
             {faultyGpu?.temp !== null && faultyGpu?.temp !== undefined
               ? `${faultyGpu.temp.toFixed(1)}°C`
-              : "Nominal"}
+              : failureLevel?.tier ?? "Nominal"}
           </small>
           <div className="node-status status-culprit">
-            {faultyGpu ? (faultyGpu.functional ? "THERMAL RUNAWAY" : "HALTED") : "NORMAL"}
+            {faultyGpu ? (faultyGpu.functional ? "ANOMALY DETECTED" : "HALTED") : "MONITORED"}
           </div>
         </div>
       </div>
-      {isStalled ? (
-        <div className="cascade-alert">
-          <strong>The Relay Race Halt:</strong> Rank {faultyGpu?.id ?? "0"} failed to report its step completion. Because tensor and pipeline parallel groups cannot advance without all participants, <strong>all other chips in this training job are frozen drawing idle power</strong>.
+
+      <div className="cascade-blast-explanation">
+        <div className="blast-title">
+          <strong>💥 Why a {failureLevel?.tier ?? "single-component"} failure halts the entire 32,768-GPU hall:</strong>
         </div>
-      ) : null}
+        <p>
+          Distributed LLM pretraining uses synchronous gang scheduling (all-reduce). {failureLevel ? failureLevel.blast_radius : "When one worker drops or stalls, all 32,768 accelerators freeze at the synchronization barrier."}
+        </p>
+        {failureLevel?.redundancy_strategy ? (
+          <div className="cascade-redundancy-box">
+            <span className="redundancy-tag">🛡️ Datacenter Redundancy Defense:</span>
+            <span>{failureLevel.redundancy_strategy}</span>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -385,13 +469,26 @@ function PhysicalCascade({
 /* =========================================================================
    3. OWNER'S SOLUTION PLAYBOOK COMPONENT
    ========================================================================= */
-function PlaybookCard({ playbook }: { playbook: OwnerPlaybook | undefined }) {
+function PlaybookCard({
+  playbook,
+  failureLevel,
+}: {
+  playbook: OwnerPlaybook | undefined;
+  failureLevel?: FailureLevel;
+}) {
   if (!playbook) return null;
   return (
     <div className="panel playbook-card">
       <div className="playbook-head">
-        <span className="eyebrow">Owner's Architecture Playbook</span>
-        <h3>{playbook.title}</h3>
+        <div>
+          <span className="eyebrow">Owner's Architecture Playbook</span>
+          <h3>{playbook.title}</h3>
+        </div>
+        {failureLevel ? (
+          <span className="playbook-tier-badge">
+            Hierarchy Tier: <strong>{failureLevel.tier}</strong>
+          </span>
+        ) : null}
       </div>
       <div className="playbook-grid">
         <div className="playbook-col">
@@ -411,6 +508,12 @@ function PlaybookCard({ playbook }: { playbook: OwnerPlaybook | undefined }) {
           <p>{playbook.roi_impact}</p>
         </div>
       </div>
+      {failureLevel ? (
+        <div className="playbook-redundancy-footer">
+          <strong>🛡️ Datacenter CapEx & Redundancy Strategy ({failureLevel.tier}):</strong>
+          <span> {failureLevel.redundancy_strategy}. Resolves blast radius: <em>{failureLevel.blast_radius}</em>.</span>
+        </div>
+      ) : null}
     </div>
   );
 }

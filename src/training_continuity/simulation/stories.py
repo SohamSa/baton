@@ -38,6 +38,12 @@ STORIES: dict[str, dict] = {
             "hardware_takeaway": "Equip node BMC telemetry with sub-10s polling and direct interrupts to your cluster orchestrator to trigger saves before thermal trips.",
             "roi_impact": "Recovers up to 90% of in-flight progress that would otherwise require multi-hour full recomputation.",
         },
+        "failure_level": {
+            "tier": "Chip Level",
+            "component": "Accelerator Silicon / Die Thermal Sensor",
+            "blast_radius": "1 GPU directly -> Entire 32,768-GPU cluster stalled via all-reduce barrier",
+            "redundancy_strategy": "Micro-checkpointing triggers and dynamic thermal fan-ramp curves",
+        },
     },
     "abrupt_failure": {
         "title": "A machine stops with no warning",
@@ -70,6 +76,12 @@ STORIES: dict[str, dict] = {
             "solution": "Do not waste time attempting multi-stage diagnostics during active training. Execute automated fail-fast gang restarts immediately.",
             "hardware_takeaway": "Maintain 1-2% warm unassigned standby nodes per network spine and pre-stage container images for sub-minute restarts.",
             "roi_impact": "Cuts cluster idle stall time from 20-30 minutes down to under 2 minutes per crash event.",
+        },
+        "failure_level": {
+            "tier": "Node Level",
+            "component": "Host Motherboard / Compute Process Kernel",
+            "blast_radius": "1 Server Host (8 GPUs) crashed -> Entire 32,768-GPU cluster stalled",
+            "redundancy_strategy": "Warm standby nodes pre-enrolled with preloaded container images",
         },
     },
     "shared_infrastructure": {
@@ -105,6 +117,12 @@ STORIES: dict[str, dict] = {
             "hardware_takeaway": "Ingest rack PDU and busbar sensor IDs directly into the cluster scheduler topology map.",
             "roi_impact": "Prevents dispatching technicians to replace healthy GPUs and focuses repairs on the root electrical feed.",
         },
+        "failure_level": {
+            "tier": "Rack Level",
+            "component": "Rack PDU & Primary Busbar Power Feed",
+            "blast_radius": "Entire Rack (16 hosts / 128 GPUs) sagged -> Entire 32,768-GPU cluster stalled",
+            "redundancy_strategy": "A+B dual power feeds with automatic transfer switches (ATS) per rack",
+        },
     },
     "healthy_workload_shift": {
         "title": "A busy spell is not a breakdown",
@@ -127,6 +145,12 @@ STORIES: dict[str, dict] = {
             "solution": "Differentiate healthy heavy computation from genuine cooling degradation by correlating SM activity and power limits with heat.",
             "hardware_takeaway": "Tune monitoring policies to evaluate thermal residuals relative to workload intensity rather than raw absolute degrees.",
             "roi_impact": "Eliminates false-alarm job halts that burn tens of thousands of dollars in wasted downtime.",
+        },
+        "failure_level": {
+            "tier": "Workload Level",
+            "component": "Forward/Backward GEMM Matrix Intensity",
+            "blast_radius": "All placed ranks experiencing high compute load (Normal execution)",
+            "redundancy_strategy": "Adaptive dynamic thresholds that account for instantaneous TDP draw",
         },
     },
     "incomplete_checkpoint": {
@@ -160,6 +184,12 @@ STORIES: dict[str, dict] = {
             "solution": "Refuse unverified checkpoints; only advance active resume pointers once all rank shards and manifest checksums pass validation.",
             "hardware_takeaway": "Implement high-throughput local NVMe staging tiers to buffer checkpoint shards before committing to shared parallel filesystems.",
             "roi_impact": "Prevents catastrophic restarts into corrupted states that invalidate days of pre-training progress.",
+        },
+        "failure_level": {
+            "tier": "Storage / Fabric Level",
+            "component": "Parallel File System / Storage Shard Fabric",
+            "blast_radius": "Checkpoint tier write drop -> Cluster unable to commit valid recovery point",
+            "redundancy_strategy": "Local NVMe burst buffers with atomic 2-phase commit manifest verification",
         },
     },
     "unsupported_local_recovery": {
@@ -195,6 +225,12 @@ STORIES: dict[str, dict] = {
             "hardware_takeaway": "Audit your ML software framework (e.g. Megatron vs. Torch Elastic) before designing cluster recovery playbooks.",
             "roi_impact": "Avoids extended silent all-reduce hangs that burn cluster hours while waiting for uncoordinated ranks.",
         },
+        "failure_level": {
+            "tier": "Distributed Mesh Level",
+            "component": "Tensor-Parallel Collective Communication Mesh",
+            "blast_radius": "All-reduce ring broken -> Distributed deadlock if single rank dropped",
+            "redundancy_strategy": "Strict gang restart enforcement or migration to dynamic elastic torch.distributed",
+        },
     },
     "stale_telemetry": {
         "title": "Late sensors mean we do not guess",
@@ -229,6 +265,12 @@ STORIES: dict[str, dict] = {
             "hardware_takeaway": "Decouple high-frequency health heartbeats from heavy metric scraping pipelines to ensure real-time liveness.",
             "roi_impact": "Prevents spurious automated node cordons and unnecessary engineering on-call pages.",
         },
+        "failure_level": {
+            "tier": "Management Plane Level",
+            "component": "Out-of-Band Telemetry Ingestion Network",
+            "blast_radius": "Metrics lag by 10 steps -> Operator triage delayed",
+            "redundancy_strategy": "Low-overhead in-band liveness heartbeats decoupled from heavy scraping",
+        },
     },
     "harmful_preventive": {
         "title": "Shutting down a healthy rush can cost more",
@@ -252,6 +294,12 @@ STORIES: dict[str, dict] = {
             "hardware_takeaway": "Configure facility chilled-water cooling loops to ramp dynamically with cluster power load spikes.",
             "roi_impact": "Directly preserves valuable pretraining compute that naive monitoring rules throw away.",
         },
+        "failure_level": {
+            "tier": "Policy / Threshold Level",
+            "component": "Static Temperature Alarm Heuristic",
+            "blast_radius": "Healthy operating accelerators erroneously cordoned -> Compute progress lost",
+            "redundancy_strategy": "Residual anomaly detection models that compare against expected workload heat",
+        },
     },
 }
 
@@ -272,6 +320,7 @@ def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | No
         "title": spec["title"],
         "summary": spec["summary"],
         "owner_playbook": spec.get("owner_playbook"),
+        "failure_level": spec.get("failure_level"),
     }
     view["approvals"] = list(approvals or [])
     if mode == "automated":
@@ -289,6 +338,7 @@ def list_stories() -> list[dict]:
             "summary": spec["summary"],
             "primary_policy": spec["primary_policy"],
             "owner_playbook": spec.get("owner_playbook"),
+            "failure_level": spec.get("failure_level"),
         }
         for story_id, spec in STORIES.items()
     ]

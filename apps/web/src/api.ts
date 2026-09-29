@@ -65,12 +65,20 @@ export type OwnerPlaybook = {
   roi_impact: string;
 };
 
+export type FailureLevel = {
+  tier: string;
+  component: string;
+  blast_radius: string;
+  redundancy_strategy: string;
+};
+
 export type StoryItem = {
   id: string;
   title: string;
   summary: string;
   primary_policy: string;
   owner_playbook?: OwnerPlaybook;
+  failure_level?: FailureLevel;
 };
 
 export function stories(token: string) {
@@ -249,7 +257,7 @@ export type RunView = {
   status: string;
   narrative: string;
   presentation?: boolean;
-  story?: { id: string; title: string; summary: string; owner_playbook?: OwnerPlaybook };
+  story?: { id: string; title: string; summary: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
   hypotheses?: { leading_mechanism: string; abstain: boolean; abstain_reason?: string; alternatives?: { mechanism: string; cause_family: string }[] };
   jobs?: Record<string, { state: string; capability: string; rank_gpu: string[]; useful_new?: number; progress?: number; dropped?: number[] }>;
   actions?: Action[];
