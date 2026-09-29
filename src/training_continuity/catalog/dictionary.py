@@ -78,6 +78,11 @@ GPU_SIGNALS = [
     ("mcm_microbump_defect_count", "count", True, "Cumulative count of detected degraded or open microbumps on the interposer.", "IEEE 1838 / JTAG boundary scan counter"),
     ("mcm_remapped_lanes", "count", True, "Cumulative number of D2D bus lanes remapped to redundant spare microbumps via BISR.", "Built-In Self-Repair lane remap register"),
     ("mcm_test_sequence_phase", "id", False, "Current active phase of the automated MCM diagnostic ladder (Phase 1 to Phase 5).", "in-situ test sequencer state register"),
+    ("wafer_lot_id", "id", False, "Foundry manufacturing wafer lot identifier.", "feed-forward foundry lot genealogy analog"),
+    ("wafer_ring_radius_mm", "mm", False, "Physical radial distance of the die from wafer center (0-150mm).", "wafer map spatial coordinates"),
+    ("factory_vmin_mv", "mV", False, "Minimum operating voltage certified at factory wafer sort.", "automated test equipment parametric sort analog"),
+    ("factory_leakage_ma", "mA", False, "Static IDDQ leakage current measured at wafer probe.", "foundry wafer acceptance testing analog"),
+    ("cohort_risk_flag", "flag", False, "Flag indicating this die belongs to a flagged or quarantined wafer lot.", "fleet silicon lineage risk register"),
 ]
 
 HOST_SIGNALS = [

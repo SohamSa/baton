@@ -190,6 +190,14 @@ def test_fractured_microbump_mcm_story():
     assert result["story"]["owner_playbook"]["title"].startswith("Automated Multi-Chip Module")
 
 
+def test_wafer_lot_contagion_story():
+    result = run_story("wafer_lot_contagion")
+    assert result["story"]["failure_level"]["tier"] == "Foundry Wafer Lot & Lineage Level"
+    assert "Wafer Lot Cohort" in result["story"]["failure_level"]["component"]
+    assert "Wafer Lot" in result["story"]["failure_level"]["blast_radius"]
+    assert result["story"]["owner_playbook"]["title"].startswith("Feed-Forward Silicon Lineage")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 

@@ -2258,3 +2258,331 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   line-height: 1.45;
   color: #d1fae5;
 }
+
+/* =========================================================================
+   Feed-Forward Silicon Lineage & Digital Birth Certificates Styles
+   ========================================================================= */
+
+.lineage-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.lineage-header h1 {
+  margin: 0.2rem 0 0.5rem;
+}
+
+/* KPI Cards */
+.lineage-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.lineage-kpi-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.lineage-kpi-card.kpi-ok {
+  border-left: 4px solid var(--ok);
+}
+.lineage-kpi-card.kpi-info {
+  border-left: 4px solid var(--accent);
+}
+.lineage-kpi-card.kpi-warn {
+  border-left: 4px solid var(--warn);
+}
+.lineage-kpi-card.kpi-danger {
+  border-left: 4px solid var(--danger);
+}
+
+/* Passport Panel */
+.passport-panel {
+  border-top: 3px solid #3b82f6;
+}
+.passport-selector label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.passport-selector select {
+  background: #090e14;
+  border: 1px solid var(--line);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.85rem;
+}
+.passport-card {
+  background: #070d14;
+  border: 1px solid #1e293b;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.passport-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0.85rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.passport-id-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.passport-id-badge .pass-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.passport-id-badge strong {
+  font-size: 1.25rem;
+  color: var(--text);
+}
+.passport-id-badge code {
+  font-size: 0.82rem;
+  color: #60a5fa;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.passport-status-pill {
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 0.25rem 0.65rem;
+  border-radius: 99px;
+  letter-spacing: 0.04em;
+}
+.status-nominal {
+  background: rgba(44, 160, 44, 0.2);
+  color: #68d391;
+  border: 1px solid #2ca02c;
+}
+.status-cordoned {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+.status-flagged {
+  background: rgba(255, 209, 102, 0.2);
+  color: #ffd166;
+  border: 1px solid #ffd166;
+}
+
+.passport-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.spec-col {
+  background: #0d1520;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.spec-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.spec-col strong {
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.spec-col small {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.passport-location-strip {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 6px;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.passport-location-strip span {
+  color: var(--muted);
+}
+.passport-location-strip strong {
+  color: #93c5fd;
+}
+.passport-risk-alert {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 6px;
+  padding: 0.65rem 0.95rem;
+  font-size: 0.85rem;
+  color: #fca5a5;
+  line-height: 1.4;
+}
+
+/* Wafer Lot Cohort Contagion */
+.contagion-panel {
+  border-top: 3px solid #f97316;
+}
+.cordon-controls {
+  display: flex;
+  align-items: center;
+}
+.cordon-toggle-btn {
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.cordon-toggle-btn.btn-active {
+  background: #10b981;
+  color: #064e3b;
+}
+.cordon-toggle-btn.btn-warning {
+  background: #ef4444;
+  color: #fff;
+}
+.cordon-status-box {
+  border-radius: 8px;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  margin: 1rem 0;
+}
+.cordon-status-box.box-ok {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #6ee7b7;
+}
+.cordon-status-box.box-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.lineage-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+}
+.lineage-table th {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 2px solid var(--line);
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.lineage-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.lot-row-ok td {
+  background: rgba(31, 78, 121, 0.04);
+}
+.lot-row-danger td {
+  background: rgba(240, 160, 160, 0.05);
+}
+.lot-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+}
+.lot-badge.tone-ok {
+  background: rgba(44, 160, 44, 0.15);
+  color: #68d391;
+}
+.lot-badge.tone-info {
+  background: rgba(0, 210, 255, 0.15);
+  color: #38bdf8;
+}
+.lot-badge.tone-danger {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+}
+
+/* Parametric Drift */
+.drift-panel {
+  border-top: 3px solid #8b5cf6;
+}
+.drift-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.drift-card {
+  background: #0d1520;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.drift-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #c4b5fd;
+}
+.drift-val-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.drift-val-row strong {
+  color: var(--text);
+}
+.drift-bar-wrap {
+  height: 8px;
+  background: #1e293b;
+  border-radius: 99px;
+  overflow: hidden;
+  margin: 0.3rem 0;
+}
+.drift-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+  border-radius: 99px;
+}
+.drift-card small {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+.lineage-takeaway {
+  margin-top: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #dbeafe;
+}

@@ -480,6 +480,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Automated 5-phase test sequencing with on-package redundant spare microbump lane remapping (BISR)",
         },
     },
+    "wafer_lot_contagion": {
+        "title": "The wafer lot contagion",
+        "summary": "A die dies of a latent gate-oxide flaw from a contaminated foundry wafer edge. A naive rule fixes one node and gets hit by rolling crashes; feed-forward lineage tracks the wafer lot birth certificate, cordoning sibling dies at the next save.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-wafer-contagion",
+            "seed": 23,
+            "steps": 50,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "gate-oxide-die-pop",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d0",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 12,
+                    "ramp": 6,
+                    "severity": 0.85,
+                    "hard_fail": 28,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Feed-Forward Silicon Lineage & Wafer-Lot Cohort Cordoning",
+            "problem": "A latent fabrication defect (gate-oxide breakdown or chemical polishing drift) affects multiple dies from the same wafer lot outer edge. Treating each failure as an isolated event causes repeated cascading restarts across the 32k GPU hall over weeks, losing over $1,200,000.",
+            "solution": "Query the failed die's feed-forward Electronic Chip ID (ECID) and wafer lot genealogy (Lot #WL-9042). Automatically flag and cordon sibling dies across the hall, migrating them during a scheduled checkpoint boundary without crashing active training.",
+            "hardware_takeaway": "Require chip vendors to provide digital birth certificates (wafer lot ID, wafer X/Y coordinates, factory Vmin, and probe leakage) populated into the BMC EEPROM for every accelerator.",
+            "roi_impact": "Prevents 5 to 10 rolling cluster crashes ($1M-$2M saved) by eliminating batch defect contagion in one proactive sweep.",
+        },
+        "failure_level": {
+            "tier": "Foundry Wafer Lot & Lineage Level",
+            "component": "Wafer Lot Cohort & Die Genealogy",
+            "blast_radius": "1 Gate-Oxide Die Failure -> 14 sibling dies from contaminated Wafer Lot #WL-9042 outer ring at risk -> Rolling multi-week 32k GPU stalls",
+            "redundancy_strategy": "Feed-forward silicon lineage tracking with automated wafer-lot cohort cordoning during scheduled checkpoint saves",
+        },
+    },
 }
 
 

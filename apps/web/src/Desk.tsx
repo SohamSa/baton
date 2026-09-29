@@ -353,6 +353,8 @@ function PhysicalCascade({
   let subsystemTitle = "Accelerator Silicon";
   if (tier.includes("Power") || tier.includes("Substation")) {
     subsystemTitle = "Substation Power Feed";
+  } else if (tier.includes("Foundry") || tier.includes("Lineage") || tier.includes("Wafer")) {
+    subsystemTitle = "Wafer Lot & Lineage Origin";
   } else if (tier.includes("MCM") || tier.includes("Packaging")) {
     subsystemTitle = "MCM & Interposer Assembly";
   } else if (tier.includes("Test") || tier.includes("Qualification")) {
