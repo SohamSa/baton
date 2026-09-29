@@ -301,6 +301,46 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Residual anomaly detection models that compare against expected workload heat",
         },
     },
+    "silent_straggler": {
+        "title": "A slow die drags the whole choir",
+        "summary": "One accelerator die throttles slightly without crashing. Because all chips synchronize every step, the entire hall slows to match the straggler, burning capital in silence.",
+        "primary_policy": "risk_aware",
+        "comparison": ["reactive", "risk_aware"],
+        "config": {
+            "scenario_id": "story-straggler",
+            "seed": 19,
+            "steps": 60,
+            "checkpoint_interval": 20,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "straggler-die-degradation",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d0",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 8,
+                    "ramp": 10,
+                    "severity": 0.75,
+                    "hard_fail": 40,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Cross-Die Straggler Detection & Fleet Wafer-Lot Cordoning",
+            "problem": "A single die throttles by 8-15% due to process variation or HBM micro-bump degradation without throwing a hard crash. In a 32,768-GPU all-reduce group, all 32,767 other chips are forced to drag their pace to match the slowest die, burning $220,000/day in silent compute drag.",
+            "solution": "Collect cross-die step-latency and memory error rate telemetry to identify straggler outliers before they trigger collective group stalls, gracefully draining the degraded node during scheduled checkpoint saves.",
+            "hardware_takeaway": "Correlate accelerator silicon die serial numbers with foundry wafer lots and HBM stack IDs in your cluster management plane to spot batch-level thermal and leakage drift.",
+            "roi_impact": "Recovers 5-10% of lost cluster-wide throughput ($1M-$3M/month on a 32k-GPU frontier cluster) that traditional crash-based monitoring completely misses.",
+        },
+        "failure_level": {
+            "tier": "Silicon Die Level",
+            "component": "Accelerator Compute Die & HBM3e Memory Stacks",
+            "blast_radius": "1 Straggler Die (8% latency drag) -> Synchronous all-reduce forces all 32,768 GPUs to drag pace ($220k/day idle waste)",
+            "redundancy_strategy": "Fleet-wide outlier die detection with automated rank descheduling at verified checkpoint boundaries",
+        },
+    },
 }
 
 

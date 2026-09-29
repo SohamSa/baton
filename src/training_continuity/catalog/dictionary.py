@@ -70,6 +70,10 @@ GPU_SIGNALS = [
     ("tensor_active_ratio", "ratio", False, "Tensor-pipe activity only where declared.", "DCGM_FI_PROF_PIPE_TENSOR_ACTIVE analog"),
     ("retired_pages", "count", True, "Retired-page counter where supported.", "DCGM_FI_DEV_RETIRED_SBE analog"),
     ("slowdown_temp_c", "C", False, "Profile slowdown temperature, a control envelope not a live measurement.", "hardware profile"),
+    ("die_temp_c", "C", False, "Reported individual compute die temperature.", "per-die thermal diode telemetry analog"),
+    ("hbm_stack_temp_c", "C", False, "Reported HBM3e high-bandwidth memory stack temperature.", "HBM base die thermal sensor analog"),
+    ("die_leakage_current_ma", "mA", False, "Estimated silicon leakage current under active voltage.", "silicon process variation analog"),
+    ("die_straggler_drag_ms", "ms", False, "Measured collective gang synchronization delay attributed to this die.", "all-reduce barrier latency delta analog"),
 ]
 
 HOST_SIGNALS = [

@@ -351,7 +351,9 @@ function PhysicalCascade({
   const isSubsystemOrigin = !isHallOrigin && !isRackOrigin && !isNodeOrigin;
 
   let subsystemTitle = "Accelerator Silicon";
-  if (tier.includes("Storage") || tier.includes("Fabric")) {
+  if (tier.includes("Silicon") || tier.includes("Die")) {
+    subsystemTitle = "Silicon Die & Package";
+  } else if (tier.includes("Storage") || tier.includes("Fabric")) {
     subsystemTitle = "Storage Fabric";
   } else if (tier.includes("Mesh")) {
     subsystemTitle = "Collective Mesh";

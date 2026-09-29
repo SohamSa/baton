@@ -22,12 +22,14 @@ import {
 } from "./api";
 import { startEngine, subscribeEngine } from "./browserEngine";
 import { Desk } from "./Desk";
+import { SiliconView } from "./SiliconView";
 
 type Session = { token: string; role: string; username: string };
 
 const LINKS = [
   ["/", "Overview"],
   ["/stories", "Rehearsals"],
+  ["/silicon", "Silicon dies"],
   ["/dependencies", "Who moves together"],
   ["/devices", "Chip charts"],
   ["/incidents", "What went wrong"],
@@ -164,6 +166,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<Desk token={session.token} run={run} frames={frames} playing={playing} presentation={presentation} onPlay={play} onDecide={decide} />} />
           <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
+          <Route path="/silicon" element={<SiliconView run={run} presentation={presentation} />} />
           <Route path="/dependencies" element={<Dependencies run={run} />} />
           <Route path="/devices" element={<Devices run={run} presentation={presentation} />} />
           <Route path="/incidents" element={<Incidents run={run} />} />
@@ -239,8 +242,8 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
   }
   return (
     <section>
-      <h1>The eight rehearsals</h1>
-      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, or a shutdown rule that does more harm than the fault. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
+      <h1>The nine rehearsals</h1>
+      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, a shutdown rule that does more harm than the fault, or a silent straggler die dragging down the entire hall. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
       <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
       <div className="grid">
         {items.map((item) => (
