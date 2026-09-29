@@ -57,10 +57,8 @@ const INITIAL_PHASES: TestPhase[] = [
 
 export function MCMView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
 
@@ -203,52 +201,52 @@ export function MCMView({
     <section className="mcm-section">
       <div className="mcm-header">
         <span className="eyebrow">
-          {presentation ? "Executive Packaging & Test" : "2.5D/3D Chiplet Diagnostics & Self-Repair"}
+          Multi-Chip Assembly & Automated Spare-Wire Repair
         </span>
-        <h1>Multi-Chip Module (MCM) Packaging & Automated Test Sequencing</h1>
+        <h1>Multi-Chip Assembly & The Microscopic Spare-Wire System</h1>
         <p className="lede">
-          At frontier scale, accelerators are no longer monolithic dies. Each processor is a <strong>Multi-Chip Module (MCM)</strong> bundling dual compute chiplets, up to 12 HBM3e memory stacks, and over 10,000 microscopic solder microbumps across a silicon interposer.
-          Under 80°C thermal expansion, microbumps crack and die-to-die links degrade.
-          Automated test sequencing runs a 5-phase diagnostic ladder in <strong>45 seconds</strong>, catches microbump faults before they crash 32k-GPU training, and dynamically remaps traffic to redundant spare lanes via <strong>Built-In Self-Repair (BISR)</strong>—saving $28,000 assemblies from scrap.
+          Think of a modern processor package like a miniature city on a silicon foundation: computing brain chiplets and memory towers are linked together by thousands of microscopic solder wires thinner than a human hair.
+          When intense 80°C datacenter heat causes the metal to expand and contract, one of these tiny wires can crack.
+          Instead of throwing away an entire $28,000 multi-chip processor, our automated testing diagnoses the broken wire in <strong>45 seconds</strong> and instantly switches communication to a built-in backup spare wire — saving the processor from the scrap heap.
         </p>
       </div>
 
       {/* 4 HIGH-IMPACT EXECUTIVE KPI CARDS */}
       <div className="mcm-kpi-grid">
         <div className="mcm-kpi-card kpi-ok">
-          <span className="kpi-label">MCM Packaging Assembly Yield</span>
+          <span className="kpi-label">Multi-Chip Assembly Yield</span>
           <div className="kpi-val">99.82% Healthy Packages</div>
           <p className="kpi-desc">
-            Across {totalGpus.toLocaleString()} modules, 18 microbump links are operating on redundant spare lines via in-situ self-repair.
+            Across {totalGpus.toLocaleString()} modules, 18 micro-wire connections are safely operating on built-in backup spare wires.
           </p>
           <div className="kpi-highlight">Zero Unplanned Cluster Drops</div>
         </div>
 
         <div className="mcm-kpi-card kpi-info">
-          <span className="kpi-label">Automated Sequencing Speedup</span>
-          <div className="kpi-val">45.2s In-Situ vs. 4.5h Manual</div>
+          <span className="kpi-label">Automated Diagnostic Speedup</span>
+          <div className="kpi-val">45.2s Automated vs. 4.5h Manual</div>
           <p className="kpi-desc">
-            Replaces multi-hour human node triage and swap cycles with a deterministic 5-phase hardware diagnostic ladder.
+            Replaces hours of human technician guessing and swapping with a fast 5-phase automated hardware test ladder.
           </p>
-          <div className="kpi-highlight">99.7% Reduction in Diagnostic MTTR</div>
+          <div className="kpi-highlight">99.7% Reduction in Diagnostic Downtime</div>
         </div>
 
         <div className="mcm-kpi-card kpi-ok">
-          <span className="kpi-label">Built-In Self-Repair (BISR) Value</span>
+          <span className="kpi-label">Automated Spare-Wire Repair Savings</span>
           <div className="kpi-val">${(monthlyRepairedPackages * packageCost).toLocaleString()} / month Saved</div>
           <p className="kpi-desc">
-            Remapping fractured D2D microbumps to redundant on-interposer spare wires prevents scrapping full dual-die + HBM assemblies.
+            Rerouting cracked micro-wires to built-in backup spare wires prevents scrapping expensive $28,000 chip assemblies.
           </p>
           <div className="kpi-highlight">Saves ~{monthlyRepairedPackages} Ultra-High-End Superchips/Month</div>
         </div>
 
         <div className="mcm-kpi-card kpi-warn">
-          <span className="kpi-label">Adaptive Fail-Fast Tester Savings</span>
-          <div className="kpi-val">{failFastHoursSavedPerMonth} ATE Tester Hours / mo</div>
+          <span className="kpi-label">Factory Tester Capacity Savings</span>
+          <div className="kpi-val">{failFastHoursSavedPerMonth} Tester Hours / mo</div>
           <p className="kpi-desc">
-            Terminating fatal defects in Phase 1 (2s) instead of running full 45-minute thermal burn-ins frees critical OSAT factory capacity.
+            Stopping fatal defects in 2 seconds instead of running full 45-minute heat tests frees critical factory testing capacity.
           </p>
-          <div className="kpi-highlight">${(monthlyTesterSavings).toLocaleString()} / month Direct ATE Savings</div>
+          <div className="kpi-highlight">${(monthlyTesterSavings).toLocaleString()} / month Direct Tester Savings</div>
         </div>
       </div>
 

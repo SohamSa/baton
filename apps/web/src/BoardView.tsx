@@ -29,10 +29,8 @@ const INITIAL_SOCKETS: SocketState[] = [
 
 export function BoardView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
   const totalBoards = Math.round(totalGpus / 8);
@@ -70,7 +68,7 @@ export function BoardView({
                 vddRippleMv: 3.8,
                 vrmTempC: 68,
                 status: "rebalanced",
-                issue: "✓ VRM Multi-Phase Rebalanced: Current redistributed across 15 healthy phases. VDD ripple stabilized at 3.8mV nominal. No chip replacement needed!",
+                issue: "✓ VRM Power Rebalanced: Current redistributed across 15 healthy regulator stages. Voltage noise stabilized at 3.8mV nominal. No chip replacement needed!",
               }
             : s
         )
@@ -83,20 +81,21 @@ export function BoardView({
     <section className="board-section">
       <div className="board-header">
         <span className="eyebrow">
-          {presentation ? "Executive Hardware Diagnostics" : "Baseboard Power Delivery & Fault Discrimination"}
+          Circuit Board Power & Fault Isolation
         </span>
-        <h1>Baseboard Power Delivery, Retimer Diagnostics & Fault Discrimination</h1>
+        <h1>Circuit Board Power Regulators & Saving Innocent Chips</h1>
         <p className="lede">
-          In high-density AI servers, 8 accelerators share a multi-thousand-dollar <strong>Accelerator Baseboard (UBB / HGX)</strong> carrying 16-phase Voltage Regulator Modules (VRMs), 54V busbars, and high-speed retimers.
-          Historically, when a GPU experiences a transient voltage sag, technicians immediately blame the chip, pulling out an innocent <strong>$30,000 accelerator</strong>.
-          By cross-referencing live board-level power delivery telemetry with the chip’s <strong>Digital Birth Certificate</strong>, TrainingContinuity discriminates the exact failure domain in <strong>1.2 seconds</strong>—stopping the multi-million-dollar "No Fault Found" (NFF) replacement cycle.
+          Think of not throwing away a $30,000 car engine when all that failed was an inexpensive $10 alternator regulator:
+          Inside modern AI servers, 8 heavy processors sit on a shared circuit board equipped with multi-phase electric voltage regulators.
+          When an electrical glitch occurs, technicians often mistakenly blame the main chip and throw away a perfectly good <strong>$30,000 processor</strong>.
+          Our diagnostics check the circuit board's power stages first, finding the true culprit in <strong>1.2 seconds</strong> and stopping the multi-million-dollar cycle of mistakenly replacing innocent chips.
         </p>
       </div>
 
       {/* 4 EXECUTIVE KPI CARDS */}
       <div className="board-kpi-grid">
         <div className="board-kpi-card kpi-ok">
-          <span className="kpi-label">Fleet Baseboard Integrity</span>
+          <span className="kpi-label">Fleet Circuit Board Integrity</span>
           <div className="kpi-val">99.78% ({totalBoards.toLocaleString()} Baseboards)</div>
           <p className="kpi-desc">
             4,096 carrier baseboards actively monitored; only 3 operating on redundant re-balanced VRM multi-phase backups.
@@ -105,7 +104,7 @@ export function BoardView({
         </div>
 
         <div className="board-kpi-card kpi-info">
-          <span className="kpi-label">No Fault Found (NFF) False RMA Rate</span>
+          <span className="kpi-label">Mistaken Processor Scrapping Rate</span>
           <div className="kpi-val">0.4% vs. 38% Industry Avg</div>
           <p className="kpi-desc">
             Directly cross-references chip birth certificates with board power stages to prevent swapping innocent $30,000 processors.
@@ -114,10 +113,10 @@ export function BoardView({
         </div>
 
         <div className="board-kpi-card kpi-ok">
-          <span className="kpi-label">Automated Triage Discrimination</span>
+          <span className="kpi-label">Instant Fault Isolation</span>
           <div className="kpi-val">1.2s Chip vs. Board Verdict</div>
           <p className="kpi-desc">
-            Deterministic diagnostic truth matrix evaluates silicon, socket BGA, VRM power delivery, and retimer traces in real time.
+            Deterministic diagnostic truth matrix evaluates silicon, socket, board power regulators, and data lines in real time.
           </p>
           <div className="kpi-highlight">Instant Root-Cause Attribution</div>
         </div>

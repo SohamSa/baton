@@ -42,10 +42,8 @@ const WAFER_LOTS = [
 
 export function SiliconView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const gpus = run?.gpus ? Object.keys(run.gpus) : ["gpu-r0-h0-d0", "gpu-r0-h0-d1", "gpu-r0-h0-d2", "gpu-r0-h0-d3"];
   const [selectedGpu, setSelectedGpu] = useState(gpus[0]);
@@ -76,26 +74,26 @@ export function SiliconView({
   return (
     <section className="silicon-section">
       <div className="silicon-header">
-        <span className="eyebrow">{presentation ? "Executive Silicon Overview" : "Hardware Telemetry & Yield Analytics"}</span>
-        <h1>Silicon Dies, Wafer Batches & Straggler Analytics</h1>
+        <span className="eyebrow">Processor Health & Batch Analytics</span>
+        <h1>Processor Brains, Factory Batches & The Tired Runner Effect</h1>
         <p className="lede">
-          Modern AI accelerators (like NVIDIA Blackwell B200 or AMD MI300X) are multi-die packages combining dual compute dies with 8 stacked High-Bandwidth Memory (HBM3e) dies on a silicon interposer.
-          Due to process variation across manufacturing wafer lots, dies do not age or heat identically.
-          This view tracks fleet-wide die patterns, isolates defective wafer batches, and stops "silent stragglers" from dragging down tens of thousands of GPUs.
+          Think of modern AI processors as multiple miniature computer rooms combined into a single chip — computing brains paired with high-speed memory blocks.
+          Because chips are baked in large batches at the silicon factory, individual processors have subtle physical differences in how hot they run and how much electrical power they need.
+          This view monitors every chip across the datacenter floor, identifies defective factory batches, and stops a single overheating "tired runner" from slowing down tens of thousands of chips.
         </p>
       </div>
 
       {/* TOP 3 EXECUTIVE KPI CARDS */}
       <div className="silicon-kpi-grid">
         <div className={`silicon-kpi-card ${isAnomalous ? "kpi-danger" : "kpi-ok"}`}>
-          <span className="kpi-label">Active Straggler Drag (Collective Barrier)</span>
+          <span className="kpi-label">Active Lag Drag (The Choir Effect)</span>
           <div className="kpi-val">
             {isAnomalous ? "⚠️ 1 ACTIVE DIE THROTTLING" : "✓ 0 ACTIVE STRAGGLERS"}
           </div>
           <p className="kpi-desc">
             {isAnomalous
-              ? `Die 0 on ${selectedGpu} is thermal-throttling (+${die0StragglerDelta.toFixed(1)}ms). All 32k GPUs must drag pace to match.`
-              : "All compute dies running within 1.2% clock synchronization envelope."}
+              ? `Brain Die 0 on ${selectedGpu} is overheating and lagging behind (+${die0StragglerDelta.toFixed(1)}ms). Because everyone must sing in unison, all 32k GPUs must drag pace to match.`
+              : "All compute dies running in perfect unison within 1.2% clock synchronization envelope."}
           </p>
           <div className="kpi-highlight">
             {isAnomalous ? "Sync Stall Waste: ~$220,000 / day" : "Gang Efficiency: 100.0% Nominal"}
@@ -103,21 +101,21 @@ export function SiliconView({
         </div>
 
         <div className="silicon-kpi-card kpi-warn">
-          <span className="kpi-label">Wafer Lot Batch Health</span>
-          <div className="kpi-val">3 Foundry Batches Active</div>
+          <span className="kpi-label">Factory Wafer Batch Health</span>
+          <div className="kpi-val">3 Factory Batches Active</div>
           <p className="kpi-desc">
-            Lot <strong>LOT-TSMC-N4P-B42</strong> (25% of hall) exhibits a 4.8x SBE memory error rate compared to baseline.
+            Batch <strong>LOT-TSMC-N4P-B42</strong> (25% of hall) exhibits elevated memory calculation hiccups, like a batch of cookies slightly underbaked in the factory oven.
           </p>
-          <div className="kpi-highlight">Action: Proactive Cordon & Evacuation Watch</div>
+          <div className="kpi-highlight">Action: Proactively rotate out sister chips at normal save breaks</div>
         </div>
 
         <div className="silicon-kpi-card kpi-info">
-          <span className="kpi-label">HBM Predictive Degradation Horizon</span>
+          <span className="kpi-label">Memory Health Early Warning</span>
           <div className="kpi-val">24–48h Early Warning</div>
           <p className="kpi-desc">
-            HBM micro-bump micro-cracks emit correctable Single-Bit Errors (SBE) days before catastrophic Double-Bit (DBE) crashes.
+            Microscopic solder connections develop tiny stress fractures that produce minor, auto-corrected memory hiccups days before a sudden catastrophic crash.
           </p>
-          <div className="kpi-highlight">Drain at scheduled save to avoid $50k restarts</div>
+          <div className="kpi-highlight">Safely swap during scheduled saves to avoid $50k crash restarts</div>
         </div>
       </div>
 
@@ -192,35 +190,35 @@ export function SiliconView({
           </label>
         </div>
         <p className="muted">
-          Each accelerator package holds 2 Compute Core Dies and 8 High-Bandwidth Memory (HBM3e) stacks bonded on a CoWoS interposer. Notice how a single die's thermal throttle cascades delay across the NV-HBI die-to-die bridge.
+          Each processor package holds 2 computing brain dies and 8 high-speed memory blocks bonded together. Notice how heat throttling in one brain die forces its partner and the entire cluster to wait.
         </p>
 
         <div className="package-diagram">
           <div className="package-frame">
             <div className="package-top-bar">
-              <strong>Package: {selectedGpu} (Batch: LOT-TSMC-N4P-B42)</strong>
-              <span>Substrate Temp: {baseTemp.toFixed(1)}°C · 700W TDP</span>
+              <strong>Processor Package: {selectedGpu} (Batch: LOT-TSMC-N4P-B42)</strong>
+              <span>Base Temperature: {baseTemp.toFixed(1)}°C · 700W Power Rating</span>
             </div>
 
             {/* Compute Dies Row */}
             <div className="compute-dies-row">
               <div className={`die-box ${isAnomalous ? "die-throttled" : "die-nominal"}`}>
                 <div className="die-header">
-                  <strong>Compute Die 0 (Primary SM Engine)</strong>
-                  <span className="die-badge">{isAnomalous ? "THROTTLED" : "NOMINAL"}</span>
+                  <strong>Compute Brain Die 0 (Main Math Engine)</strong>
+                  <span className="die-badge">{isAnomalous ? "THROTTLED (RUNNING SLOW)" : "NOMINAL (HEALTHY)"}</span>
                 </div>
                 <div className="die-metrics">
-                  <div><span>Die Temp:</span> <strong>{die0Temp.toFixed(1)}°C</strong></div>
-                  <div><span>Clock Freq:</span> <strong>{die0Freq} MHz</strong></div>
-                  <div><span>Leakage Current:</span> <strong>{die0Leakage} mA</strong></div>
-                  <div><span>Straggler Drag:</span> <strong className={isAnomalous ? "text-danger" : ""}>+{die0StragglerDelta.toFixed(1)} ms</strong></div>
+                  <div><span>Die Temperature:</span> <strong>{die0Temp.toFixed(1)}°C</strong></div>
+                  <div><span>Clock Speed:</span> <strong>{die0Freq} MHz</strong></div>
+                  <div><span>Standby Heat Leakage:</span> <strong>{die0Leakage} mA</strong></div>
+                  <div><span>Choir Lag Drag:</span> <strong className={isAnomalous ? "text-danger" : ""}>+{die0StragglerDelta.toFixed(1)} ms</strong></div>
                 </div>
               </div>
 
               <div className="die-interconnect">
-                <span>NV-HBI Die-to-Die Bridge</span>
-                <strong>10 TB/s · 1.1 ns</strong>
-                <small>CRC Replays: 0</small>
+                <span>Internal Micro-Bridge</span>
+                <strong>High-Speed Highway</strong>
+                <small>Retries: 0</small>
               </div>
 
               <div className="die-box die-nominal">

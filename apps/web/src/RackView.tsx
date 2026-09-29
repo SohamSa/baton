@@ -89,10 +89,8 @@ const GENERATE_INITIAL_SHELVES = (): ShelfState[] => {
 
 export function RackView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
   const totalRacks = run?.cluster?.rack_count ?? 256;
@@ -142,7 +140,7 @@ export function RackView({
             status: "equalized",
             issue:
               shelf.shelfIndex >= 12
-                ? "✓ Manifold Valve Flushed: Particulate blockage cleared. Coolant flow restored to 18.0 L/min nominal. Thermal shadow dissipated across all 32 GPUs."
+                ? "✓ Cooling Line Flushed: Blockage cleared. Water flow restored to 18.0 L/min nominal. Thermal shadow dissipated across all 32 GPUs."
                 : shelf.issue,
             gpus: recoveredGpus,
           };
@@ -161,14 +159,15 @@ export function RackView({
     <section className="rack-section">
       <div className="rack-header">
         <span className="eyebrow">
-          {presentation ? "Executive Spatial Telemetry" : "Rack Elevation & Thermal Waveform Diagnostics"}
+          Rack Plumbing & Power Feeders
         </span>
-        <h1>Rack-Scale Real-Time Elevation, Spatial Thermal Wave & Manifold Diagnostics</h1>
+        <h1>Server Rack Elevation & The Pinched Pipe Heat Shadow</h1>
         <p className="lede">
-          In 100kW+ high-density AI racks, <strong>128 accelerators across 16 server shelves</strong> share a single vertical 54V DC busbar and liquid cooling manifold.
-          When a manifold supply valve pinches on upper shelves, return coolant recirculates, casting a <strong>silent spatial thermal shadow</strong> across 32 GPUs.
-          Single-chip monitoring misdiagnoses this as isolated silicon faults until 32 GPUs trip simultaneously and abort the 32,768-chip training job.
-          TrainingContinuity’s <strong>real-time spatial elevation telemetry</strong> correlates manifold differential pressure (ΔP) and vertical temperature gradients to trigger an automated checkpoint and manifold flush in sub-seconds.
+          Think of a pinched garden hose in a 16-story high-rise building:
+          Inside a high-density server rack, 128 processors stacked across 16 shelves all drink from a single vertical water cooling pipe and power feeder.
+          When a water valve pinches on the upper shelves, 32 processors suddenly heat up together like a silent thermal shadow.
+          Watching each chip in isolation blinds you to the plumbing problem until 32 chips overheat simultaneously and abort the whole {totalGpus.toLocaleString()}-chip training job.
+          Our rack-wide elevation monitoring watches cooling water pressure across all 16 shelves, saves everyone's progress, and flushes the line before any chips overheat.
         </p>
       </div>
 

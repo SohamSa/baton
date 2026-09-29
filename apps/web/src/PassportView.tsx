@@ -232,10 +232,8 @@ const CHIP_PASSPORTS: Record<string, ChipPassport> = {
 
 export function PassportView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
 
@@ -278,12 +276,14 @@ export function PassportView({
     <section className="passport-section">
       <div className="passport-header">
         <span className="eyebrow">
-          {presentation ? "Executive Hardware Lifecycle" : "Digital Product Passport & Cradle-to-Grave Traceability"}
+          Digital Product Passport (Cradle to Grave)
         </span>
-        <h1>Cradle-to-Grave Digital Chip Passport, Supply-Chain Lineage & Integration History</h1>
+        <h1>Digital Chip Passport (From Factory Bakery to Server Rack)</h1>
         <p className="lede">
-          In a 32,768-accelerator cluster, hardware failures are rarely isolated silicon faults—they are often assembly-induced latent defects from out-of-spec mounting torque, micro-voided TIM dispense, or blind-mate coupling leaks.
-          By unifying manufacturing (Foundry wafer probe, OSAT 2.5D packaging, SLT class test) with integration history (ODM board torque, rack insertion, and runtime thermal cycles) into an immutable <strong>Digital Product Passport</strong>, TrainingContinuity eliminates multi-week supplier finger-pointing, attributes warranty liability in sub-seconds, and proactively cordons assembly batches before rolling cluster crashes occur.
+          Think of a verified Carfax report or Digital Birth Certificate for every processor:
+          From the moment silicon is baked in the factory, packaged into multi-chip modules, mounted to circuit boards, clamped with liquid cooling plates, and slotted into server racks, every single machine has an unbroken digital history.
+          If a factory robot over-tightened cooling plate clamp screws on machine #14, bending the circuit board under microscopic stress until it fails months later, we immediately look up the digital passport to find the other 15 machines built on the exact same assembly bench.
+          We safely swap them during normal saves before rolling crashes can bring down the entire datacenter.
         </p>
       </div>
 

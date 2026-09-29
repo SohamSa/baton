@@ -119,7 +119,7 @@ export async function startStory(token: string, id: string, mode: "manual" | "au
   });
 }
 
-export function getRun(token: string, id: string, presentation: boolean) {
+export function getRun(token: string, id: string, presentation: boolean = false) {
   if (PUBLIC_DEMO) {
     const current = openRuns.get(id);
     if (!current) return Promise.reject(new ApiError(404, "Open a story from this page first."));

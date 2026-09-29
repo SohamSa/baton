@@ -92,10 +92,8 @@ const WAFER_LOT_SUMMARY = [
 
 export function LineageView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
 
@@ -106,16 +104,16 @@ export function LineageView({
   // Interactive Cohort Cordoning state
   const [cohortCordoned, setCohortCordoned] = useState<boolean>(true);
   const [cordonMessage, setCordonMessage] = useState<string>(
-    "✓ COHORT CORDON ACTIVE: 14 sibling dies from Wafer Lot #WL-9042 outer ring safely descheduled at verified checkpoint boundaries. Zero rolling crashes."
+    "✓ COHORT CORDON ACTIVE: 14 sister dies from Wafer Lot #WL-9042 outer ring safely descheduled at verified checkpoint boundaries. Zero rolling crashes."
   );
 
   const toggleCordon = () => {
     if (cohortCordoned) {
       setCohortCordoned(false);
-      setCordonMessage("⚠️ COHORT CORDON REMOVED: 14 sibling dies re-enrolled into active training ranks. Cluster exposed to rolling wafer-lot contagion crashes.");
+      setCordonMessage("⚠️ COHORT CORDON REMOVED: 14 sister dies re-enrolled into active training ranks. Cluster exposed to rolling wafer-lot contagion crashes.");
     } else {
       setCohortCordoned(true);
-      setCordonMessage("✓ COHORT CORDON APPLIED: 14 sibling dies flagged for graceful migration at the next scheduled checkpoint save (Step 30).");
+      setCordonMessage("✓ COHORT CORDON APPLIED: 14 sister dies flagged for graceful migration at the next scheduled checkpoint save (Step 30).");
     }
   };
 
@@ -123,13 +121,13 @@ export function LineageView({
     <section className="lineage-section">
       <div className="lineage-header">
         <span className="eyebrow">
-          {presentation ? "Executive Silicon Traceability" : "Die-to-Datacenter Lineage & Digital Twins"}
+          Silicon Birth Certificates & Batch Lineage
         </span>
-        <h1>Feed-Forward Silicon Lineage & Digital Birth Certificates</h1>
+        <h1>Factory Baking Batches & Digital Birth Certificates</h1>
         <p className="lede">
-          Historically, semiconductor testing data dies at the foundry exit gate. Datacenter operators only see generic serial numbers and real-time temperatures.
-          <strong> Feed-Forward Silicon Lineage</strong> breaks down the factory-to-datacenter wall, attaching each chip’s digital birth certificate (foundry wafer lot, wafer probe coordinates, factory Vmin, and leakage current) directly into the telemetry stream.
-          When a chip fails from a manufacturing defect, the cluster instantly identifies its <strong>genetic sibling dies</strong> across the {totalGpus.toLocaleString()}-GPU hall and cordons them during scheduled saves—preventing rolling multi-week cluster crashes.
+          Think of tracking an automaker recall: if an automaker discovers a batch of faulty airbags made on a specific factory Tuesday, they don't wait for every car on the highway to crash. They recall the sister cars with matching serial numbers.
+          Silicon chips are baked in circular batches called wafers. If one chip has a hidden factory baking defect, its sister chips from the same batch will fail too.
+          By attaching a Digital Birth Certificate to every processor, our system immediately identifies genetic sister chips across the entire {totalGpus.toLocaleString()}-GPU datacenter and safely rotates them out during normal save breaks — preventing weeks of rolling crashes.
         </p>
       </div>
 
@@ -145,21 +143,21 @@ export function LineageView({
         </div>
 
         <div className="lineage-kpi-card kpi-info">
-          <span className="kpi-label">Active Fab Production Lots</span>
+          <span className="kpi-label">Active Factory Production Batches</span>
           <div className="kpi-val">128 Wafer Lots Tracked</div>
           <p className="kpi-desc">
-            Aggregated across 4 foundry production runs from TSMC Fab 18A (3nm FinFET), tracking lot-by-lot leakage skew.
+            Aggregated across 4 foundry production runs from TSMC Fab 18A (3nm process), tracking lot-by-lot leakage patterns.
           </p>
           <div className="kpi-highlight">4 Lots Monitored for Wear Drift</div>
         </div>
 
         <div className="lineage-kpi-card kpi-warn">
-          <span className="kpi-label">Wafer-Lot Cohort Cordoning</span>
-          <div className="kpi-val">14 Sibling Dies Evacuated</div>
+          <span className="kpi-label">Batch Defect Quarantine</span>
+          <div className="kpi-val">14 Sister Chips Evacuated</div>
           <p className="kpi-desc">
-            Identified all dies from contaminated Wafer Lot #WL-9042 outer ring and migrated them without interrupting training.
+            Identified all sister chips from baking batch #WL-9042 and safely rotated them out at normal save breaks without interrupting training.
           </p>
-          <div className="kpi-highlight">Zero Unplanned All-Reduce Stalls</div>
+          <div className="kpi-highlight">Zero Unplanned Cluster Stalls</div>
         </div>
 
         <div className="lineage-kpi-card kpi-ok">
@@ -227,9 +225,9 @@ export function LineageView({
               <small>{passport.ringZone} · Radius: {passport.radiusMm}mm</small>
             </div>
             <div className="spec-col">
-              <span className="spec-label">Factory Sort Vmin & Leakage</span>
-              <strong>{passport.factoryVminMv} mV · {passport.factoryLeakageMa} mA IDDQ</strong>
-              <small>Certified at 25°C Automated Test Equipment (ATE)</small>
+              <span className="spec-label">Factory Electrical Cushion & Standby Heat</span>
+              <strong>{passport.factoryVminMv} mV Min Voltage · {passport.factoryLeakageMa} mA Heat Leakage</strong>
+              <small>Certified at Factory Quality Inspection</small>
             </div>
           </div>
 

@@ -394,8 +394,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "power_cliff": {
-        "title": "The substation power cliff",
-        "summary": "A simultaneous heavy GEMM launch across 32,768 chips causes an instantaneous 16-megawatt surge, sagging electrical feeds. The footprint-aware policy correlates circuit topology to distinguish power sags from chip failures, protecting the facility breaker.",
+        "title": "The substation power grid shockwave",
+        "summary": "A simultaneous heavy compute rush across 32,768 chips causes an instantaneous 16-megawatt electrical surge, sagging feeds like thousands of air conditioners turning on simultaneously. The smart policy distinguishes power line dips from chip failures, protecting the facility breaker.",
         "primary_policy": "combined",
         "comparison": ["combined"],
         "config": {
@@ -424,11 +424,11 @@ STORIES: dict[str, dict] = {
             ],
         },
         "owner_playbook": {
-            "title": "di/dt Power Ramp Pacing & Electrical Breaker Squeeze",
-            "problem": "Simultaneous kernel execution across 32,768 GPUs causes massive 15-20MW current surges (di/dt) in under 50ms, tripping substation circuit breakers or inducing voltage sags that brown-out entire server rows.",
-            "solution": "Implement software-managed kernel launch micro-staggering (5-10ms pacing) and topology-aware power domain smoothing to prevent utility breaker trips.",
-            "hardware_takeaway": "Equip rack busbars with sub-cycle high-speed voltage transient logging and link PDU power telemetry directly into the cluster scheduler.",
-            "roi_impact": "Prevents catastrophic facility-wide blackout events that take hours of manual substation reset and re-commissioning, saving millions in downtime.",
+            "title": "Substation Surge Pacing & Breaker Trip Protection",
+            "problem": "Thousands of chips launching heavy math kernels in the same microsecond cause an instantaneous 16-megawatt electrical shockwave, tripping substation master breakers and blacking out server rows.",
+            "solution": "Micro-stagger math execution by 5-10 milliseconds across server rows to smooth power spikes and keep the building grid stable without sacrificing job speed.",
+            "hardware_takeaway": "Equip rack power distribution units with sub-cycle high-speed voltage logging linked directly into the cluster job scheduler.",
+            "roi_impact": "Prevents catastrophic facility blackouts that require 4+ hours of manual substation resets, saving millions of dollars per event.",
         },
         "failure_level": {
             "tier": "Facility Power & Substation Level",
@@ -438,8 +438,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "fractured_microbump": {
-        "title": "The fractured microbump",
-        "summary": "An interposer microbump develops high resistance under thermal expansion, dropping die-to-die (D2D) packets. Naive restarts repeat the crash; automated MCM test sequencing isolates the degraded lane and remaps traffic to a redundant spare.",
+        "title": "The microscopic cracked solder wire",
+        "summary": "A microscopic solder wire connecting chiplets cracks under heat expansion, dropping data. Naive restarts repeat the crash; automated testing isolates the bad wire and switches instantly to a built-in backup spare wire in 45 seconds.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -468,10 +468,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Automated Multi-Chip Module (MCM) Test Sequencing & Microbump BISR",
-            "problem": "Thermal cycling causes a 35-micron solder microbump on the 2.5D silicon interposer to crack intermittently at 80°C. Standard software restarts crash repeatedly, wasting $150,000 in cluster-wide stall hours.",
-            "solution": "Trigger in-situ automated test sequencing on the MCM: verify boundary scan (Phase 1), execute D2D PHY lane margin test (Phase 2), and dynamically remap the faulty wire to an on-package redundant spare microbump via Built-In Self-Repair (BISR).",
-            "hardware_takeaway": "Mandate redundant die-to-die spare microbumps (UCIe / NV-HBI) and in-situ lane margin telemetry in all multi-chip module procurement specifications.",
-            "roi_impact": "Recovers $25,000+ per packaged MCM by repairing in-field instead of scrapping the assembly, while cutting incident resolution time from 4 hours to 45 seconds.",
+            "problem": "Thermal expansion causes a microscopic 35-micron solder wire inside the multi-chip package to crack intermittently at high heat. Simple software restarts fail repeatedly, wasting $150,000 in cluster idle stalls.",
+            "solution": "Trigger automated package testing: scan boundaries, test signal margins, and dynamically remap the faulty connection to an on-package backup spare wire in 45 seconds.",
+            "hardware_takeaway": "Require chip manufacturers to include redundant die-to-die spare wires (UCIe / NV-HBI) and live signal margin telemetry in your chip purchase contracts.",
+            "roi_impact": "Saves $25,000+ per multi-chip package by repairing it in place instead of throwing it away, while slashing downtime from 4 hours to 45 seconds.",
         },
         "failure_level": {
             "tier": "Silicon Packaging & MCM Level",
@@ -481,8 +481,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "wafer_lot_contagion": {
-        "title": "The wafer lot contagion",
-        "summary": "A die dies of a latent gate-oxide flaw from a contaminated foundry wafer edge. A naive rule fixes one node and gets hit by rolling crashes; feed-forward lineage tracks the wafer lot birth certificate, cordoning sibling dies at the next save.",
+        "title": "The bad factory baking batch recall",
+        "summary": "A processor dies from a hidden manufacturing flaw from the outer edge of a factory baking batch. A naive rule replaces one machine and gets hit by rolling crashes; digital birth certificates trace sister chips across the facility and safely rotate them out during normal save breaks.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -511,10 +511,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Feed-Forward Silicon Lineage & Wafer-Lot Cohort Cordoning",
-            "problem": "A latent fabrication defect (gate-oxide breakdown or chemical polishing drift) affects multiple dies from the same wafer lot outer edge. Treating each failure as an isolated event causes repeated cascading restarts across the 32k GPU hall over weeks, losing over $1,200,000.",
-            "solution": "Query the failed die's feed-forward Electronic Chip ID (ECID) and wafer lot genealogy (Lot #WL-9042). Automatically flag and cordon sibling dies across the hall, migrating them during a scheduled checkpoint boundary without crashing active training.",
-            "hardware_takeaway": "Require chip vendors to provide digital birth certificates (wafer lot ID, wafer X/Y coordinates, factory Vmin, and probe leakage) populated into the BMC EEPROM for every accelerator.",
-            "roi_impact": "Prevents 5 to 10 rolling cluster crashes ($1M-$2M saved) by eliminating batch defect contagion in one proactive sweep.",
+            "problem": "A hidden manufacturing defect affects an entire batch of chips sliced from the edge of a silicon disc. Replacing failed chips one by one causes rolling crashes across the hall for weeks, costing over $1,200,000.",
+            "solution": "Query the failed chip's digital birth certificate (wafer lot ID and coordinate). Automatically find all sister chips from the same flawed batch and safely swap them out during normal scheduled save intervals without crashing the active job.",
+            "hardware_takeaway": "Mandate digital birth certificates (wafer lot ID, slice coordinates, factory voltage requirements, and leakage) stored in on-board memory for every accelerator.",
+            "roi_impact": "Prevents 5 to 10 rolling cluster crashes ($1M-$2M saved) by eliminating the entire bad batch in one proactive rotation.",
         },
         "failure_level": {
             "tier": "Foundry Wafer Lot & Lineage Level",
@@ -524,8 +524,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "innocent_chip_dying_board": {
-        "title": "The innocent chip on a dying board",
-        "summary": "A GPU suffers voltage sags from a blown baseboard VRM power stage. A naive policy blames the $30,000 chip, replaces it, and crashes again; board-aware diagnostics cross-reference the chip's clean history, pinpointing the board fault and redistributing power phases.",
+        "title": "The healthy car engine on a faulty circuit board",
+        "summary": "A processor suffers electrical pressure drops from a blown circuit board regulator. A naive policy scraps the good $30,000 chip and crashes again; board diagnostics confirm the chip is healthy, pinpoint the cheap board regulator, and redistribute electrical phases.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -554,10 +554,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Baseboard VRM Power Delivery & Chip-History Fault Discrimination",
-            "problem": "A multi-phase Voltage Regulator Module (VRM) on the accelerator baseboard fails, causing transient voltage ripple under high-current matrix bursts. Uninformed technicians replace the $30,000 accelerator, leading to 'No Fault Found' (NFF) vendor rejections and a repeat crash on the replacement chip.",
-            "solution": "Correlate the accelerator's golden birth certificate (nominal Vmin/leakage) with board-level VRM telemetry. Discriminate the board power delivery network (PDN) as the true failure domain, dynamically redistributing current across remaining VRM phases to preserve continuity.",
-            "hardware_takeaway": "Instrument baseboards with per-phase current telemetry and PCB strain sensors; enforce board-level diagnostics before approving high-value accelerator RMAs.",
-            "roi_impact": "Eliminates false $30,000 chip replacements, prevents repeat secondary cluster outages, and cuts No-Fault-Found RMA processing disputes to near-zero.",
+            "problem": "A cheap $10 voltage regulator module on the circuit board fails, causing electrical pressure dips during heavy computing. Uninformed technicians mistakenly replace the healthy $30,000 chip, leading to rejected warranty claims and an immediate repeat crash on the new chip.",
+            "solution": "Cross-reference the chip's flawless factory history with circuit board power sensors. Confirm the board power line is the true culprit, and dynamically redistribute electrical load across remaining board regulators to finish training.",
+            "hardware_takeaway": "Instrument carrier boards with per-phase current sensors and strain gauges; enforce board-level diagnostics before approving expensive chip replacements.",
+            "roi_impact": "Eliminates mistaken $30,000 chip replacements, prevents secondary crash loops, and eliminates warranty return rejections.",
         },
         "failure_level": {
             "tier": "Accelerator Baseboard & Motherboard Level",
@@ -567,8 +567,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "rack_thermal_shadow": {
-        "title": "The rack thermal shadow",
-        "summary": "A cooling manifold valve pinch on Shelf 10 starves the top four server shelves, generating a spatial thermal wave across 32 GPUs that threatens a simultaneous thermal shutdown of 32 chips and stalls the 32k-GPU cluster unless rack-wide spatial monitoring detects the gradient and triggers an automated checkpoint and valve flush.",
+        "title": "The pinched high-rise cooling pipe",
+        "summary": "A pinched cooling valve on a lower shelf starves the top four server shelves, like a pinched garden hose in a 16-story high-rise. 32 chips heat up together; rack elevation monitoring catches the heat gradient early and triggers a clean save and valve line flush.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -597,10 +597,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Rack-Scale Spatial Telemetry & Coolant Manifold Diagnostics",
-            "problem": "A partial valve blockage or debris pinch in the rack liquid cooling supply manifold starves the upper shelves (Shelves 12-15). As return water heats up, a spatial thermal wave propagates across 32 GPUs. Reactive single-chip policies miss the macro pattern until 32 GPUs trip their thermal limits simultaneously, halting training across 32,768 accelerators.",
-            "solution": "Aggregate out-of-band (OOB) BMC telemetry into real-time rack elevation maps. Detect spatial thermal gradients (top vs. bottom shelf ΔT > 10°C) and manifold pressure drops (ΔP > 8 psi). Proactively initiate a coordinated checkpoint save and trigger automated coolant manifold reverse-flush cycling before emergency thermal throttling occurs.",
-            "hardware_takeaway": "Instrument rack cooling manifolds with digital differential pressure transmitters and integrate vertical shelf elevation topology into the cluster scheduler's spatial monitoring engine.",
-            "roi_impact": "Prevents catastrophic 32-GPU thermal shutdown cascades, protecting $180,000 in lost goodput time per manifold incident and preventing prolonged cluster-wide stalls.",
+            "problem": "A valve blockage in the rack liquid cooling supply manifold starves the upper shelves. Heat builds up into a thermal wave across 32 processors. Single-chip monitoring misses the rack-wide pattern until 32 chips overheat simultaneously, halting training across 32,768 accelerators.",
+            "solution": "Aggregate temperature sensors into real-time vertical rack elevation maps. Detect spatial heat gradients (top vs bottom ΔT > 10°C) and pressure drops. Proactively trigger a clean save and execute an automated coolant manifold line flush before chips overheat.",
+            "hardware_takeaway": "Install digital differential pressure sensors on rack cooling manifolds and map vertical shelf elevation directly into the cluster monitoring engine.",
+            "roi_impact": "Prevents catastrophic 32-processor simultaneous overheating cascades, protecting $180,000 in lost computing time per manifold incident.",
         },
         "failure_level": {
             "tier": "Rack Scale & Cooling Loop Level",
@@ -610,8 +610,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "cold_plate_torque_fracture": {
-        "title": "The cold plate torque fracture",
-        "summary": "An accelerator with golden wafer test credentials dies abruptly from an HBM channel disconnect induced by mechanical flexure. The digital passport policy correlates the chip's complete history, tracing an out-of-spec 185 cN·m mounting torque at ODM assembly and cordoning 16 sibling nodes at the next save before rolling crashes occur.",
+        "title": "The over-tightened cooling clamp screws",
+        "summary": "A pristine processor abruptly dies from cracked microscopic pins caused by over-tightened cooling screws at the assembly plant. Digital passport history traces the faulty factory assembly bench and cordons 16 sister machines at the next save before rolling crashes occur.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -640,10 +640,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Cradle-to-Grave Digital Passport & Assembly Batch Cordoning",
-            "problem": "An uncalibrated pneumatic torque driver at the ODM factory applied 185 cN·m (nominal 140 cN·m) to Socket 2 during cold plate mounting, inducing 380 microstrain on the carrier PCB. Under 700W thermal expansion at 85°C, solder micro-cracks open under HBM channel 3. Reactive policies blame random silicon failure, leaving 16 sibling nodes from ODM Batch #8810 to trigger rolling multi-week cluster crashes.",
-            "solution": "Query the accelerator's Unified Digital Product Passport (ECID -> Foundry Wafer Lot -> OSAT Interposer -> ODM Assembly Line B, Batch #8810). Identify the torque exceedance, assign 100% warranty liability to the ODM, and proactively cordon sibling nodes during the next scheduled checkpoint save without aborting active training.",
-            "hardware_takeaway": "Mandate automated torque telemetry logging and in-situ PCB strain gauges in all accelerator baseboard SMT procurement specifications, tied directly to the chip's digital passport.",
-            "roi_impact": "Recovers $480,000 in automated ODM warranty credits and prevents 3 to 6 secondary cluster stalls ($600,000+ saved) by eliminating integration lot contagion in one proactive sweep.",
+            "problem": "An uncalibrated power screwdriver at the contract assembly factory over-tightened cooling plate screws by 32%, bending the underlying circuit board. Under operating heat, solder joints crack under high-speed memory towers. Reactive policies blame random silicon, leaving 16 sister machines from the same assembly line to crash over weeks.",
+            "solution": "Query the processor's unified digital passport (birth certificate -> packaging plant -> factory assembly bench and batch). Identify the screw torque violation, claim 100% manufacturer warranty credit, and safely cordon sister machines during the next scheduled save without crashing active training.",
+            "hardware_takeaway": "Mandate automated screw torque telemetry logging and board strain sensors in all system assembly procurement contracts, recorded in the chip's digital passport.",
+            "roi_impact": "Recovers $480,000 in automated factory warranty credits and prevents 3 to 6 secondary cluster stalls ($600,000+ saved) by eliminating assembly batch defects in one proactive sweep.",
         },
         "failure_level": {
             "tier": "ODM Assembly & System Integration Level",
@@ -653,8 +653,8 @@ STORIES: dict[str, dict] = {
         },
     },
     "silent_subthreshold_cliff": {
-        "title": "The silent sub-threshold cliff",
-        "summary": "An edge-wafer die running at a nominal 71°C suffers subtle voltage droop under collective all-reduce, collapsing its timing margin. A silicon-blind policy sees no temperature alarms and lets the chip crash with silent data corruption; the silicon-context AI model evaluates real-time Vmargin, predicts the timing violation 60 seconds ahead, and triggers a preemptive checkpoint and micro-clock pacing.",
+        "title": "The subtle electrical pressure drop",
+        "summary": "A processor running at normal temperature suffers a slight electrical pressure dip, causing silent math calculation errors. A blind policy lets errors corrupt training; AI early warning predicts the timing drop 60 seconds early and applies micro-pacing to restore safety without stopping the job.",
         "primary_policy": "combined",
         "comparison": ["reactive", "combined"],
         "config": {
@@ -683,10 +683,10 @@ STORIES: dict[str, dict] = {
         },
         "owner_playbook": {
             "title": "Silicon-Context AI Anomaly Detection & Dynamic Vmin Pacing",
-            "problem": "Edge-of-wafer dies have higher leakage and tighter voltage margins. During collective all-reduce bursts, normal transient voltage droop pushes high-leakage dies past their sub-threshold timing cliff even at safe temperatures (71°C). Generic threshold detectors miss the approaching timing violation until uncorrectable Silent Data Corruption (SDC) poisons model weights or aborts training across 32,768 GPUs.",
-            "solution": "Deploy physics-informed autoencoder inference that combines real-time voltage/temperature telemetry with the chip's factory Vmin and wafer coordinates. Detect Vmargin collapse (< 15 mV), initiate a preemptive weights checkpoint, and apply a temporary 50 MHz micro-frequency pace to restore 35 mV timing headroom without crashing the job.",
-            "hardware_takeaway": "Incorporate per-die factory Vmin and leakage curves into the scheduler's telemetry inference pipeline; configure sub-millisecond core voltage droop monitors on all accelerator rails.",
-            "roi_impact": "Prevents catastrophic multi-day rollbacks from Silent Data Corruption ($500k-$1.5M saved per incident) and slashes false-positive cluster restarts by 98%.",
+            "problem": "Processors sliced from the outer edge of a silicon disc require tighter voltage cushions. During heavy sync bursts, transient electrical pressure dips push high-leakage chips over a timing cliff even at comfortable temperatures (71°C). Traditional tools miss this until silent math calculation errors corrupt training weights or crash the cluster.",
+            "solution": "Deploy smart AI anomaly detection that combines real-time voltage and temperature with the chip's factory birth certificate. Detect safety cushion collapse (< 15 mV) 60 seconds early, trigger a proactive weights save, and apply a 50 MHz micro-pace to restore safe timing cushion without stopping the job.",
+            "hardware_takeaway": "Incorporate per-chip factory minimum voltage requirements into your telemetry inference pipeline; configure sub-millisecond core voltage droop monitors on all accelerator power rails.",
+            "roi_impact": "Prevents catastrophic multi-day rollbacks from silent math calculation errors ($500k-$1.5M saved per incident) and eliminates 98% of false-alarm cluster restarts.",
         },
         "failure_level": {
             "tier": "Silicon Physics & AI Telemetry Level",

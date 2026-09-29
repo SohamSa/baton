@@ -51,7 +51,6 @@ export function Desk({
   run,
   frames,
   playing,
-  presentation,
   onPlay,
   onDecide,
 }: {
@@ -59,7 +58,6 @@ export function Desk({
   run: RunView | null;
   frames: LiveFrame[];
   playing: boolean;
-  presentation: boolean;
   onPlay: (id: string, mode: "manual" | "automated") => void;
   onDecide: (decision: "approve" | "reject") => void;
 }) {
@@ -92,7 +90,6 @@ export function Desk({
         run={run}
         frames={frames}
         activeRate={activeRate}
-        presentation={presentation}
       />
 
       <div className="problems">
@@ -172,9 +169,9 @@ export function Desk({
         </div>
         <div className="floor" role="img" aria-label="Placed accelerators in the simulated job">
           {placed.length === 0 ? <p className="muted">Waiting for the first step.</p> : placed.map((gpu) => (
-            <div key={gpu.id} className={`cell ${tone(gpu)}`} title={cellTitle(gpu, presentation)}>
+            <div key={gpu.id} className={`cell ${tone(gpu)}`} title={cellTitle(gpu)}>
               <span>{gpu.id.split("-").slice(-1)[0]}</span>
-              <strong>{presentation || gpu.temp === null ? "·" : `${gpu.temp.toFixed(0)}°`}</strong>
+              <strong>{gpu.temp === null ? "—" : `${gpu.temp.toFixed(0)}°`}</strong>
             </div>
           ))}
         </div>
@@ -198,7 +195,7 @@ export function Desk({
         <article className="card">
           <h2>What the job is doing</h2>
           <p>{live?.job_state ?? Object.values(run?.jobs ?? {})[0]?.state ?? "Waiting to start"}</p>
-          {!presentation && live ? <p className="muted">Useful new progress {live.useful_new.toFixed(2)} steps. Recomputation {live.recomputation.toFixed(2)}.</p> : null}
+          {live ? <p className="muted">Useful new progress {live.useful_new.toFixed(2)} steps. Recomputation {live.recomputation.toFixed(2)}.</p> : null}
         </article>
         <article className="card">
           <h2>Last verified save</h2>
@@ -224,14 +221,13 @@ export function Desk({
         </div>
       ) : null}
 
-      <Comparison run={run} presentation={presentation} onCompare={() => onPlay(run?.story?.id ?? selected, "automated")} playing={playing} />
+      <Comparison run={run} onCompare={() => onPlay(run?.story?.id ?? selected, "automated")} playing={playing} />
       
       {/* 4. ROI CALCULATOR WITH INDUSTRY PRESETS & 3-LEAK BREAKDOWN */}
       <ReturnPanel
         token={token}
         run={run}
         live={live}
-        presentation={presentation}
         activeRate={activeRate}
         onRateChange={setActiveRate}
       />
@@ -257,13 +253,11 @@ function BurnTicker({
   run,
   frames,
   activeRate,
-  presentation,
 }: {
   live: LiveFrame | undefined;
   run: RunView | null;
   frames: LiveFrame[];
   activeRate: number;
-  presentation: boolean;
 }) {
   const isStalled = live?.job_state === "stalled";
   const acceleratorsInJob = live?.cluster?.detailed_accelerator_count ?? run?.cluster?.detailed_accelerator_count ?? 8;
@@ -277,29 +271,12 @@ function BurnTicker({
   const stallWasteCost = (stalledSeconds / 3600) * acceleratorsInJob * activeRate;
   const fullHallPerHour = (run?.cluster?.accelerator_count ?? 32768) * activeRate;
 
-  if (presentation) {
-    return (
-      <div className="burn-ticker">
-        <div className="ticker-item">
-          <span className="ticker-label">Cluster Status</span>
-          <span className={`ticker-val ${isStalled ? "val-danger" : "val-ok"}`}>
-            {isStalled ? "STALLED (RELAY RACE HALTED)" : live ? "COMPUTING IN LOCKSTEP" : "STANDBY"}
-          </span>
-        </div>
-        <div className="ticker-item">
-          <span className="ticker-label">Useful Steps Delivered</span>
-          <span className="ticker-val">{live ? live.useful_new.toFixed(1) : "0.0"} steps</span>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className={`burn-ticker ${isStalled ? "burn-stalled" : ""}`}>
       <div className="ticker-item">
         <span className="ticker-label">Cluster Operation Status</span>
         <span className={`ticker-val ${isStalled ? "val-danger" : "val-ok"}`}>
-          {isStalled ? "⚠️ STALLED: BATON DROPPED" : live ? "✓ ACTIVE PRETRAINING" : "STANDBY"}
+          {isStalled ? "⚠️ STALLED: BATON DROPPED (ALL CHIPS WAITING)" : live ? "✓ ACTIVE TRAINING (SINGING IN HARMONY)" : "STANDBY"}
         </span>
       </div>
       <div className="ticker-item">
@@ -395,12 +372,12 @@ function PhysicalCascade({
             </span>
           ) : null}
           <div className={`cascade-badge ${isStalled ? "stalled-badge" : "healthy-badge"}`}>
-            {isStalled ? "⚠️ ALL-REDUCE BARRIER BLOCKED" : "✓ CLUSTER ADVANCING IN LOCKSTEP"}
+            {isStalled ? "⚠️ ALL 32,768 CHIPS FROZEN WAITING AT SYNC BARRIER" : "✓ ALL 32,768 CHIPS ADVANCING IN HARMONY"}
           </div>
         </div>
       </div>
       <p className="muted">
-        In distributed pretraining, every single chip must complete each calculation beat before any chip moves forward. Watch how an anomaly starting at the <strong>{failureLevel?.tier ?? "component level"}</strong> halts the entire datacenter hall.
+        In synchronized AI training, every single chip must complete each calculation step together before any chip moves forward. Watch how an anomaly starting at the <strong>{failureLevel?.tier ?? "component level"}</strong> halts the entire datacenter hall.
       </p>
       <div className="cascade-flow">
         {/* Tier 1: Datacenter Hall */}
@@ -471,7 +448,7 @@ function PhysicalCascade({
           <strong>💥 Why a {failureLevel?.tier ?? "single-component"} failure halts the entire 32,768-GPU hall:</strong>
         </div>
         <p>
-          Distributed LLM pretraining uses synchronous gang scheduling (all-reduce). {failureLevel ? failureLevel.blast_radius : "When one worker drops or stalls, all 32,768 accelerators freeze at the synchronization barrier."}
+          Distributed AI training works like a giant synchronized choir or relay race: every single chip must finish singing its verse together before anyone can move to the next measure. {failureLevel ? failureLevel.blast_radius : "When one worker drops or stalls, all 32,768 accelerators freeze in place while the electric meter keeps spinning."}
         </p>
         {failureLevel?.redundancy_strategy ? (
           <div className="cascade-redundancy-box">
@@ -539,7 +516,7 @@ function PlaybookCard({
 /* =========================================================================
    COMPARISON & 3-LEAK COST BREAKDOWN
    ========================================================================= */
-function Comparison({ run, presentation, onCompare, playing }: { run: RunView | null; presentation: boolean; onCompare: () => void; playing: boolean }) {
+function Comparison({ run, onCompare, playing }: { run: RunView | null; onCompare: () => void; playing: boolean }) {
   const branches = run?.comparison?.branches ?? [];
   if (branches.length === 0) {
     return (
@@ -561,11 +538,11 @@ function Comparison({ run, presentation, onCompare, playing }: { run: RunView | 
           <div key={branch.policy}>
             <span>{branch.policy.replaceAll("_", " ")}</span>
             <div className="bar" style={{ width: `${(branch.useful_new / max) * 100}%` }} />
-            {presentation ? null : <em>{branch.useful_new.toFixed(2)} useful steps</em>}
+            <em>{branch.useful_new.toFixed(2)} useful steps</em>
           </div>
         ))}
       </div>
-      {!presentation && delta !== undefined && delta !== null ? (
+      {delta !== undefined && delta !== null ? (
         <p>Useful-progress difference, second policy minus first: {delta.toFixed(2)} steps. A negative difference means the second policy preserved less work.</p>
       ) : null}
     </div>
@@ -579,14 +556,12 @@ function ReturnPanel({
   token,
   run,
   live,
-  presentation,
   activeRate,
   onRateChange,
 }: {
   token: string;
   run: RunView | null;
   live: LiveFrame | undefined;
-  presentation: boolean;
   activeRate: number;
   onRateChange: (rate: number) => void;
 }) {
@@ -727,36 +702,34 @@ function ReturnPanel({
       ) : null}
 
       {error ? <p role="alert">{error}</p> : null}
-      {estimate ? <EstimateView estimate={estimate} presentation={presentation} /> : null}
+      {estimate ? <EstimateView estimate={estimate} /> : null}
 
       {/* 3 LEAKS COST BREAKDOWN CARD */}
-      {!presentation && (
-        <div className="three-leaks-breakdown">
-          <h3>The Three Operational Leaks Breakdown</h3>
-          <div className="leaks-grid">
-            <div className="leak-box leak-stall">
-              <span className="leak-title">1. The Stall Leak</span>
-              <strong className="leak-amount">${stallLossDollar.toFixed(2)}</strong>
-              <small>{stallSeconds} seconds of idle cluster wait</small>
-            </div>
-            <div className="leak-box leak-unsaved">
-              <span className="leak-title">2. Unsaved Work Leak</span>
-              <strong className="leak-amount">${recompLossDollar.toFixed(2)}</strong>
-              <small>{recompSteps.toFixed(1)} steps forced to recompute</small>
-            </div>
-            <div className="leak-box leak-savings">
-              <span className="leak-title">3. Net Preserved Savings</span>
-              <strong className="leak-amount">+${preservedSavingsDollar.toFixed(2)}</strong>
-              <small>{Math.max(0, deltaSteps).toFixed(1)} useful steps preserved</small>
-            </div>
+      <div className="three-leaks-breakdown">
+        <h3>The Three Operational Leaks Breakdown</h3>
+        <div className="leaks-grid">
+          <div className="leak-box leak-stall">
+            <span className="leak-title">1. The Stall Leak</span>
+            <strong className="leak-amount">${stallLossDollar.toFixed(2)}</strong>
+            <small>{stallSeconds} seconds of idle cluster wait</small>
+          </div>
+          <div className="leak-box leak-unsaved">
+            <span className="leak-title">2. Unsaved Work Leak</span>
+            <strong className="leak-amount">${recompLossDollar.toFixed(2)}</strong>
+            <small>{recompSteps.toFixed(1)} steps forced to recompute</small>
+          </div>
+          <div className="leak-box leak-savings">
+            <span className="leak-title">3. Net Preserved Savings</span>
+            <strong className="leak-amount">+${preservedSavingsDollar.toFixed(2)}</strong>
+            <small>{Math.max(0, deltaSteps).toFixed(1)} useful steps preserved</small>
           </div>
         </div>
-      )}
+      </div>
     </form>
   );
 }
 
-function EstimateView({ estimate, presentation }: { estimate: EconomicsEstimate; presentation: boolean }) {
+function EstimateView({ estimate }: { estimate: EconomicsEstimate }) {
   const reason = REASONS[estimate.reason] ?? estimate.reason.replaceAll("_", " ");
   return (
     <div className="estimate" role="status">
@@ -766,14 +739,13 @@ function EstimateView({ estimate, presentation }: { estimate: EconomicsEstimate;
         <p>Useful-work difference expressed as accelerator-hours: <strong>{estimate.useful_delta_gpu_hours.toFixed(4)} GPU-hrs</strong>. Formula: {estimate.conversion}.</p>
       ) : null}
       {estimate.missing?.length ? <p>Still empty: {estimate.missing.join(", ").replaceAll("_", " ")}.</p> : null}
-      {!presentation && estimate.roi !== null && estimate.benefit !== undefined && estimate.net_benefit !== null ? (
+      {estimate.roi !== null && estimate.benefit !== undefined && estimate.net_benefit !== null ? (
         <div className="estimate-highlight">
           <p>Gross Benefit: <strong>${estimate.benefit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></p>
           <p>Net Financial Return: <strong>${estimate.net_benefit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></p>
           <p>Estimated ROI: <strong>{(estimate.roi * 100).toFixed(1)}%</strong> of investment</p>
         </div>
       ) : null}
-      {presentation && estimate.roi !== null ? <p>A return figure was computed from your inputs. Switch off presentation mode to read the figure.</p> : null}
     </div>
   );
 }
@@ -796,8 +768,8 @@ function tone(gpu: { functional: boolean; quarantined: boolean; temp: number | n
   return "cool";
 }
 
-function cellTitle(gpu: { id: string; temp: number | null; functional: boolean; quarantined: boolean }, presentation: boolean) {
+function cellTitle(gpu: { id: string; temp: number | null; functional: boolean; quarantined: boolean }) {
   const state = !gpu.functional ? "not functional" : gpu.quarantined ? "quarantined" : "in the job";
-  if (presentation || gpu.temp === null) return `${gpu.id}, ${state}`;
-  return `${gpu.id}, ${gpu.temp.toFixed(1)} C, ${state}`;
+  if (gpu.temp === null) return `${gpu.id}, ${state}`;
+  return `${gpu.id}, ${gpu.temp.toFixed(1)}°C, ${state}`;
 }

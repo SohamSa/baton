@@ -58,10 +58,8 @@ const INITIAL_DIES: Record<string, DieOperatingState> = {
 
 export function AnomalyView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
 
@@ -109,38 +107,41 @@ export function AnomalyView({
     <section className="anomaly-section">
       <div className="anomaly-header">
         <span className="eyebrow">
-          {presentation ? "Executive AI Anomaly Detection" : "Silicon-Context Physics & Deep Learning Telemetry"}
+          AI Early Warning & Electrical Pressure Guard
         </span>
-        <h1>AI-Driven Anomaly Detection with Silicon Context & Physics-Informed Digital Twins</h1>
+        <h1>Smart AI Anomaly Detection & The Silent Math Glitch</h1>
         <p className="lede">
-          Traditional datacenter ML anomaly detectors fail in frontier AI pretraining: they mistake normal GEMM workload phase shifts for thermal anomalies (generating costly <strong>false-alarm cluster restarts</strong>), yet miss true <strong>sub-threshold timing cliffs</strong> where edge-of-wafer dies experience Silent Data Corruption (SDC) even at safe temperatures.
-          TrainingContinuity fuses real-time voltage/temperature telemetry with the chip’s <strong>Silicon Birth Certificate</strong> (Vmin, leakage, wafer coordinates), slashing false alarms by <strong>98.9%</strong> and predicting timing faults <strong>180 seconds ahead</strong>.
+          Think of water pressure dipping in a high-rise building causing upper-floor faucets to sputter:
+          When thousands of processors do intense math bursts at once, electrical voltage sags slightly.
+          If the electrical pressure dips too low, a chip will quietly miscalculate a number without crashing — a silent math glitch that poisons AI training weights undetected for days until weeks of work must be thrown out.
+          Generic alarms miss this because temperatures look completely normal.
+          Our smart AI watches each chip's electrical pressure cushion in real time, saves training progress, and gently paces chip clock speeds by 2% to restore safety margins before any calculations get corrupted.
         </p>
       </div>
 
       {/* 4 EXECUTIVE KPI CARDS */}
       <div className="anomaly-kpi-grid">
         <div className="anomaly-kpi-card kpi-ok">
-          <span className="kpi-label">Silicon-Context Inference Loop</span>
+          <span className="kpi-label">AI Telemetry Watchdog</span>
           <div className="kpi-val">100% ({totalGpus.toLocaleString()} Accelerators)</div>
           <p className="kpi-desc">
-            Continuous 10Hz physics-informed autoencoder evaluates dynamic voltage margins across all placed dies.
+            Continuous physics-informed autoencoder evaluates dynamic voltage cushions across all placed dies.
           </p>
-          <div className="kpi-highlight">Zero Host OS CPU Overhead</div>
+          <div className="kpi-highlight">Zero Main CPU Overhead</div>
         </div>
 
         <div className={`anomaly-kpi-card ${pacingSuccess ? "kpi-ok" : "kpi-warning"}`}>
-          <span className="kpi-label">Sub-Threshold Timing Margin</span>
+          <span className="kpi-label">Electrical Pressure Cushion</span>
           <div className="kpi-val">
-            {pacingSuccess ? "+36 mV Margin (Safe)" : "+11 mV Margin (Critical)"}
+            {pacingSuccess ? "+36 mV Margin (Safe Cushion)" : "+11 mV Margin (Low Pressure Warning)"}
           </div>
           <p className="kpi-desc">
             {pacingSuccess
-              ? "Micro-frequency pacing (-50 MHz) restored +36 mV timing headroom; SDC hazard completely dissipated."
-              : "Impending timing violation flagged on gpu-r0-h0-d1: Voltage margin collapsed below 15 mV threshold."}
+              ? "Gentle clock pacing (-50 MHz) restored +36 mV safety cushion; math glitch risk eliminated."
+              : "Voltage cushion collapsed below 15 mV safety threshold on gpu-r0-h0-d1."}
           </p>
           <div className="kpi-highlight">
-            {pacingSuccess ? "✓ Timing Cliff Averted" : "⚠ SDC Hazard: Bitflip Imminent"}
+            {pacingSuccess ? "✓ Voltage Cushion Restored" : "⚠ Math Glitch Hazard: Bitflip Imminent"}
           </div>
         </div>
 

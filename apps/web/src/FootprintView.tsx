@@ -70,10 +70,8 @@ const PARALLEL_TOPOLOGY = [
 
 export function FootprintView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const totalGpus = run?.cluster?.accelerator_count ?? 32768;
 
@@ -97,12 +95,14 @@ export function FootprintView({
   return (
     <section className="footprint-section">
       <div className="footprint-header">
-        <span className="eyebrow">{presentation ? "Executive Energy & Power" : "Megawatt Envelopes & Energy Economics"}</span>
-        <h1>Compute Footprint, Grid Megawatts & Energy Continuity</h1>
+        <span className="eyebrow">Electric Bill, Power Grid & Standby Waste</span>
+        <h1>Megawatts, Utility Grid & Standby Electric Waste</h1>
         <p className="lede">
-          A {hallGpus.toLocaleString()}-GPU datacenter draws between 25 and 40 Megawatts (MW) of electrical power—enough to power a city of 30,000 homes.
-          At frontier scale, electrical power is the primary physical constraint on AI training.
-          This view monitors real-time substation load, tracks the financial drain of <strong>ghost idle megawatts</strong> burned during cluster stalls, manages PUE cooling overhead, and proves that our telemetry watchdog algorithms consume less than 0.02% CPU footprint.
+          Think of leaving the stadium lights and air conditioners running in an empty arena:
+          A {hallGpus.toLocaleString()}-processor datacenter draws between 25 and 40 Megawatts of power — enough to power a city of 30,000 homes.
+          When the cluster stalls waiting for a crashed node, the chips do not shut off.
+          They sit in standby burning over 6 Megawatts of electricity just keeping memory warm and liquid pumps circulating.
+          This view monitors real-time electric load, tracks the dollars wasted burning power while waiting, and proves our watchdog software runs with virtually zero computing overhead (&lt; 0.02%).
         </p>
       </div>
 
@@ -118,10 +118,10 @@ export function FootprintView({
         </div>
 
         <div className="footprint-kpi-card kpi-danger">
-          <span className="kpi-label">Ghost Idle Megawatt Waste</span>
+          <span className="kpi-label">Standby Electric Waste</span>
           <div className="kpi-val">{ghostMegawatts.toFixed(1)} MW Stall Power</div>
           <p className="kpi-desc">
-            When 32k GPUs freeze at a synchronization barrier, they still draw 35% idle power to maintain HBM state and cooling pumps.
+            When 32k chips freeze, they still draw standby power to keep memory alive and water pumps circulating.
           </p>
           <div className="kpi-highlight">Idle Utility Waste: ${Math.round(hourlyElectricityWaste).toLocaleString()} / hour</div>
         </div>

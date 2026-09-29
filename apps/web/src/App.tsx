@@ -35,27 +35,27 @@ import { YieldView } from "./YieldView";
 type Session = { token: string; role: string; username: string };
 
 const LINKS = [
-  ["/", "Overview"],
-  ["/stories", "Rehearsals"],
-  ["/silicon", "Silicon dies"],
-  ["/lineage", "Silicon lineage"],
-  ["/passport", "Chip passport"],
-  ["/anomalies", "AI anomalies"],
-  ["/yield", "Test & yield"],
-  ["/mcm", "MCM packaging"],
-  ["/boards", "Board diagnostics"],
-  ["/racks", "Rack elevation"],
-  ["/footprint", "Power footprint"],
-  ["/dependencies", "Who moves together"],
-  ["/devices", "Chip charts"],
-  ["/incidents", "What went wrong"],
-  ["/checkpoints", "Saves"],
-  ["/recovery", "Your decision"],
-  ["/audit", "Paper trail"],
-  ["/experiments", "Two reactions"],
-  ["/data", "Data catalog"],
-  ["/models", "Learned helper"],
-  ["/monitoring", "Sensor health"],
+  ["/", "Cluster Overview"],
+  ["/stories", "Incident Rehearsals"],
+  ["/silicon", "Processor Health"],
+  ["/lineage", "Manufacturing Batches"],
+  ["/passport", "Digital Chip Passport"],
+  ["/anomalies", "AI Early Warning"],
+  ["/yield", "Factory Quality & Bins"],
+  ["/mcm", "Multi-Chip Assembly"],
+  ["/boards", "Baseboard Power"],
+  ["/racks", "Rack Plumbing & Power"],
+  ["/footprint", "Electric Bill & Grid"],
+  ["/dependencies", "Choir Ranks & Teamwork"],
+  ["/devices", "Sensor Telemetry"],
+  ["/incidents", "Downtime Incidents"],
+  ["/checkpoints", "Saved Progress"],
+  ["/recovery", "Operator Decisions"],
+  ["/audit", "Compliance Audit Trail"],
+  ["/experiments", "Strategy Comparison"],
+  ["/data", "Telemetry Dictionary"],
+  ["/models", "AI Helper Models"],
+  ["/monitoring", "Sensor Health"],
 ] as const;
 
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
@@ -64,7 +64,6 @@ export function App() {
   const [session, setSession] = useState<Session | null>(
     PUBLIC_DEMO ? { token: "public", role: "approver", username: "public visitor" } : null,
   );
-  const [presentation, setPresentation] = useState(false);
   const [theme, setTheme] = useState("dark");
   const [run, setRun] = useState<RunView | null>(null);
   const [frames, setFrames] = useState<LiveFrame[]>([]);
@@ -154,9 +153,6 @@ export function App() {
             {label}
           </NavLink>
         ))}
-        <button type="button" onClick={() => setPresentation((value) => !value)}>
-          {presentation ? "Technical mode" : "Presentation mode"}
-        </button>
         <button type="button" onClick={() => setTheme((value) => (value === "dark" ? "light" : "dark"))}>
           {theme === "dark" ? "Light theme" : "Dark theme"}
         </button>
@@ -180,26 +176,26 @@ export function App() {
         {error ? <p role="alert">{error}</p> : null}
         {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
         <Routes>
-          <Route path="/" element={<Desk token={session.token} run={run} frames={frames} playing={playing} presentation={presentation} onPlay={play} onDecide={decide} />} />
+          <Route path="/" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
           <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
-          <Route path="/silicon" element={<SiliconView run={run} presentation={presentation} />} />
-          <Route path="/lineage" element={<LineageView run={run} presentation={presentation} />} />
-          <Route path="/yield" element={<YieldView run={run} presentation={presentation} />} />
-          <Route path="/mcm" element={<MCMView run={run} presentation={presentation} />} />
-          <Route path="/boards" element={<BoardView run={run} presentation={presentation} />} />
-          <Route path="/racks" element={<RackView run={run} presentation={presentation} />} />
-          <Route path="/passport" element={<PassportView run={run} presentation={presentation} />} />
-          <Route path="/anomalies" element={<AnomalyView run={run} presentation={presentation} />} />
-          <Route path="/footprint" element={<FootprintView run={run} presentation={presentation} />} />
+          <Route path="/silicon" element={<SiliconView run={run} />} />
+          <Route path="/lineage" element={<LineageView run={run} />} />
+          <Route path="/yield" element={<YieldView run={run} />} />
+          <Route path="/mcm" element={<MCMView run={run} />} />
+          <Route path="/boards" element={<BoardView run={run} />} />
+          <Route path="/racks" element={<RackView run={run} />} />
+          <Route path="/passport" element={<PassportView run={run} />} />
+          <Route path="/anomalies" element={<AnomalyView run={run} />} />
+          <Route path="/footprint" element={<FootprintView run={run} />} />
           <Route path="/dependencies" element={<Dependencies run={run} />} />
-          <Route path="/devices" element={<Devices run={run} presentation={presentation} />} />
+          <Route path="/devices" element={<Devices run={run} />} />
           <Route path="/incidents" element={<Incidents run={run} />} />
           <Route path="/checkpoints" element={<Checkpoints run={run} />} />
           <Route path="/recovery" element={<Recovery session={session} run={run} onDecide={decide} />} />
           <Route path="/audit" element={<AuditView session={session} run={run} />} />
-          <Route path="/experiments" element={<Experiments run={run} presentation={presentation} />} />
+          <Route path="/experiments" element={<Experiments run={run} />} />
           <Route path="/data" element={<DataView session={session} />} />
-          <Route path="/models" element={<Models session={session} presentation={presentation} />} />
+          <Route path="/models" element={<Models session={session} />} />
           <Route path="/monitoring" element={<MonitoringView session={session} />} />
         </Routes>
 
@@ -267,7 +263,10 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
   return (
     <section>
       <h1>The seventeen rehearsals</h1>
-      <p>Each card is one situation a data-center owner can hit: a slow heat problem, a sudden stop, a shared power feed, a healthy busy spell, a broken save, a job that must restart together, late sensor readings, a shutdown rule that does more harm than the fault, a silent straggler die dragging down the hall, the revolving door trap where a repaired node relapses into an immediate crash, the substation power cliff where an unmanaged launch surge trips facility breakers, the fractured microbump where automated MCM test sequencing isolates a cracked interposer lane and triggers self-repair without scrapping a $28,000 package, the wafer lot contagion where feed-forward silicon lineage tracks a manufacturing defect forward and cordons sibling dies before rolling crashes stall the cluster, the innocent chip on a dying board where baseboard VRM diagnostics correlate the chip's clean history to fix a power rail defect instead of falsely scrapping a good $30,000 processor, the rack thermal shadow where real-time spatial elevation monitoring across all 16 shelves detects a cooling manifold valve pinch and initiates preemptive checkpointing and manifold flushing before 32 GPUs overheat simultaneously, the cold plate torque fracture where full cradle-to-grave manufacturing and integration history isolates an out-of-spec mounting torque applied at ODM assembly and cordons 16 sibling nodes at the next save before rolling crashes occur, or the silent sub-threshold cliff where silicon-context AI anomaly detection tracks real-time Vmargin against the die's factory Vmin curve, predicting an uncorrectable timing fault during collective all-reduce and triggering proactive checkpointing and micro-frequency pacing before Silent Data Corruption aborts training. Pick one and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.</p>
+      <p>Each card is one realistic situation a datacenter business owner encounters:
+        a slow heat buildup, a sudden stop, a shared power feed, a healthy busy spell, a corrupted save, a job that must restart as a choir, late sensor readings, a shutdown rule that does more harm than the breakdown, a tired runner chip dragging down the entire hall, the hospital discharge trap where a repaired machine crashes again immediately, the substation power grid shockwave where thousands of chips booting together trip facility breakers, the microscopic cracked solder wire where automated testing switches to a built-in backup spare wire in 45 seconds, the bad factory baking batch recall where silicon birth certificates trace sister chips and safely rotate them out during normal save breaks, the healthy car engine on a faulty circuit board where power diagnostics prevent mistakenly scrapping a good $30,000 processor, the pinched high-rise cooling pipe where rack elevation monitoring detects valve blockages before 32 chips overheat together, the over-tightened cooling clamp screws where digital passport history finds sister machines assembled on the same faulty factory bench, or the subtle electrical pressure drop where smart AI catches voltage sags before silent math calculation errors corrupt training.
+        Pick one rehearsal and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.
+      </p>
       <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
       <div className="grid">
         {items.map((item) => (
@@ -324,7 +323,7 @@ function Dependencies({ run }: { run: RunView | null }) {
   );
 }
 
-function Devices({ run, presentation }: { run: RunView | null; presentation: boolean }) {
+function Devices({ run }: { run: RunView | null }) {
   const [selected, setSelected] = useState("");
   if (!run?.gpus) return <Empty text="Play a rehearsal first. This page then shows the chips that have their own temperature and power history." />;
   const ids = Object.keys(run.gpus);
@@ -339,12 +338,10 @@ function Devices({ run, presentation }: { run: RunView | null; presentation: boo
       <label>Accelerator <select value={current} onChange={(event) => setSelected(event.target.value)}>{ids.map((id) => <option key={id}>{id}</option>)}</select></label>
       <div className="panel">
         <p>Chip family {gpu.family}. Stretch of work: {gpu.phase}. Fan speed {gpu.fan_speed_ratio === null ? "is not available in this rehearsal, so it stays blank" : "is being reported"}. The cause named on the other pages comes from readings like these. The scripted answer key stays off this page.</p>
-        {!presentation ? <p>Latest reported temperature {gpu.gpu_temp_c?.toFixed(1) ?? "unavailable"} C. How far that sits from the chip’s normal pattern: {gpu.residual_ewma?.toFixed(2) ?? "unavailable"}.</p> : <p>Temperature is being watched against the range this chip is expected to stay inside.</p>}
-        {!presentation ? (
-          <div className="bars" aria-label="Recent reported temperature">
-            {series.map((point) => <div key={point.step} className="bar" style={{ width: `${((point.gpu_temp_c ?? 0) / max) * 100}%` }} title={`step ${point.step}`} />)}
-          </div>
-        ) : null}
+        <p>Latest reported temperature {gpu.gpu_temp_c?.toFixed(1) ?? "unavailable"}°C. How far that sits from the chip’s normal pattern: {gpu.residual_ewma?.toFixed(2) ?? "unavailable"}.</p>
+        <div className="bars" aria-label="Recent reported temperature">
+          {series.map((point) => <div key={point.step} className="bar" style={{ width: `${((point.gpu_temp_c ?? 0) / max) * 100}%` }} title={`step ${point.step}`} />)}
+        </div>
       </div>
     </section>
   );
@@ -427,18 +424,16 @@ function AuditView({ session, run }: { session: Session; run: RunView | null }) 
   );
 }
 
-function Experiments({ run, presentation }: { run: RunView | null; presentation: boolean }) {
+function Experiments({ run }: { run: RunView | null }) {
   if (!run?.comparison) return <Empty text="On the overview, choose “Compare two ways” and play a rehearsal. This page then shows the two reactions side by side on the same breakdown." />;
   return (
     <section>
       <h1>Two ways of handling the same breakdown</h1>
       <p>Both columns face the same scripted problem, the way two managers are given the same incident report. The one that keeps more finished work is the better reaction for this rehearsal. The numbers are from the practice floor.</p>
-      {presentation ? <p>The decision story is available in the narrative. Benchmark numbers are hidden in presentation mode.</p> : (
-        <table><thead><tr><th>Way of reacting</th><th>Finished work</th><th>Work repeated</th><th>Seconds the job was stopped</th></tr></thead><tbody>
-          {run.comparison.branches.map((branch) => <tr key={branch.policy}><td>{branch.policy}</td><td>{branch.useful_new.toFixed(2)}</td><td>{branch.recomputation.toFixed(2)}</td><td>{branch.interruption_seconds.toFixed(1)}</td></tr>)}
-        </tbody></table>
-      )}
-      {!presentation && run.comparison.delta_second_minus_first ? <p>Finished-work difference, second way minus first: {run.comparison.delta_second_minus_first.useful_new.toFixed(2)}. A negative number means the second way kept less of the job.</p> : null}
+      <table><thead><tr><th>Way of reacting</th><th>Finished work</th><th>Work repeated</th><th>Seconds the job was stopped</th></tr></thead><tbody>
+        {run.comparison.branches.map((branch) => <tr key={branch.policy}><td>{branch.policy}</td><td>{branch.useful_new.toFixed(2)}</td><td>{branch.recomputation.toFixed(2)}</td><td>{branch.interruption_seconds.toFixed(1)}</td></tr>)}
+      </tbody></table>
+      {run.comparison.delta_second_minus_first ? <p>Finished-work difference, second way minus first: {run.comparison.delta_second_minus_first.useful_new.toFixed(2)}. A negative number means the second way kept less of the job.</p> : null}
     </section>
   );
 }
@@ -520,7 +515,7 @@ function DataView({ session }: { session: Session }) {
   );
 }
 
-function Models({ session, presentation }: { session: Session; presentation: boolean }) {
+function Models({ session }: { session: Session }) {
   const [report, setReport] = useState<ModelReport | null>(null);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -535,7 +530,7 @@ function Models({ session, presentation }: { session: Session; presentation: boo
         <>
           <p>The rule in charge: {report.operational_default.replaceAll("_", " ")}.</p>
           <p>The answer key is {report.oracle.available_to_operators ? "visible here" : "kept off the operator pages"}.</p>
-          {presentation || !report.trained_report ? <p>{report.trained_report?.note ?? "No trained report has been written yet."}</p> : (
+          {!report.trained_report ? <p>No trained report has been written yet.</p> : (
             <div className="panel">
               <p>On the cases it had not seen, the learned helper scored {report.trained_report.model_average_precision.toFixed(3)}. The simple heat-pattern rule scored {report.trained_report.baseline_average_precision.toFixed(3)}. Higher is a better ranking of the risky moments.</p>
               <p>Beats the simple rule: {report.trained_report.beats_baseline ? "yes" : "no"}.</p>

@@ -84,10 +84,8 @@ const YIELD_BINS = [
 
 export function YieldView({
   run,
-  presentation,
 }: {
   run: RunView | null;
-  presentation: boolean;
 }) {
   const [selectedClaim, setSelectedClaim] = useState<string>("host-r0-h0");
   const [copied, setCopied] = useState<boolean>(false);
@@ -101,39 +99,41 @@ export function YieldView({
   return (
     <section className="yield-section">
       <div className="yield-header">
-        <span className="eyebrow">{presentation ? "Executive Quality & RMA" : "Lifecycle Quality & Warranty Economics"}</span>
-        <h1>Intelligent Test, Canary Qualification & Silicon Yield Decisions</h1>
+        <span className="eyebrow">Quality Testing & Factory Warranty Reclaims</span>
+        <h1>Factory Quality, Sorting Bins & The Hospital Discharge Trap</h1>
         <p className="lede">
-          Hardware testing does not stop at the semiconductor factory gate.
-          Throughout a datacenter's lifecycle, intelligent testing prevents infant mortality during bring-up, stops repaired nodes from crash-looping production jobs (<strong>the revolving door trap</strong>), and bins silicon yield so only the highest-grade chips run synchronous 32k frontier pretraining.
+          Hardware testing does not stop when chips leave the factory.
+          Think of testing a runner before sending them back into a marathon: if a server crashes and reboots, sending it straight back onto the track without checking if its fever is gone causes <strong>the hospital discharge trap</strong> (crashing the entire cluster again immediately).
+          Our system runs an automated 2-minute diagnostic jog first to verify full recovery.
+          We also sort chips like fresh fruit: top-grade Grade-A chips are assigned to the big {totalGpus}-chip synchronized marathon where everyone must run at top speed, while good-but-warmer Grade-B chips work on flexible jobs that don't hold anyone back.
         </p>
       </div>
 
       {/* TOP 3 EXECUTIVE KPI CARDS */}
       <div className="yield-kpi-grid">
         <div className="yield-kpi-card kpi-danger">
-          <span className="kpi-label">Canary Qualification Pipeline</span>
+          <span className="kpi-label">Canary Safety Gate</span>
           <div className="kpi-val">1 Node Blocked from Re-entry</div>
           <p className="kpi-desc">
-            Node <strong>host-r0-h0</strong> rebooted after a cooling fault but failed the thermal recovery slope canary. <strong>The safety gate blocked re-entry</strong>, preventing a second catastrophic cluster crash.
+            Node <strong>host-r0-h0</strong> rebooted after a cooling fault but failed the thermal recovery jog. <strong>The safety gate blocked re-entry</strong>, preventing a second catastrophic cluster crash.
           </p>
           <div className="kpi-highlight">Avoided Cost: ~$300,000 in repeated stall burn</div>
         </div>
 
         <div className="yield-kpi-card kpi-ok">
-          <span className="kpi-label">Fleet Silicon Yield Distribution</span>
-          <div className="kpi-val">87.5% Bin 1 (Gold Fleet)</div>
+          <span className="kpi-label">Processor Quality Bins</span>
+          <div className="kpi-val">87.5% Grade-A (Gold Fleet)</div>
           <p className="kpi-desc">
-            28,672 accelerators verified for frontier synchronous gang pretraining. 3,072 standard dies binned into elastic fine-tuning.
+            28,672 top-grade chips assigned to the synchronized main marathon. 3,072 standard chips binned into flexible background jobs.
           </p>
-          <div className="kpi-highlight">Gang Efficiency: Maximum synchronization protection</div>
+          <div className="kpi-highlight">Choir Harmony: Maximum synchronization protection</div>
         </div>
 
         <div className="yield-kpi-card kpi-info">
-          <span className="kpi-label">OEM Vendor Warranty Reclaim</span>
-          <div className="kpi-val">$480,000 Reclaimable CapEx</div>
+          <span className="kpi-label">Factory Warranty Reclaims</span>
+          <div className="kpi-val">$480,000 Recoverable Credits</div>
           <p className="kpi-desc">
-            48 accelerators flagged with undeniable sensor telemetry proof (elevated thermal resistance under standard ambient airflow).
+            48 processors flagged with undeniable sensor proof of factory defects, ready for supplier warranty refund submission.
           </p>
           <div className="kpi-highlight">Audit Dossier: Ready for vendor submission</div>
         </div>
