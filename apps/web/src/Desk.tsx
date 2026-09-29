@@ -1,7 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { EconomicsEstimate, LiveFrame, RunView, estimateEconomics, stories } from "./api";
-
-type StoryItem = { id: string; title: string; summary: string };
+import { EconomicsEstimate, LiveFrame, OwnerPlaybook, RunView, StoryItem, estimateEconomics, stories } from "./api";
 
 const REASONS: Record<string, string> = {
   currency_disabled_until_complete_accounting_configuration: "Currency stays off until the accounting configuration is complete.",
@@ -11,6 +9,42 @@ const REASONS: Record<string, string> = {
   missing_useful_delta_gpu_hours: "The useful-work delta is not available yet.",
   computed_from_user_supplied_assumptions: "Computed from the rates you entered and the useful-work difference of this simulation.",
 };
+
+const INDUSTRY_PRESETS = [
+  {
+    name: "Hyperscale Frontier (32k GPUs)",
+    rate: "3.50",
+    currency: "USD",
+    cost_basis: "All-in: power, cooling, space & hardware depreciation",
+    scope: "Active frontier pre-training cluster (placed accelerators)",
+    horizon: "1-year pretraining campaign",
+    investment: "50000",
+    extra: "5000",
+    desc: "Simulating massive multi-node training (e.g. Gemini-scale)",
+  },
+  {
+    name: "Enterprise Cluster (4,096 GPUs)",
+    rate: "2.85",
+    currency: "USD",
+    cost_basis: "Cloud reserved instances + dedicated networking",
+    scope: "Enterprise foundation model training run",
+    horizon: "90-day training run",
+    investment: "15000",
+    extra: "1200",
+    desc: "Dedicated enterprise LLM training capacity",
+  },
+  {
+    name: "AI Cloud Startup (1,024 GPUs)",
+    rate: "2.20",
+    currency: "USD",
+    cost_basis: "Spot & on-demand accelerator rental",
+    scope: "Startup model pre-training & fine-tuning",
+    horizon: "30-day training sprint",
+    investment: "5000",
+    extra: "500",
+    desc: "Fast-moving AI startup or Neocloud cluster",
+  },
+];
 
 export function Desk({
   token,
@@ -32,10 +66,12 @@ export function Desk({
   const [items, setItems] = useState<StoryItem[]>([]);
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const [selected, setSelected] = useState("gradual_warning");
+  const [activeRate, setActiveRate] = useState<number>(3.5);
   const live = frames[frames.length - 1];
   const cluster = live?.cluster ?? run?.cluster;
   const placed = (live?.accelerators ?? []).filter((item) => !item.spare);
   const maxUseful = Math.max(...frames.map((frame) => frame.useful_new), 1);
+  const currentStory = items.find((item) => item.id === selected) ?? (run?.story as StoryItem | undefined);
 
   useEffect(() => {
     stories(token).then((payload) => setItems(payload.stories)).catch(() => setItems([]));
@@ -49,6 +85,15 @@ export function Desk({
         Think of a relay race where the baton cannot move until every runner finishes the same leg. The runners here are accelerator chips, the special processors that do the heavy math inside a data center. If one runner stops, the race stops, even while the rest of the building is still powered and cooled.
         This page rehearses that moment in a simulated hall of {cluster ? cluster.accelerator_count.toLocaleString() : "tens of thousands of"} chips. It is a practice floor. It is not connected to a building you own.
       </p>
+
+      {/* 1. LIVE CAPITAL BURN TICKER */}
+      <BurnTicker
+        live={live}
+        run={run}
+        frames={frames}
+        activeRate={activeRate}
+        presentation={presentation}
+      />
 
       <div className="problems">
         <article>
@@ -64,6 +109,12 @@ export function Desk({
           <p>A busy spell makes chips warmer, the way a kitchen heats up during the dinner rush. A rule that shuts a machine down just because it is warm can throw away more work than the breakdown it was meant to prevent.</p>
         </article>
       </div>
+
+      {/* 2. PHYSICAL FAILURE CASCADE */}
+      <PhysicalCascade live={live} cluster={cluster} />
+
+      {/* 3. OWNER'S SOLUTION PLAYBOOK */}
+      <PlaybookCard playbook={currentStory?.owner_playbook} />
 
       <div className="panel controls">
         <div className="row">
@@ -150,7 +201,16 @@ export function Desk({
       ) : null}
 
       <Comparison run={run} presentation={presentation} onCompare={() => onPlay(run?.story?.id ?? selected, "automated")} playing={playing} />
-      <ReturnPanel token={token} run={run} live={live} presentation={presentation} />
+      
+      {/* 4. ROI CALCULATOR WITH INDUSTRY PRESETS & 3-LEAK BREAKDOWN */}
+      <ReturnPanel
+        token={token}
+        run={run}
+        live={live}
+        presentation={presentation}
+        activeRate={activeRate}
+        onRateChange={setActiveRate}
+      />
 
       <ol className="tape">
         {frames.slice(-6).map((frame, index) => (
@@ -165,6 +225,199 @@ export function Desk({
   );
 }
 
+/* =========================================================================
+   1. LIVE CAPITAL BURN TICKER COMPONENT
+   ========================================================================= */
+function BurnTicker({
+  live,
+  run,
+  frames,
+  activeRate,
+  presentation,
+}: {
+  live: LiveFrame | undefined;
+  run: RunView | null;
+  frames: LiveFrame[];
+  activeRate: number;
+  presentation: boolean;
+}) {
+  const isStalled = live?.job_state === "stalled";
+  const acceleratorsInJob = live?.cluster?.detailed_accelerator_count ?? run?.cluster?.detailed_accelerator_count ?? 8;
+  const stepSeconds = live?.step_seconds ?? run?.step_seconds ?? 12;
+  const totalSteps = frames.length;
+  const totalSeconds = totalSteps * stepSeconds;
+  const stalledSteps = frames.filter((f) => f.job_state === "stalled").length;
+  const stalledSeconds = stalledSteps * stepSeconds;
+
+  const totalComputeCost = (totalSeconds / 3600) * acceleratorsInJob * activeRate;
+  const stallWasteCost = (stalledSeconds / 3600) * acceleratorsInJob * activeRate;
+  const fullHallPerHour = (run?.cluster?.accelerator_count ?? 32768) * activeRate;
+
+  if (presentation) {
+    return (
+      <div className="burn-ticker">
+        <div className="ticker-item">
+          <span className="ticker-label">Cluster Status</span>
+          <span className={`ticker-val ${isStalled ? "val-danger" : "val-ok"}`}>
+            {isStalled ? "STALLED (RELAY RACE HALTED)" : live ? "COMPUTING IN LOCKSTEP" : "STANDBY"}
+          </span>
+        </div>
+        <div className="ticker-item">
+          <span className="ticker-label">Useful Steps Delivered</span>
+          <span className="ticker-val">{live ? live.useful_new.toFixed(1) : "0.0"} steps</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`burn-ticker ${isStalled ? "burn-stalled" : ""}`}>
+      <div className="ticker-item">
+        <span className="ticker-label">Cluster Operation Status</span>
+        <span className={`ticker-val ${isStalled ? "val-danger" : "val-ok"}`}>
+          {isStalled ? "⚠️ STALLED: BATON DROPPED" : live ? "✓ ACTIVE PRETRAINING" : "STANDBY"}
+        </span>
+      </div>
+      <div className="ticker-item">
+        <span className="ticker-label">Total Compute Accrued ({acceleratorsInJob} Placed GPUs)</span>
+        <span className="ticker-val">${totalComputeCost.toFixed(2)}</span>
+      </div>
+      <div className="ticker-item">
+        <span className="ticker-label">Idle Stall Waste (Dollars Burned Waiting)</span>
+        <span className={`ticker-val ${stallWasteCost > 0 ? "val-danger" : ""}`}>
+          ${stallWasteCost.toFixed(2)}
+        </span>
+      </div>
+      <div className="ticker-item">
+        <span className="ticker-label">Scale Reference (Full 32k Hall Burn Rate)</span>
+        <span className="ticker-val">${fullHallPerHour.toLocaleString()}/hr</span>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   2. PHYSICAL FAILURE CASCADE COMPONENT
+   ========================================================================= */
+function PhysicalCascade({
+  live,
+  cluster,
+}: {
+  live: LiveFrame | undefined;
+  cluster: RunView["cluster"] | undefined;
+}) {
+  const faultyGpu = live?.accelerators?.find(
+    (a) => !a.functional || a.quarantined || (a.temp !== null && a.temp >= 70)
+  );
+  const isStalled = live?.job_state === "stalled";
+  const faultLevel = faultyGpu
+    ? !faultyGpu.functional
+      ? "down"
+      : faultyGpu.quarantined
+      ? "held"
+      : "hot"
+    : "ok";
+
+  return (
+    <div className="panel cascade-panel">
+      <div className="cascade-head">
+        <div>
+          <span className="eyebrow">Physical Failure Cascade</span>
+          <h2>Where the Fire Started & How It Propagates</h2>
+        </div>
+        <div className={`cascade-badge ${isStalled ? "stalled-badge" : "healthy-badge"}`}>
+          {isStalled ? "⚠️ ALL-REDUCE BARRIER BLOCKED" : "✓ CLUSTER ADVANCING IN LOCKSTEP"}
+        </div>
+      </div>
+      <p className="muted">
+        In distributed pretraining, every single chip must complete the beat before any chip moves forward. Watch how an anomaly in 1 chip halts the entire datacenter hall.
+      </p>
+      <div className="cascade-flow">
+        <div className="cascade-node">
+          <span className="node-level">Datacenter Hall</span>
+          <strong>{cluster?.accelerator_count ? cluster.accelerator_count.toLocaleString() : "32,768"} GPUs</strong>
+          <small>{cluster?.rack_count ?? 256} Racks · 1 Facility</small>
+          <div className={`node-status ${isStalled ? "status-stalled" : "status-ok"}`}>
+            {isStalled ? "HALTED (WAITING)" : "COMPUTING"}
+          </div>
+        </div>
+        <div className="cascade-arrow">➔</div>
+        <div className="cascade-node">
+          <span className="node-level">Rack</span>
+          <strong>Rack 0</strong>
+          <small>128 GPUs · 16 Hosts · 1 Busbar</small>
+          <div className={`node-status ${faultyGpu ? "status-warn" : "status-ok"}`}>
+            {faultyGpu ? "FAULT DETECTED" : "NOMINAL"}
+          </div>
+        </div>
+        <div className="cascade-arrow">➔</div>
+        <div className="cascade-node">
+          <span className="node-level">Host Node</span>
+          <strong>Host 0</strong>
+          <small>8 Accelerator Trays · NVLink</small>
+          <div className={`node-status ${faultyGpu ? "status-warn" : "status-ok"}`}>
+            {faultyGpu ? "THERMAL/PROCESS SPIKE" : "NOMINAL"}
+          </div>
+        </div>
+        <div className="cascade-arrow">➔</div>
+        <div className={`cascade-node culprit-node ${faultLevel}`}>
+          <span className="node-level">Accelerator Rank</span>
+          <strong>{faultyGpu ? faultyGpu.id : "GPU #0"}</strong>
+          <small>
+            {faultyGpu?.temp !== null && faultyGpu?.temp !== undefined
+              ? `${faultyGpu.temp.toFixed(1)}°C`
+              : "Nominal"}
+          </small>
+          <div className="node-status status-culprit">
+            {faultyGpu ? (faultyGpu.functional ? "THERMAL RUNAWAY" : "HALTED") : "NORMAL"}
+          </div>
+        </div>
+      </div>
+      {isStalled ? (
+        <div className="cascade-alert">
+          <strong>The Relay Race Halt:</strong> Rank {faultyGpu?.id ?? "0"} failed to report its step completion. Because tensor and pipeline parallel groups cannot advance without all participants, <strong>all other chips in this training job are frozen drawing idle power</strong>.
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/* =========================================================================
+   3. OWNER'S SOLUTION PLAYBOOK COMPONENT
+   ========================================================================= */
+function PlaybookCard({ playbook }: { playbook: OwnerPlaybook | undefined }) {
+  if (!playbook) return null;
+  return (
+    <div className="panel playbook-card">
+      <div className="playbook-head">
+        <span className="eyebrow">Owner's Architecture Playbook</span>
+        <h3>{playbook.title}</h3>
+      </div>
+      <div className="playbook-grid">
+        <div className="playbook-col">
+          <strong>The Underlying Problem</strong>
+          <p>{playbook.problem}</p>
+        </div>
+        <div className="playbook-col">
+          <strong>What to Build in Your Datacenter</strong>
+          <p>{playbook.solution}</p>
+        </div>
+        <div className="playbook-col">
+          <strong>Hardware & Telemetry Architecture</strong>
+          <p>{playbook.hardware_takeaway}</p>
+        </div>
+        <div className="playbook-col highlight-col">
+          <strong>Business & ROI Impact</strong>
+          <p>{playbook.roi_impact}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   COMPARISON & 3-LEAK COST BREAKDOWN
+   ========================================================================= */
 function Comparison({ run, presentation, onCompare, playing }: { run: RunView | null; presentation: boolean; onCompare: () => void; playing: boolean }) {
   const branches = run?.comparison?.branches ?? [];
   if (branches.length === 0) {
@@ -198,69 +451,186 @@ function Comparison({ run, presentation, onCompare, playing }: { run: RunView | 
   );
 }
 
-function ReturnPanel({ token, run, live, presentation }: { token: string; run: RunView | null; live: LiveFrame | undefined; presentation: boolean }) {
-  const [rate, setRate] = useState("");
-  const [currency, setCurrency] = useState("");
-  const [basis, setBasis] = useState("");
-  const [scope, setScope] = useState("");
-  const [horizon, setHorizon] = useState("");
-  const [investment, setInvestment] = useState("");
-  const [extra, setExtra] = useState("");
+/* =========================================================================
+   4. RETURN PANEL WITH INDUSTRY PRESETS & 3-LEAK COST BREAKDOWN
+   ========================================================================= */
+function ReturnPanel({
+  token,
+  run,
+  live,
+  presentation,
+  activeRate,
+  onRateChange,
+}: {
+  token: string;
+  run: RunView | null;
+  live: LiveFrame | undefined;
+  presentation: boolean;
+  activeRate: number;
+  onRateChange: (rate: number) => void;
+}) {
+  const [rate, setRate] = useState(String(activeRate));
+  const [currency, setCurrency] = useState("USD");
+  const [basis, setBasis] = useState("All-in: power, cooling, space & hardware depreciation");
+  const [scope, setScope] = useState("Active frontier pre-training cluster (placed accelerators)");
+  const [horizon, setHorizon] = useState("1-year pretraining campaign");
+  const [investment, setInvestment] = useState("50000");
+  const [extra, setExtra] = useState("5000");
   const [estimate, setEstimate] = useState<EconomicsEstimate | null>(null);
   const [error, setError] = useState("");
   const delta = run?.comparison?.delta_second_minus_first?.useful_new;
-  const stepSeconds = run?.step_seconds ?? live?.step_seconds;
-  const accelerators = run?.cluster?.detailed_accelerator_count ?? live?.cluster?.detailed_accelerator_count;
+  const stepSeconds = run?.step_seconds ?? live?.step_seconds ?? 12;
+  const accelerators = run?.cluster?.detailed_accelerator_count ?? live?.cluster?.detailed_accelerator_count ?? 8;
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function executeEstimate(customConfig?: Record<string, string | number>) {
     if (delta === undefined || delta === null || stepSeconds === undefined || accelerators === undefined) return;
-    const data = new FormData(event.currentTarget);
-    const entered = {
-      gpu_hour_rate: String(data.get("gpu_hour_rate") ?? ""),
-      currency: String(data.get("currency") ?? ""),
-      cost_basis: String(data.get("cost_basis") ?? ""),
-      scope: String(data.get("scope") ?? ""),
-      horizon: String(data.get("horizon") ?? ""),
-      investment_cost: String(data.get("investment_cost") ?? ""),
-    };
-    const operating = String(data.get("incremental_cost") ?? "");
     setError("");
-    const config: Record<string, string | number> = { ...entered };
-    if (operating !== "") config.incremental_cost = operating;
+    const config = customConfig ?? {
+      gpu_hour_rate: rate,
+      currency,
+      cost_basis: basis,
+      scope,
+      horizon,
+      investment_cost: investment,
+      ...(extra !== "" ? { incremental_cost: extra } : {}),
+    };
     try {
-      setEstimate(await estimateEconomics(token, {
-        config,
-        useful_delta_steps: delta,
-        step_seconds: stepSeconds,
-        accelerators_in_job: accelerators,
-      }));
+      setEstimate(
+        await estimateEconomics(token, {
+          config,
+          useful_delta_steps: delta,
+          step_seconds: stepSeconds,
+          accelerators_in_job: accelerators,
+        })
+      );
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "The estimate did not run.");
     }
   }
 
+  function applyPreset(preset: (typeof INDUSTRY_PRESETS)[0]) {
+    setRate(preset.rate);
+    setCurrency(preset.currency);
+    setBasis(preset.cost_basis);
+    setScope(preset.scope);
+    setHorizon(preset.horizon);
+    setInvestment(preset.investment);
+    setExtra(preset.extra);
+    const numRate = parseFloat(preset.rate);
+    if (!isNaN(numRate)) onRateChange(numRate);
+    if (delta !== undefined && delta !== null) {
+      void executeEstimate({
+        gpu_hour_rate: preset.rate,
+        currency: preset.currency,
+        cost_basis: preset.cost_basis,
+        scope: preset.scope,
+        horizon: preset.horizon,
+        investment_cost: preset.investment,
+        incremental_cost: preset.extra,
+      });
+    }
+  }
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const numRate = parseFloat(rate);
+    if (!isNaN(numRate)) onRateChange(numRate);
+    await executeEstimate();
+  }
+
+  const numRate = parseFloat(rate) || activeRate;
+  const stallSeconds = run?.metrics?.job_interruption_seconds ?? 0;
+  const recompSteps = run?.metrics?.recomputation ?? live?.recomputation ?? 0;
+  const stallLossDollar = (stallSeconds / 3600) * accelerators * numRate;
+  const recompLossDollar = ((recompSteps * stepSeconds) / 3600) * accelerators * numRate;
+  const deltaSteps = delta ?? 0;
+  const preservedSavingsDollar = ((Math.max(0, deltaSteps) * stepSeconds) / 3600) * accelerators * numRate;
+
   return (
     <form className="panel roi" onSubmit={submit}>
-      <h2>What the saved work would be worth, using your own numbers</h2>
+      <h2>What the saved work is worth in dollars</h2>
       <p>
-        Think of two ways of handling the same breakdown. One way finishes more of the job. The page turns that difference into hours of chip time with one formula: useful steps × length of a step in seconds ÷ 3600 × chips in this job.
-        {accelerators !== undefined ? ` This job uses ${accelerators.toLocaleString()} chips.` : ""}
-        {" "}The other chips in the hall are left out of the multiplication. You type the hourly rate, the currency, what that rate includes, what the estimate covers, the time horizon, and what you would invest. An empty form leaves the return blank. An investment of zero leaves the return blank, because dividing by zero is not a real return. When a number appears, it is an assumption-based simulation estimate: a what-if on this rehearsal, using the prices you typed. It is not cash already in an account.
+        In synchronous training, stopping one chip halts the entire choir. Choose a pre-loaded industry benchmark profile below, or enter your own facility numbers:
       </p>
-      <div className="roi-grid">
-        <label>Accelerator-hour rate<input name="gpu_hour_rate" inputMode="decimal" value={rate} onChange={(event) => setRate(event.target.value)} autoComplete="off" /></label>
-        <label>Currency<input name="currency" value={currency} onChange={(event) => setCurrency(event.target.value)} autoComplete="off" /></label>
-        <label>What the rate includes<input name="cost_basis" value={basis} onChange={(event) => setBasis(event.target.value)} autoComplete="off" /></label>
-        <label>What this estimate covers<input name="scope" value={scope} onChange={(event) => setScope(event.target.value)} autoComplete="off" /></label>
-        <label>Horizon<input name="horizon" value={horizon} onChange={(event) => setHorizon(event.target.value)} autoComplete="off" /></label>
-        <label>Investment<input name="investment_cost" inputMode="decimal" value={investment} onChange={(event) => setInvestment(event.target.value)} autoComplete="off" /></label>
-        <label>Operating cost beyond the investment, if you have one<input name="incremental_cost" inputMode="decimal" value={extra} onChange={(event) => setExtra(event.target.value)} autoComplete="off" /></label>
+
+      {/* PRESETS BUTTONS */}
+      <div className="presets-bar">
+        <span className="presets-label">1-Click Industry Benchmark Profiles:</span>
+        <div className="presets-buttons">
+          {INDUSTRY_PRESETS.map((p) => (
+            <button
+              key={p.name}
+              type="button"
+              className="preset-btn"
+              onClick={() => applyPreset(p)}
+              title={p.desc}
+            >
+              <strong>{p.name}</strong>
+              <small>${p.rate}/GPU-hr</small>
+            </button>
+          ))}
+        </div>
       </div>
-      <button type="submit" disabled={delta === undefined || delta === null}>Estimate from this comparison</button>
-      {delta === undefined || delta === null ? <p className="muted">Play “Compare two ways” first. Approving a single action does not produce the side-by-side difference.</p> : null}
+
+      <div className="roi-grid">
+        <label>
+          Accelerator-hour rate
+          <input
+            name="gpu_hour_rate"
+            inputMode="decimal"
+            value={rate}
+            onChange={(e) => {
+              setRate(e.target.value);
+              const n = parseFloat(e.target.value);
+              if (!isNaN(n)) onRateChange(n);
+            }}
+            autoComplete="off"
+          />
+        </label>
+        <label>Currency<input name="currency" value={currency} onChange={(e) => setCurrency(e.target.value)} autoComplete="off" /></label>
+        <label>What the rate includes<input name="cost_basis" value={basis} onChange={(e) => setBasis(e.target.value)} autoComplete="off" /></label>
+        <label>What this estimate covers<input name="scope" value={scope} onChange={(e) => setScope(e.target.value)} autoComplete="off" /></label>
+        <label>Horizon<input name="horizon" value={horizon} onChange={(e) => setHorizon(e.target.value)} autoComplete="off" /></label>
+        <label>Investment cost<input name="investment_cost" inputMode="decimal" value={investment} onChange={(e) => setInvestment(e.target.value)} autoComplete="off" /></label>
+        <label>Operating cost beyond investment<input name="incremental_cost" inputMode="decimal" value={extra} onChange={(e) => setExtra(e.target.value)} autoComplete="off" /></label>
+      </div>
+
+      <button type="submit" disabled={delta === undefined || delta === null}>
+        Estimate ROI from this comparison
+      </button>
+
+      {delta === undefined || delta === null ? (
+        <p className="muted">
+          💡 <strong>Tip:</strong> Run <em>“Compare two ways”</em> above to produce the side-by-side delta. The presets will then immediately calculate your net dollar savings.
+        </p>
+      ) : null}
+
       {error ? <p role="alert">{error}</p> : null}
       {estimate ? <EstimateView estimate={estimate} presentation={presentation} /> : null}
+
+      {/* 3 LEAKS COST BREAKDOWN CARD */}
+      {!presentation && (
+        <div className="three-leaks-breakdown">
+          <h3>The Three Operational Leaks Breakdown</h3>
+          <div className="leaks-grid">
+            <div className="leak-box leak-stall">
+              <span className="leak-title">1. The Stall Leak</span>
+              <strong className="leak-amount">${stallLossDollar.toFixed(2)}</strong>
+              <small>{stallSeconds} seconds of idle cluster wait</small>
+            </div>
+            <div className="leak-box leak-unsaved">
+              <span className="leak-title">2. Unsaved Work Leak</span>
+              <strong className="leak-amount">${recompLossDollar.toFixed(2)}</strong>
+              <small>{recompSteps.toFixed(1)} steps forced to recompute</small>
+            </div>
+            <div className="leak-box leak-savings">
+              <span className="leak-title">3. Net Preserved Savings</span>
+              <strong className="leak-amount">+${preservedSavingsDollar.toFixed(2)}</strong>
+              <small>{Math.max(0, deltaSteps).toFixed(1)} useful steps preserved</small>
+            </div>
+          </div>
+        </div>
+      )}
     </form>
   );
 }
@@ -269,14 +639,18 @@ function EstimateView({ estimate, presentation }: { estimate: EconomicsEstimate;
   const reason = REASONS[estimate.reason] ?? estimate.reason.replaceAll("_", " ");
   return (
     <div className="estimate" role="status">
-      <p>{estimate.label ?? "No currency figure"}</p>
+      <p><strong>{estimate.label ?? "No currency figure"}</strong></p>
       <p>{reason}</p>
       {estimate.useful_delta_gpu_hours !== undefined ? (
-        <p>Useful-work difference expressed as accelerator-hours: {estimate.useful_delta_gpu_hours.toFixed(4)}. Formula: {estimate.conversion}.</p>
+        <p>Useful-work difference expressed as accelerator-hours: <strong>{estimate.useful_delta_gpu_hours.toFixed(4)} GPU-hrs</strong>. Formula: {estimate.conversion}.</p>
       ) : null}
       {estimate.missing?.length ? <p>Still empty: {estimate.missing.join(", ").replaceAll("_", " ")}.</p> : null}
       {!presentation && estimate.roi !== null && estimate.benefit !== undefined && estimate.net_benefit !== null ? (
-        <p>Benefit {estimate.benefit.toFixed(2)}. Net {estimate.net_benefit.toFixed(2)}. Return on investment {(estimate.roi * 100).toFixed(1)} percent of the investment you entered.</p>
+        <div className="estimate-highlight">
+          <p>Gross Benefit: <strong>${estimate.benefit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></p>
+          <p>Net Financial Return: <strong>${estimate.net_benefit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong></p>
+          <p>Estimated ROI: <strong>{(estimate.roi * 100).toFixed(1)}%</strong> of investment</p>
+        </div>
       ) : null}
       {presentation && estimate.roi !== null ? <p>A return figure was computed from your inputs. Switch off presentation mode to read the figure.</p> : null}
     </div>

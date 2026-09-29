@@ -31,6 +31,13 @@ STORIES: dict[str, dict] = {
                 }
             ],
         },
+        "owner_playbook": {
+            "title": "Dynamic Thermal-Slope Micro-Checkpointing",
+            "problem": "A chip heats up over several minutes before fatal thermal shutdown. Waiting for scheduled saves wipes out all work between the last save and the crash.",
+            "solution": "Trigger an immediate micro-checkpoint when the temperature rate of rise (dT/dt) spikes, saving model weights right before the chip fails.",
+            "hardware_takeaway": "Equip node BMC telemetry with sub-10s polling and direct interrupts to your cluster orchestrator to trigger saves before thermal trips.",
+            "roi_impact": "Recovers up to 90% of in-flight progress that would otherwise require multi-hour full recomputation.",
+        },
     },
     "abrupt_failure": {
         "title": "A machine stops with no warning",
@@ -56,6 +63,13 @@ STORIES: dict[str, dict] = {
                     "fail_mode": "recoverable_process",
                 }
             ],
+        },
+        "owner_playbook": {
+            "title": "Fast-Path Rank Eviction & Rapid Group Restart",
+            "problem": "Unpredictable silicon or software crashes cannot be foreseen by sensor metrics. Cluster stall time is pure financial burn.",
+            "solution": "Do not waste time attempting multi-stage diagnostics during active training. Execute automated fail-fast gang restarts immediately.",
+            "hardware_takeaway": "Maintain 1-2% warm unassigned standby nodes per network spine and pre-stage container images for sub-minute restarts.",
+            "roi_impact": "Cuts cluster idle stall time from 20-30 minutes down to under 2 minutes per crash event.",
         },
     },
     "shared_infrastructure": {
@@ -84,6 +98,13 @@ STORIES: dict[str, dict] = {
                 }
             ],
         },
+        "owner_playbook": {
+            "title": "Power-Domain Topology Alignment & Alarm Correlation",
+            "problem": "A single PDU breaker drop sags 16+ GPUs simultaneously, causing naive monitoring tools to fire 16 independent hardware failure tickets.",
+            "solution": "Correlate telemetry by electrical circuit topology so one breaker event creates exactly one facility ticket.",
+            "hardware_takeaway": "Ingest rack PDU and busbar sensor IDs directly into the cluster scheduler topology map.",
+            "roi_impact": "Prevents dispatching technicians to replace healthy GPUs and focuses repairs on the root electrical feed.",
+        },
     },
     "healthy_workload_shift": {
         "title": "A busy spell is not a breakdown",
@@ -99,6 +120,13 @@ STORIES: dict[str, dict] = {
                 {"start": 0, "util": 0.4, "phase": "steady"},
                 {"start": 12, "util": 0.95, "phase": "burst"},
             ],
+        },
+        "owner_playbook": {
+            "title": "Workload-Aware Adaptive Thermal Baselines",
+            "problem": "Heavy compute phases (such as forward-pass GEMM kernels) naturally drive up chip heat. Rigid alarm thresholds flag these as impending breakdowns.",
+            "solution": "Differentiate healthy heavy computation from genuine cooling degradation by correlating SM activity and power limits with heat.",
+            "hardware_takeaway": "Tune monitoring policies to evaluate thermal residuals relative to workload intensity rather than raw absolute degrees.",
+            "roi_impact": "Eliminates false-alarm job halts that burn tens of thousands of dollars in wasted downtime.",
         },
     },
     "incomplete_checkpoint": {
@@ -125,6 +153,13 @@ STORIES: dict[str, dict] = {
                     "fail_mode": "recoverable_process",
                 }
             ],
+        },
+        "owner_playbook": {
+            "title": "Atomic Two-Phase Commit Checkpointing",
+            "problem": "Restoring an unverified or partially written checkpoint causes catastrophic crash loops and silent model weight corruption.",
+            "solution": "Refuse unverified checkpoints; only advance active resume pointers once all rank shards and manifest checksums pass validation.",
+            "hardware_takeaway": "Implement high-throughput local NVMe staging tiers to buffer checkpoint shards before committing to shared parallel filesystems.",
+            "roi_impact": "Prevents catastrophic restarts into corrupted states that invalidate days of pre-training progress.",
         },
     },
     "unsupported_local_recovery": {
@@ -153,6 +188,13 @@ STORIES: dict[str, dict] = {
                 }
             ],
         },
+        "owner_playbook": {
+            "title": "Distributed Topology Contract Enforcement",
+            "problem": "Attempting to drop a dead rank on a tensor-parallel model that lacks dynamic elasticity causes immediate collective communication deadlock.",
+            "solution": "Enforce strict gang restarts if the runtime cannot dynamically reshard tensor dimensions.",
+            "hardware_takeaway": "Audit your ML software framework (e.g. Megatron vs. Torch Elastic) before designing cluster recovery playbooks.",
+            "roi_impact": "Avoids extended silent all-reduce hangs that burn cluster hours while waiting for uncoordinated ranks.",
+        },
     },
     "stale_telemetry": {
         "title": "Late sensors mean we do not guess",
@@ -180,6 +222,13 @@ STORIES: dict[str, dict] = {
                 }
             ],
         },
+        "owner_playbook": {
+            "title": "Telemetry Staleness Guardrails (Epistemic Abstention)",
+            "problem": "Lagging telemetry collectors deliver stale metrics. Automated systems that act on delayed metrics mistakenly quarantine healthy nodes.",
+            "solution": "Incorporate telemetry freshness TTL checks; abstain from automated hardware intervention when metrics are older than 2-3 steps.",
+            "hardware_takeaway": "Decouple high-frequency health heartbeats from heavy metric scraping pipelines to ensure real-time liveness.",
+            "roi_impact": "Prevents spurious automated node cordons and unnecessary engineering on-call pages.",
+        },
     },
     "harmful_preventive": {
         "title": "Shutting down a healthy rush can cost more",
@@ -196,6 +245,13 @@ STORIES: dict[str, dict] = {
                 {"start": 12, "util": 0.95, "phase": "burst"},
             ],
         },
+        "owner_playbook": {
+            "title": "Dynamic Residual Tracking vs. Static Alarms",
+            "problem": "Static temperature limits (e.g. 70°C) quarantine working chips during burst phases, ironically causing the exact cluster downtime they aim to prevent.",
+            "solution": "Adopt residual thermal models that account for ambient room temperature and current TDP to avoid premature quarantines.",
+            "hardware_takeaway": "Configure facility chilled-water cooling loops to ramp dynamically with cluster power load spikes.",
+            "roi_impact": "Directly preserves valuable pretraining compute that naive monitoring rules throw away.",
+        },
     },
 }
 
@@ -211,7 +267,12 @@ def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | No
     name = policy or spec["primary_policy"]
     result = run_scenario(cfg, name, mode=mode, approvals=approvals or [])
     view = public_view(result, presentation=presentation)
-    view["story"] = {"id": story_id, "title": spec["title"], "summary": spec["summary"]}
+    view["story"] = {
+        "id": story_id,
+        "title": spec["title"],
+        "summary": spec["summary"],
+        "owner_playbook": spec.get("owner_playbook"),
+    }
     view["approvals"] = list(approvals or [])
     if mode == "automated":
         view["comparison"] = compare_policies(cfg, spec["comparison"])
@@ -222,6 +283,12 @@ def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | No
 
 def list_stories() -> list[dict]:
     return [
-        {"id": story_id, "title": spec["title"], "summary": spec["summary"], "primary_policy": spec["primary_policy"]}
+        {
+            "id": story_id,
+            "title": spec["title"],
+            "summary": spec["summary"],
+            "primary_policy": spec["primary_policy"],
+            "owner_playbook": spec.get("owner_playbook"),
+        }
         for story_id, spec in STORIES.items()
     ]

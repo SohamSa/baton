@@ -105,3 +105,438 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   .problems { grid-template-columns: 1fr; }
   .hall-head { flex-direction: column; }
 }
+
+/* 1. Live Capital Burn Ticker */
+.burn-ticker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
+.burn-stalled {
+  border-left-color: var(--danger);
+  background: rgba(240, 160, 160, 0.07);
+  box-shadow: 0 0 16px rgba(240, 160, 160, 0.12);
+}
+.ticker-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.ticker-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.ticker-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.val-danger {
+  color: var(--danger);
+  animation: pulse-warn 1.5s infinite ease-in-out;
+}
+.val-ok {
+  color: var(--ok);
+}
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* 2. Physical Failure Cascade */
+.cascade-panel {
+  margin: 1.2rem 0;
+}
+.cascade-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+.cascade-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+.stalled-badge {
+  background: rgba(240, 160, 160, 0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+.healthy-badge {
+  background: rgba(143, 206, 171, 0.15);
+  color: var(--ok);
+  border: 1px solid var(--ok);
+}
+.cascade-flow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+}
+.cascade-node {
+  flex: 1;
+  min-width: 140px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.7rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.node-level {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.node-status {
+  font-size: 0.72rem;
+  font-weight: 650;
+  margin-top: 0.35rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  display: inline-block;
+  text-align: center;
+}
+.status-ok { background: rgba(143, 206, 171, 0.15); color: var(--ok); }
+.status-warn { background: rgba(226, 192, 122, 0.2); color: var(--warn); }
+.status-stalled { background: rgba(240, 160, 160, 0.25); color: var(--danger); }
+.cascade-arrow {
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+.culprit-node {
+  border-color: var(--warn);
+}
+.culprit-node.hot, .culprit-node.down {
+  border-color: var(--danger);
+  background: rgba(240, 160, 160, 0.1);
+}
+.status-culprit {
+  background: rgba(240, 160, 160, 0.3);
+  color: var(--danger);
+}
+.cascade-alert {
+  background: rgba(240, 160, 160, 0.12);
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* 3. Owner's Solution Playbook */
+.playbook-card {
+  margin: 1.2rem 0;
+  border-top: 3px solid var(--ok);
+}
+.playbook-head {
+  margin-bottom: 0.8rem;
+}
+.playbook-head h3 {
+  margin: 0.2rem 0 0;
+  font-size: 1.25rem;
+}
+.playbook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+}
+.playbook-col {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem 0.85rem;
+}
+.playbook-col strong {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--accent);
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.playbook-col p {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.highlight-col {
+  border-color: var(--ok);
+  background: rgba(143, 206, 171, 0.06);
+}
+.highlight-col strong {
+  color: var(--ok);
+}
+
+/* 4. Industry Presets */
+.presets-bar {
+  margin: 0.8rem 0 1.1rem;
+}
+.presets-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.presets-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.preset-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--accent);
+  background: rgba(142, 182, 224, 0.08);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.preset-btn:hover {
+  background: rgba(142, 182, 224, 0.18);
+  border-color: var(--text);
+}
+.preset-btn strong {
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.preset-btn small {
+  font-size: 0.75rem;
+  color: var(--ok);
+  font-weight: 600;
+}
+
+/* 3-Leaks Cost Breakdown */
+.three-leaks-breakdown {
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+.three-leaks-breakdown h3 {
+  margin: 0 0 0.6rem;
+  font-size: 1.05rem;
+}
+.leaks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.65rem;
+}
+.leak-box {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.leak-title {
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.leak-amount {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+.leak-stall .leak-amount { color: var(--danger); }
+.leak-unsaved .leak-amount { color: var(--warn); }
+.leak-savings .leak-amount { color: var(--ok); }
+.leak-box small {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+.estimate-highlight {
+  margin-top: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  background: rgba(143, 206, 171, 0.1);
+  border: 1px solid var(--ok);
+  border-radius: 8px;
+}
+.estimate-highlight p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+/* 5. Executive Tour Banner & Modal */
+.tour-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  background: linear-gradient(135deg, rgba(31, 78, 121, 0.25) 0%, rgba(26, 33, 41, 0.8) 100%);
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 1rem;
+}
+.tour-banner strong {
+  display: block;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.tour-banner p {
+  margin: 0.15rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.tour-action-btn, .tour-nav-btn {
+  background: var(--accent);
+  color: #0b131b;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.tour-action-btn:hover, .tour-nav-btn:hover {
+  opacity: 0.9;
+}
+.tour-nav-btn {
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+  padding: 0.45rem 0.65rem;
+}
+
+/* Modal */
+.tour-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+.tour-modal {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  max-width: 620px;
+  width: 100%;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  animation: modal-enter 0.25s ease-out;
+}
+@keyframes modal-enter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+.tour-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+.tour-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: rgba(142, 182, 224, 0.12);
+  padding: 0.25rem 0.55rem;
+  border-radius: 4px;
+}
+.tour-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 0.2rem;
+}
+.tour-modal h2 {
+  margin: 0.3rem 0 0.65rem;
+  font-size: 1.38rem;
+}
+.tour-body {
+  font-size: 0.96rem;
+  line-height: 1.55;
+  color: var(--text);
+  margin-bottom: 1.1rem;
+}
+.tour-metric-box {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ok);
+  border-radius: 8px;
+  padding: 0.75rem 0.95rem;
+  margin-bottom: 1.25rem;
+}
+.tour-metric-box strong {
+  display: block;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  color: var(--ok);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+.tour-metric-box p {
+  margin: 0;
+  font-size: 0.92rem;
+}
+.tour-modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+.tour-dots {
+  display: flex;
+  gap: 0.45rem;
+}
+.tour-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tour-dot.dot-active {
+  background: var(--accent);
+  width: 20px;
+  border-radius: 99px;
+}
+.tour-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.tour-primary-btn {
+  background: var(--accent);
+  color: #0b131b;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 0.95rem;
+  cursor: pointer;
+}
+

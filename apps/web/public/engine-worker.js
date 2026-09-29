@@ -60,7 +60,7 @@ def op_tick():
     if frame["done"]:
         result = _live["run"].result()
         view = public_view(result, presentation=False)
-        view["story"] = {"id": _live["story_id"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"]}
+        view["story"] = {"id": _live["story_id"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"], "owner_playbook": _live["spec"].get("owner_playbook")}
         view["approvals"] = _live["approvals"]
         view["operator_view"] = True
         _live["view"] = publish(view)

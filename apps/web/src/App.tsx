@@ -119,12 +119,17 @@ export function App() {
     return <Login onSuccess={setSession} />;
   }
 
+  const [showTour, setShowTour] = useState(false);
+
   return (
     <div className="shell">
       <a className="skip" href="#content">Skip to content</a>
       <nav aria-label="Primary">
         <strong>TrainingContinuity</strong>
         <p className="muted">{session.username} · {session.role}</p>
+        <button type="button" className="tour-nav-btn" onClick={() => setShowTour(true)}>
+          ✦ 2-Min Executive Tour
+        </button>
         {LINKS.map(([path, label]) => (
           <NavLink key={path} to={path} end={path === "/"}>
             {label}
@@ -139,6 +144,16 @@ export function App() {
         {PUBLIC_DEMO ? null : <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>}
       </nav>
       <main id="content">
+        <div className="tour-banner">
+          <div>
+            <strong>New to Datacenter Operations?</strong>
+            <p>See how 1 failing chip stalls a $150M cluster, and how continuity engineering saves millions.</p>
+          </div>
+          <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
+            ✦ Take the 2-Minute Executive Tour
+          </button>
+        </div>
+
         <p className="banner">{PUBLIC_DEMO
           ? "This page is a practice floor for the moment a data-center job has to stop or restart. It loads the decision engine in your browser and moves the rehearsal one step at a time. Nothing in a real building is plugged in. The scripted cause of each story stays off this page."
           : "A practice floor for hardware trouble during a large training job. The simulated hall holds tens of thousands of chips. Detailed charts cover the chips in the job. Those chips are not plugged into this computer."}</p>
@@ -159,6 +174,16 @@ export function App() {
           <Route path="/models" element={<Models session={session} presentation={presentation} />} />
           <Route path="/monitoring" element={<MonitoringView session={session} />} />
         </Routes>
+
+        {showTour ? (
+          <ExecutiveTourModal
+            onClose={() => setShowTour(false)}
+            onRunDemo={() => {
+              setShowTour(false);
+              void play("gradual_warning", "manual");
+            }}
+          />
+        ) : null}
       </main>
     </div>
   );
@@ -513,5 +538,72 @@ function TruthButton({ token, onResult }: { token: string; onResult: (value: str
       <label>Evaluator run id <input value={runId} onChange={(event) => setRunId(event.target.value)} /></label>
       <button type="submit">Open evaluator truth</button>
     </form>
+  );
+}
+
+function ExecutiveTourModal({ onClose, onRunDemo }: { onClose: () => void; onRunDemo: () => void }) {
+  const [step, setStep] = useState(0);
+
+  const SLIDES = [
+    {
+      badge: "THE $150M RELAY RACE",
+      title: "When 1 Chip Stops, 32,768 Accelerators Wait",
+      body: "Imagine Google pre-training Gemini across 32,768 accelerators. Because modern AI training is synchronous, all chips advance in lockstep like runners in a relay race. If just one runner stops or overheats, the baton cannot move. The entire building freezes while power, cooling, and staff costs continue to burn.",
+      metric: "At $3.50/GPU-hr, a 1-hour cluster stall burns $114,688 with zero progress.",
+    },
+    {
+      badge: "THE THREE SILENT LEAKS",
+      title: "Why Traditional Runbooks Lose Millions",
+      body: "Datacenter owners bleed money through 3 distinct operational leaks: 1. The Stall (idle time spent diagnosing a crashed node). 2. Unsaved Work (recomputing hours of progress lost between checkpoints). 3. The False Alarm (killing healthy machines during normal high-utilization compute rushes).",
+      metric: "Using the wrong remedy on the wrong leak is how careful operators lose the race anyway.",
+    },
+    {
+      badge: "PROACTIVE CONTINUITY",
+      title: "Catching the Wave Before the Crash",
+      body: "Standard data centers wait for a chip to die, crashing the job. TrainingContinuity tracks the thermal slope (dT/dt) early. It detects the climb, triggers a lightweight micro-checkpoint right before failure, and performs a fast-path coordinated restart.",
+      metric: "Preserves up to 90% of in-flight work and slashes downtime from 40 mins to 2 mins.",
+    },
+    {
+      badge: "MEASURABLE BOTTOM-LINE ROI",
+      title: "Cold Hard Dollars, Not Academic Jargon",
+      body: "We don't manufacture fake savings claims. Use our 1-Click Industry Benchmark Profiles (Hyperscale Frontier, Enterprise, or AI Startup) to see the exact return on investment for your cluster based on useful progress preserved.",
+      metric: "See live cost accrual, stall waste, and net preserved savings on the practice floor.",
+    },
+  ];
+
+  const current = SLIDES[step];
+
+  return (
+    <div className="tour-modal-backdrop" role="dialog" aria-modal="true">
+      <div className="tour-modal">
+        <div className="tour-modal-header">
+          <span className="tour-badge">{current.badge}</span>
+          <button type="button" className="tour-close-btn" onClick={onClose} aria-label="Close tour">✕</button>
+        </div>
+        <h2>{current.title}</h2>
+        <p className="tour-body">{current.body}</p>
+        <div className="tour-metric-box">
+          <strong>Key Datacenter Fact:</strong>
+          <p>{current.metric}</p>
+        </div>
+        <div className="tour-modal-footer">
+          <div className="tour-dots">
+            {SLIDES.map((_, i) => (
+              <span key={i} className={`tour-dot ${i === step ? "dot-active" : ""}`} onClick={() => setStep(i)} />
+            ))}
+          </div>
+          <div className="tour-actions">
+            {step > 0 ? (
+              <button type="button" onClick={() => setStep((s) => s - 1)}>Previous</button>
+            ) : null}
+            {step < SLIDES.length - 1 ? (
+              <button type="button" className="tour-primary-btn" onClick={() => setStep((s) => s + 1)}>Next Step ➔</button>
+            ) : (
+              <button type="button" className="tour-primary-btn" onClick={onRunDemo}>Run Live Rehearsal Now 🚀</button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

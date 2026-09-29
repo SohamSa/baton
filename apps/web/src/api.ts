@@ -57,11 +57,27 @@ export function login(username: string, password: string) {
   });
 }
 
+export type OwnerPlaybook = {
+  title: string;
+  problem: string;
+  solution: string;
+  hardware_takeaway: string;
+  roi_impact: string;
+};
+
+export type StoryItem = {
+  id: string;
+  title: string;
+  summary: string;
+  primary_policy: string;
+  owner_playbook?: OwnerPlaybook;
+};
+
 export function stories(token: string) {
   if (PUBLIC_DEMO) {
-    return startEngine().then(() => engineCall<{ stories: { id: string; title: string; summary: string; primary_policy: string }[] }>("stories"));
+    return startEngine().then(() => engineCall<{ stories: StoryItem[] }>("stories"));
   }
-  return request<{ stories: { id: string; title: string; summary: string; primary_policy: string }[] }>("/api/v1/stories", token);
+  return request<{ stories: StoryItem[] }>("/api/v1/stories", token);
 }
 
 export type LiveFrame = {
@@ -233,7 +249,7 @@ export type RunView = {
   status: string;
   narrative: string;
   presentation?: boolean;
-  story?: { id: string; title: string; summary: string };
+  story?: { id: string; title: string; summary: string; owner_playbook?: OwnerPlaybook };
   hypotheses?: { leading_mechanism: string; abstain: boolean; abstain_reason?: string; alternatives?: { mechanism: string; cause_family: string }[] };
   jobs?: Record<string, { state: string; capability: string; rank_gpu: string[]; useful_new?: number; progress?: number; dropped?: number[] }>;
   actions?: Action[];
