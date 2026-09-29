@@ -104,6 +104,11 @@ HOST_SIGNALS = [
     ("canary_test_passed", "flag", False, "Whether the node passed the canary qualification gate."),
     ("silicon_yield_bin", "id", False, "Silicon yield categorization bin (Bin 1 Gold, Bin 2 Standard, Bin 3 Marginal)."),
     ("rma_eligible_flag", "flag", False, "Whether telemetry justifies a vendor hardware warranty claim."),
+    ("board_vrm_phase_count", "count", False, "Number of active operational VRM multi-phase power stages."),
+    ("board_vrm_ripple_mv", "mV", False, "Measured core voltage ripple on the baseboard power distribution network."),
+    ("board_retimer_eye_margin_mv", "mV", False, "Measured eye-diagram voltage margin on high-speed baseboard PCIe/NVLink retimers."),
+    ("board_pcb_strain_microstrain", "strain", False, "Mechanical flexure strain on baseboard PCB from cold plate torque."),
+    ("fault_domain_verdict", "id", False, "Diagnostic classification verdict isolating fault to silicon, board VRM, retimer, or socket."),
 ]
 
 FABRIC_SIGNALS = [

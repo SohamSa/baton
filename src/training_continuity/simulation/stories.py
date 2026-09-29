@@ -523,6 +523,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Feed-forward silicon lineage tracking with automated wafer-lot cohort cordoning during scheduled checkpoint saves",
         },
     },
+    "innocent_chip_dying_board": {
+        "title": "The innocent chip on a dying board",
+        "summary": "A GPU suffers voltage sags from a blown baseboard VRM power stage. A naive policy blames the $30,000 chip, replaces it, and crashes again; board-aware diagnostics cross-reference the chip's clean history, pinpointing the board fault and redistributing power phases.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-dying-board",
+            "seed": 24,
+            "steps": 45,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "vrm-phase-droop",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d1",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 10,
+                    "ramp": 8,
+                    "severity": 0.85,
+                    "hard_fail": 26,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Baseboard VRM Power Delivery & Chip-History Fault Discrimination",
+            "problem": "A multi-phase Voltage Regulator Module (VRM) on the accelerator baseboard fails, causing transient voltage ripple under high-current matrix bursts. Uninformed technicians replace the $30,000 accelerator, leading to 'No Fault Found' (NFF) vendor rejections and a repeat crash on the replacement chip.",
+            "solution": "Correlate the accelerator's golden birth certificate (nominal Vmin/leakage) with board-level VRM telemetry. Discriminate the board power delivery network (PDN) as the true failure domain, dynamically redistributing current across remaining VRM phases to preserve continuity.",
+            "hardware_takeaway": "Instrument baseboards with per-phase current telemetry and PCB strain sensors; enforce board-level diagnostics before approving high-value accelerator RMAs.",
+            "roi_impact": "Eliminates false $30,000 chip replacements, prevents repeat secondary cluster outages, and cuts No-Fault-Found RMA processing disputes to near-zero.",
+        },
+        "failure_level": {
+            "tier": "Accelerator Baseboard & Motherboard Level",
+            "component": "Carrier Baseboard VRM Phase & Retimer",
+            "blast_radius": "1 Blown VRM Power Phase on Baseboard Socket 1 -> Voltage droop induces false GPU faults -> Naive chip swap crashes again ($180k wasted)",
+            "redundancy_strategy": "Board-level power delivery network (PDN) diagnostics correlated with chip birth history to trigger dynamic VRM multi-phase redistribution",
+        },
+    },
 }
 
 

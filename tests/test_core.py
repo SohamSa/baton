@@ -198,6 +198,14 @@ def test_wafer_lot_contagion_story():
     assert result["story"]["owner_playbook"]["title"].startswith("Feed-Forward Silicon Lineage")
 
 
+def test_innocent_chip_dying_board_story():
+    result = run_story("innocent_chip_dying_board")
+    assert result["story"]["failure_level"]["tier"] == "Accelerator Baseboard & Motherboard Level"
+    assert "Carrier Baseboard" in result["story"]["failure_level"]["component"]
+    assert "VRM Power Phase" in result["story"]["failure_level"]["blast_radius"]
+    assert result["story"]["owner_playbook"]["title"].startswith("Baseboard VRM Power Delivery")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 
