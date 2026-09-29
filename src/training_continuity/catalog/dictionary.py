@@ -138,6 +138,11 @@ FACILITY_SIGNALS = [
     ("facility_pue", "ratio", False, "Power usage effectiveness ratio (total facility power / IT power)."),
     ("idle_stall_power_mw", "MW", False, "Unproductive electrical power drawn by the cluster while stalled."),
     ("power_ramp_rate_mw_s", "MW/s", False, "Transient rate of change of electrical power demand (di/dt proxy)."),
+    ("rack_shelf_index", "index", False, "Server shelf elevation slot inside rack 0-15."),
+    ("rack_manifold_flow_lpm", "L/min", False, "Rack liquid coolant manifold flow rate."),
+    ("rack_manifold_pressure_psi", "psi", False, "Coolant loop differential pressure across rack manifold."),
+    ("rack_busbar_voltage_v", "V", False, "Live DC voltage measured at rack vertical busbar tap."),
+    ("rack_thermal_gradient_c", "C", False, "Spatial temperature delta between top and bottom shelves in the rack."),
 ]
 
 PROGRESS_SIGNALS = [

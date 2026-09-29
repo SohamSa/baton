@@ -206,6 +206,15 @@ def test_innocent_chip_dying_board_story():
     assert result["story"]["owner_playbook"]["title"].startswith("Baseboard VRM Power Delivery")
 
 
+def test_rack_thermal_shadow_story():
+    result = run_story("rack_thermal_shadow")
+    assert result["status"] == "completed"
+    assert result["story"]["failure_level"]["tier"] == "Rack Scale & Cooling Loop Level"
+    assert "Coolant Manifold" in result["story"]["failure_level"]["component"]
+    assert "32 GPUs" in result["story"]["failure_level"]["blast_radius"]
+    assert result["story"]["owner_playbook"]["title"].startswith("Rack-Scale Spatial Telemetry")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 

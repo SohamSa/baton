@@ -566,6 +566,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Board-level power delivery network (PDN) diagnostics correlated with chip birth history to trigger dynamic VRM multi-phase redistribution",
         },
     },
+    "rack_thermal_shadow": {
+        "title": "The rack thermal shadow",
+        "summary": "A cooling manifold valve pinch on Shelf 10 starves the top four server shelves, generating a spatial thermal wave across 32 GPUs that threatens a simultaneous thermal shutdown of 32 chips and stalls the 32k-GPU cluster unless rack-wide spatial monitoring detects the gradient and triggers an automated checkpoint and valve flush.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-rack-thermal-shadow",
+            "seed": 25,
+            "steps": 45,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "manifold-pinch",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d0",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 10,
+                    "ramp": 8,
+                    "severity": 0.85,
+                    "hard_fail": 28,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Rack-Scale Spatial Telemetry & Coolant Manifold Diagnostics",
+            "problem": "A partial valve blockage or debris pinch in the rack liquid cooling supply manifold starves the upper shelves (Shelves 12-15). As return water heats up, a spatial thermal wave propagates across 32 GPUs. Reactive single-chip policies miss the macro pattern until 32 GPUs trip their thermal limits simultaneously, halting training across 32,768 accelerators.",
+            "solution": "Aggregate out-of-band (OOB) BMC telemetry into real-time rack elevation maps. Detect spatial thermal gradients (top vs. bottom shelf ΔT > 10°C) and manifold pressure drops (ΔP > 8 psi). Proactively initiate a coordinated checkpoint save and trigger automated coolant manifold reverse-flush cycling before emergency thermal throttling occurs.",
+            "hardware_takeaway": "Instrument rack cooling manifolds with digital differential pressure transmitters and integrate vertical shelf elevation topology into the cluster scheduler's spatial monitoring engine.",
+            "roi_impact": "Prevents catastrophic 32-GPU thermal shutdown cascades, protecting $180,000 in lost goodput time per manifold incident and preventing prolonged cluster-wide stalls.",
+        },
+        "failure_level": {
+            "tier": "Rack Scale & Cooling Loop Level",
+            "component": "Rack Coolant Manifold & Vertical Busbar",
+            "blast_radius": "Coolant Manifold Valve Pinch -> Upper 4 Shelves starved -> 32 GPUs overheat simultaneously -> Cluster-wide 32k GPU training job aborted",
+            "redundancy_strategy": "Rack-scale spatial elevation monitoring with automated manifold differential pressure telemetry, preemptive checkpointing, and dynamic valve flushing",
+        },
+    },
 }
 
 
