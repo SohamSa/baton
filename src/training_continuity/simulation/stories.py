@@ -437,6 +437,49 @@ STORIES: dict[str, dict] = {
             "redundancy_strategy": "Software power ramp pacing (micro-staggered launch) with rack-level peak shaving batteries (BBU)",
         },
     },
+    "fractured_microbump": {
+        "title": "The fractured microbump",
+        "summary": "An interposer microbump develops high resistance under thermal expansion, dropping die-to-die (D2D) packets. Naive restarts repeat the crash; automated MCM test sequencing isolates the degraded lane and remaps traffic to a redundant spare.",
+        "primary_policy": "combined",
+        "comparison": ["reactive", "combined"],
+        "config": {
+            "scenario_id": "story-microbump",
+            "seed": 22,
+            "steps": 45,
+            "hosts_per_rack": 2,
+            "gpus_per_host": 2,
+            "tp_size": 2,
+            "checkpoint_interval": 15,
+            "warmup_steps": 2,
+            "scripted_faults": [
+                {
+                    "fault_id": "microbump-intermittent",
+                    "target_type": "accelerator",
+                    "target_id": "gpu-r0-h0-d1",
+                    "cause": "physical_hardware",
+                    "mechanism": "cooling_degradation",
+                    "onset": 10,
+                    "ramp": 8,
+                    "severity": 0.85,
+                    "hard_fail": 26,
+                    "fail_mode": "recoverable_process",
+                }
+            ],
+        },
+        "owner_playbook": {
+            "title": "Automated Multi-Chip Module (MCM) Test Sequencing & Microbump BISR",
+            "problem": "Thermal cycling causes a 35-micron solder microbump on the 2.5D silicon interposer to crack intermittently at 80°C. Standard software restarts crash repeatedly, wasting $150,000 in cluster-wide stall hours.",
+            "solution": "Trigger in-situ automated test sequencing on the MCM: verify boundary scan (Phase 1), execute D2D PHY lane margin test (Phase 2), and dynamically remap the faulty wire to an on-package redundant spare microbump via Built-In Self-Repair (BISR).",
+            "hardware_takeaway": "Mandate redundant die-to-die spare microbumps (UCIe / NV-HBI) and in-situ lane margin telemetry in all multi-chip module procurement specifications.",
+            "roi_impact": "Recovers $25,000+ per packaged MCM by repairing in-field instead of scrapping the assembly, while cutting incident resolution time from 4 hours to 45 seconds.",
+        },
+        "failure_level": {
+            "tier": "Silicon Packaging & MCM Level",
+            "component": "Silicon Interposer & Microbump Array",
+            "blast_radius": "1 Fractured D2D Microbump -> Die-to-die bus parity drops -> Gang-scheduled all-reduce stalls all 32,768 GPUs",
+            "redundancy_strategy": "Automated 5-phase test sequencing with on-package redundant spare microbump lane remapping (BISR)",
+        },
+    },
 }
 
 

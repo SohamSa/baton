@@ -74,6 +74,10 @@ GPU_SIGNALS = [
     ("hbm_stack_temp_c", "C", False, "Reported HBM3e high-bandwidth memory stack temperature.", "HBM base die thermal sensor analog"),
     ("die_leakage_current_ma", "mA", False, "Estimated silicon leakage current under active voltage.", "silicon process variation analog"),
     ("die_straggler_drag_ms", "ms", False, "Measured collective gang synchronization delay attributed to this die.", "all-reduce barrier latency delta analog"),
+    ("mcm_d2d_link_margin_mv", "mV", False, "Die-to-die (D2D) interposer high-speed link eye margin voltage.", "UCIe / NV-HBI PHY eye-margin telemetry"),
+    ("mcm_microbump_defect_count", "count", True, "Cumulative count of detected degraded or open microbumps on the interposer.", "IEEE 1838 / JTAG boundary scan counter"),
+    ("mcm_remapped_lanes", "count", True, "Cumulative number of D2D bus lanes remapped to redundant spare microbumps via BISR.", "Built-In Self-Repair lane remap register"),
+    ("mcm_test_sequence_phase", "id", False, "Current active phase of the automated MCM diagnostic ladder (Phase 1 to Phase 5).", "in-situ test sequencer state register"),
 ]
 
 HOST_SIGNALS = [

@@ -1725,3 +1725,536 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   border-radius: 4px;
   line-height: 1.35;
 }
+
+/* =========================================================================
+   Multi-Chip Module (MCM) Packaging & Automated Test Sequencing Styles
+   ========================================================================= */
+
+.mcm-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.mcm-header h1 {
+  margin: 0.2rem 0 0.5rem;
+}
+
+/* KPI Cards */
+.mcm-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.mcm-kpi-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+.mcm-kpi-card.kpi-ok {
+  border-left: 4px solid var(--ok);
+}
+.mcm-kpi-card.kpi-info {
+  border-left: 4px solid var(--accent);
+}
+.mcm-kpi-card.kpi-warn {
+  border-left: 4px solid var(--warn);
+}
+.mcm-kpi-card.kpi-danger {
+  border-left: 4px solid var(--danger);
+}
+
+/* Packaging Architecture Visualizer */
+.mcm-arch-panel {
+  border-top: 3px solid #00d2ff;
+}
+.mcm-tag-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.mcm-pill {
+  font-size: 0.74rem;
+  font-weight: 700;
+  background: rgba(0, 210, 255, 0.12);
+  color: #00d2ff;
+  border: 1px solid rgba(0, 210, 255, 0.3);
+  padding: 0.2rem 0.55rem;
+  border-radius: 99px;
+}
+
+.mcm-interactive-stage {
+  margin: 1.2rem 0;
+  background: #080d14;
+  border: 2px solid #1a2736;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.hbm-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.mcm-chiplet {
+  background: #111a26;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.mcm-chiplet:hover {
+  border-color: #00d2ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 210, 255, 0.2);
+}
+.mcm-chiplet.selected {
+  border-color: #00d2ff;
+  background: rgba(0, 210, 255, 0.12);
+  box-shadow: 0 0 16px rgba(0, 210, 255, 0.3);
+}
+
+.hbm-chiplet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 140px;
+  text-align: center;
+}
+.hbm-chiplet span {
+  font-weight: 700;
+  color: #79c0ff;
+  font-size: 0.85rem;
+}
+.hbm-chiplet small {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.compute-middle-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.compute-chiplet {
+  flex: 1;
+  min-width: 240px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+  background: linear-gradient(135deg, #131f2e 0%, #0d1622 100%);
+  border: 1px solid #23354a;
+}
+.chiplet-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #38d9a9;
+  letter-spacing: 0.05em;
+}
+.compute-chiplet strong {
+  font-size: 1.05rem;
+  color: #f0f6fc;
+}
+.compute-chiplet small {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.chiplet-sub {
+  font-size: 0.72rem;
+  color: #a5d8ff;
+}
+
+.mcm-interposer-bridge {
+  background: #0b131e;
+  border: 2px dashed #3a506b;
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 220px;
+}
+.mcm-interposer-bridge:hover {
+  border-color: #ffd166;
+  background: rgba(255, 209, 102, 0.06);
+}
+.mcm-interposer-bridge.selected {
+  border-color: #ffd166;
+  border-style: solid;
+  background: rgba(255, 209, 102, 0.1);
+  box-shadow: 0 0 16px rgba(255, 209, 102, 0.25);
+}
+.bridge-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffd166;
+  text-transform: uppercase;
+}
+.microbump-lane-preview {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+}
+.lane-count {
+  color: #fff;
+  font-weight: 700;
+}
+.spare-count {
+  color: #38d9a9;
+  font-weight: 700;
+}
+.d2d-speed {
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+
+.mcm-component-detail {
+  background: #0b131e;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.1rem;
+}
+.detail-box h3 {
+  margin: 0 0 0.5rem;
+  color: #00d2ff;
+  font-size: 1.05rem;
+}
+.detail-box p {
+  margin: 0 0 0.8rem;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.detail-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+  background: #070c12;
+  padding: 0.8rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.detail-metrics div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+}
+.detail-metrics span {
+  color: var(--muted);
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.detail-metrics strong {
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+/* 5-Phase Diagnostic Sequencer */
+.mcm-sequencer-panel {
+  border-top: 3px solid #a855f7;
+}
+.sequencer-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  cursor: pointer;
+  background: #0d1520;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+.run-seq-btn {
+  background: linear-gradient(90deg, #9333ea 0%, #c084fc 100%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.run-seq-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.run-seq-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.reset-seq-btn {
+  background: #1e293b;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.phase-ladder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.9rem;
+  margin: 1.2rem 0;
+}
+.phase-card {
+  background: #0d1520;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: all 0.25s ease;
+}
+.phase-card.phase-active {
+  border-color: #a855f7;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+  transform: translateY(-2px);
+}
+.phase-card.status-passed {
+  border-left: 4px solid var(--ok);
+}
+.phase-card.status-repaired {
+  border-left: 4px solid #ffd166;
+  background: linear-gradient(135deg, rgba(255, 209, 102, 0.08) 0%, #0d1520 100%);
+}
+.phase-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.phase-num {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--muted);
+}
+.phase-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+.badge-pending {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+}
+.badge-passed {
+  background: rgba(44, 160, 44, 0.2);
+  color: #68d391;
+}
+.badge-repaired {
+  background: rgba(255, 209, 102, 0.2);
+  color: #ffd166;
+}
+.phase-card h4 {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.phase-meta {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.74rem;
+  color: var(--muted);
+}
+.phase-obj {
+  margin: 0.3rem 0 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+/* Diagnostic Terminal */
+.mcm-terminal {
+  background: #05080c;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.terminal-header {
+  background: #0b131e;
+  padding: 0.5rem 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  border-bottom: 1px solid var(--line);
+}
+.terminal-header span {
+  font-weight: 600;
+  color: var(--muted);
+}
+.status-indicator {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+.status-indicator.status-idle {
+  color: var(--muted);
+}
+.status-indicator.status-running {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+}
+.status-indicator.status-repaired {
+  background: rgba(255, 209, 102, 0.2);
+  color: #ffd166;
+}
+.status-indicator.status-certified {
+  background: rgba(44, 160, 44, 0.2);
+  color: #68d391;
+}
+.terminal-body {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.terminal-line {
+  margin-bottom: 0.2rem;
+}
+.terminal-line.log-warn {
+  color: #fca5a5;
+  font-weight: 700;
+}
+.terminal-line.log-ok {
+  color: #86efac;
+  font-weight: 700;
+}
+.terminal-line.log-repair {
+  color: #fde047;
+  font-weight: 700;
+}
+
+/* MCM Scrap & Tester ROI Calculator */
+.mcm-calc-panel {
+  border-top: 3px solid #10b981;
+}
+.mcm-calc-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 1.2rem;
+  background: #0d1520;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.mcm-calc-inputs label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.mcm-calc-inputs input {
+  background: #090e14;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 0.45rem 0.65rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  font-weight: 700;
+}
+.mcm-calc-inputs input:focus {
+  border-color: #10b981;
+  outline: none;
+}
+.mcm-calc-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.mcm-result-box {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.mcm-result-box span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.mcm-result-box strong {
+  font-size: 1.3rem;
+  color: var(--text);
+}
+.mcm-result-box small {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.mcm-result-box.result-highlight {
+  border-left: 4px solid var(--ok);
+  background: linear-gradient(135deg, rgba(44, 160, 44, 0.08) 0%, var(--panel) 100%);
+}
+.mcm-result-box.result-highlight strong {
+  color: #68d391;
+}
+.mcm-result-box.result-info {
+  border-left: 4px solid var(--accent);
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.08) 0%, var(--panel) 100%);
+}
+.mcm-result-box.result-info strong {
+  color: #38bdf8;
+}
+.mcm-takeaway {
+  margin-top: 1rem;
+  padding: 0.85rem 1.1rem;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #d1fae5;
+}

@@ -182,6 +182,14 @@ def test_power_cliff_substation_surge_story():
     assert result["hypotheses"]["leading_mechanism"] == "power_interruption"
 
 
+def test_fractured_microbump_mcm_story():
+    result = run_story("fractured_microbump")
+    assert result["story"]["failure_level"]["tier"] == "Silicon Packaging & MCM Level"
+    assert "Silicon Interposer" in result["story"]["failure_level"]["component"]
+    assert "microbump" in result["story"]["failure_level"]["blast_radius"].lower()
+    assert result["story"]["owner_playbook"]["title"].startswith("Automated Multi-Chip Module")
+
+
 def test_job_isolation_and_elastic_restart():
     from training_continuity.simulation.engine import FaultConfig
 
