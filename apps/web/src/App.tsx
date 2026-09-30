@@ -32,6 +32,7 @@ import { PassportView } from "./PassportView";
 import { RackView } from "./RackView";
 import { SiliconView } from "./SiliconView";
 import { YieldView } from "./YieldView";
+import { FieldDispatchView } from "./FieldDispatchView";
 
 type Session = { token: string; role: string; username: string };
 
@@ -64,6 +65,7 @@ const DEEP_DIVES = [
   {
     category: "Operations & Telemetry",
     links: [
+      ["/dispatch", "Boots-on-Ground Dispatch"],
       ["/dependencies", "Choir Ranks & Teamwork"],
       ["/devices", "Sensor Telemetry"],
       ["/incidents", "Downtime Incidents"],
@@ -175,10 +177,11 @@ export function App() {
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
+        <NavLink to="/dispatch">🔧 Field Operations & Dispatch</NavLink>
         <NavLink to="/stories">💡 Executive Q&A (17)</NavLink>
 
         <details className="nav-deep-dives" open={isDeepDive}>
-          <summary>System Diagnostics & Deep Dives (18) ▾</summary>
+          <summary>System Diagnostics & Deep Dives (19) ▾</summary>
           <div className="nav-deep-dives-list">
             {DEEP_DIVES.map((group) => (
               <div key={group.category}>
@@ -207,6 +210,9 @@ export function App() {
           </NavLink>
           <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             ⚡ Live Practice Floor (32k Cluster)
+          </NavLink>
+          <NavLink to="/dispatch" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            🔧 Field Operations & Dispatch
           </NavLink>
           <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             💡 Incident Rehearsals (17)
@@ -247,6 +253,7 @@ export function App() {
             }
           />
           <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
+          <Route path="/dispatch" element={<FieldDispatchView run={run} frames={frames} onRehearse={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} />} />
           <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
           <Route path="/silicon" element={<SiliconView run={run} />} />
           <Route path="/lineage" element={<LineageView run={run} />} />

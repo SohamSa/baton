@@ -116,13 +116,22 @@ export function Desk({
         <p className="eyebrow" style={{ margin: 0 }}>
           🎮 Practice Floor: 32,768-Chip Datacenter Crisis Simulator
         </p>
-        <NavLink
-          to="/"
-          className="hero-secondary-btn"
-          style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}
-        >
-          🌟 Switch to Executive Portfolio & Q&A
-        </NavLink>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          <NavLink
+            to="/dispatch"
+            className="hero-secondary-btn"
+            style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#f59e0b", borderColor: "rgba(245, 158, 11, 0.4)" }}
+          >
+            🔧 Boots-on-Ground Dispatch
+          </NavLink>
+          <NavLink
+            to="/"
+            className="hero-secondary-btn"
+            style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}
+          >
+            🌟 Switch to Executive Portfolio & Q&A
+          </NavLink>
+        </div>
       </div>
 
       <h1>When one machine stops, the whole job waits.</h1>
