@@ -113,7 +113,7 @@ def test_background_story_returns_before_the_engine_finishes(tmp_path, monkeypat
     db.close()
     client = TestClient(application)
     headers = _login(client, "investigator")
-    started = client.post("/api/v1/stories/healthy_workload_shift/runs", json={"mode": "automated"}, headers=headers)
+    started = client.post("/api/v1/stories/healthy_workload_shift/runs", json={"mode": "automated", "settings": {"checkpoint_interval": 12}}, headers=headers)
     assert started.status_code == 202
     assert started.json()["status"] == "queued"
     queued = client.get(f"/api/v1/runs/{started.json()['run_id']}", headers=headers)
@@ -126,6 +126,7 @@ def test_background_story_returns_before_the_engine_finishes(tmp_path, monkeypat
         if body["status"] != "queued":
             break
     assert body["status"] == "completed"
+    assert body["rehearsal"]["effective"]["checkpoint_interval"] == 12
     assert "_evaluator" not in body
 
 
@@ -141,3 +142,20 @@ def test_challenge_variant_survives_manual_approval_and_rejects_unknown_inputs()
     assert approved['story']['variant']=='challenge'
     assert any(a['action_type']=='pace_rank' and a['effect_applied'] and a['actor_kind']=='human' for a in approved['actions'])
     assert {'_evaluator','evaluator','observations','condition','advanced'}.isdisjoint(approved)
+
+
+def test_owner_conditions_survive_api_approval_and_invalid_inputs_fail():
+    client = TestClient(_app()); headers = _login(client, 'approver')
+    for settings in [{'spare_count': -1}, {'collector_lag_steps': 100}, {'true_cause': 'hardware'}]:
+        assert client.post('/api/v1/stories/recovery_crossroads/runs', json={'settings':settings}, headers=headers).status_code == 400
+    settings = {'spare_count': 2, 'checkpoint_interval': 12, 'collector_lag_steps': 4}
+    started = client.post('/api/v1/stories/recovery_crossroads/runs', json={'mode':'manual','settings':settings}, headers=headers)
+    assert started.status_code == 202
+    path = '/api/v1/runs/' + started.json()['run_id']
+    view = client.get(path, headers=headers).json()
+    assert view['story']['settings'] == settings
+    pending = view['pending_action']
+    approved = client.post(path+'/approvals', json={'decision':'approve','precondition_hash':pending['precondition_hash']}, headers=headers).json()
+    assert approved['rehearsal'] == view['rehearsal']
+    assert any(a['action_type']=='restart' and a['effect_applied'] for a in approved['actions'])
+    assert {'_evaluator','evaluator','observations','logs'}.isdisjoint(approved)

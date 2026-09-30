@@ -92,7 +92,7 @@ Finally, you ask what membership changes the runtime supports and whether compat
 
 After the restart and the repeated work, the number begins moving beyond its old position. Mira points to it again. The relief is earned: the team can explain what was restored, what was lost, and why this recovery was supported. The room has not become simple. You have become harder to mislead. You can connect a warning to its evidence, an action to its prerequisites, and an apparent recovery to the work it really preserves.
 
-[What would you tell the team? Try the decisions.](https://sohamsa.github.io/baton/#/journey/finale)
+[Try the recovery discussion](https://sohamsa.github.io/baton/#/journey/finale) · [Run the combined scenario](https://sohamsa.github.io/baton/#/desk?scenario=recovery_crossroads&chapter=finale)
 
 ## The next building starts here
 
@@ -114,7 +114,7 @@ The next time someone says “Everything is running,” you know where to look. 
 
 ## Explore what happened
 
-The dashboard follows the same investigation. You can read without starting the simulation engine, then open a rehearsal to compare responses. Standard and challenge conditions show why an intervention can help, waste work, or fail when a prerequisite is missing.
+The dashboard follows the same investigation. You can read without starting the simulation engine, then open a rehearsal to compare responses. Standard and challenge conditions show why an intervention can help, waste work, or fail when a prerequisite is missing. Owner controls let you change spare capacity, save spacing, observation delay, and supported warning strength, then rerun both policies under the same conditions. A reusable link preserves your choices.
 
 [The evidence companion](docs/story-reference.md) keeps every problem’s observations, invented inputs, response gates, limitations, and challenge conditions together. The [data catalog](https://sohamsa.github.io/baton/#/data) explains the wider field dictionary. The [owner worksheet](https://sohamsa.github.io/baton/#/worksheet) starts blank and saves your questions locally, with download and print options.
 

@@ -1,4 +1,5 @@
 import storyNotes from "../../../content/owner-journey.json";
+import { RehearsalLab, InteractionReview } from "./RehearsalLab";
 import { ScenarioNotes } from "./ScenarioNotes";
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -7,6 +8,7 @@ import {
   LiveFrame,
   OwnerPlaybook,
   RunView,
+  RehearsalSettings,
   StoryItem,
   stories,
 } from "./api";
@@ -14,6 +16,7 @@ import { FinancialIllustration, RehearsalEvidence } from "./OwnerRooms";
 import { EXECUTIVE_QUESTIONS } from "./ExecutivePortfolioView";
 
 const HIGHLIGHTED_SCENARIOS = [
+  "recovery_crossroads",
   "gradual_warning",
   "abrupt_failure",
   "power_cliff",
@@ -40,7 +43,7 @@ export function Desk({
   run: RunView | null;
   frames: LiveFrame[];
   playing: boolean;
-  onPlay: (id: string, mode: "manual" | "automated", variant?: string) => void;
+  onPlay: (id: string, mode: "manual" | "automated", variant?: string, settings?: RehearsalSettings) => void;
   onDecide: (decision: "approve" | "reject") => void;
 }) {
   const location = useLocation();
@@ -51,6 +54,9 @@ export function Desk({
   const [variant, setVariant] = useState("standard");
   const requestedVariant = new URLSearchParams(location.search).get("variant");
   useEffect(() => { setVariant(requestedVariant === "challenge" && storyNotes.characters.find((c) => c.id === selected)?.challenge ? "challenge" : "standard"); }, [selected, requestedVariant]);
+  const [settings, setSettings] = useState<RehearsalSettings>({});
+  const [linkError, setLinkError] = useState("");
+  const requestedSettings = new URLSearchParams(location.search).get("settings");
   const [activeTab, setActiveTab] = useState<"arena" | "battle" | "roi" | "cascade">("arena");
 
   useEffect(() => {
@@ -70,12 +76,28 @@ export function Desk({
       .catch(() => setItems([]));
   }, [token]);
 
+  useEffect(() => {
+    const supported = items.find((item) => item.id === selected)?.rehearsal_controls;
+    if (!supported) return;
+    try {
+      const supplied = requestedSettings ? JSON.parse(requestedSettings) : {};
+      if (!supplied || Array.isArray(supplied) || typeof supplied !== "object") throw new Error("Invalid linked conditions.");
+      for (const [key, value] of Object.entries(supplied)) {
+        const control = supported.controls.find((c) => c.key === key);
+        if (!control || typeof value !== "number" || !Number.isFinite(value) || value < control.min || value > control.max || (control.step === 1 && !Number.isInteger(value))) throw new Error("Unsupported linked conditions.");
+      }
+      setSettings(supplied); setLinkError("");
+    } catch { setSettings({}); setLinkError("The linked conditions are invalid for this scenario. The selected preset is shown instead."); }
+  }, [selected, variant, requestedSettings, items]);
+
   const hasPendingAction = Boolean(run?.pending_action && !playing);
   const hasBattleResults = Boolean(run?.comparison?.branches && run.comparison.branches.length > 0);
 
   return (
     <section className="desk">
       <ScenarioNotes id={selected} variant={variant} onVariant={setVariant} disabled={playing} />
+      <RehearsalLab id={selected} variant={variant} controls={items.find((item) => item.id === selected)?.rehearsal_controls} settings={settings} onChange={setSettings} disabled={playing} run={run} linkError={linkError} />
+      <InteractionReview run={run} />
       <RehearsalEvidence run={run} frames={frames} />
       {/* Top Header & Navigation Bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.5rem" }}>
@@ -296,7 +318,7 @@ export function Desk({
                 <button
                   type="button"
                   className="game-launch-btn"
-                  onClick={() => onPlay(selected, mode, variant)}
+                  onClick={() => onPlay(selected, mode, variant, settings)}
                   disabled={playing}
                 >
                   {playing ? (
@@ -443,7 +465,7 @@ export function Desk({
       {/* TAB 2: HEAD-TO-HEAD BATTLE (TWO WAYS, ONE BREAKDOWN) */}
       {activeTab === "battle" ? (
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          <Comparison run={run} onCompare={() => onPlay(selected, "automated", variant)} playing={playing} />
+          <Comparison run={run} onCompare={() => onPlay(selected, "automated", variant, settings)} playing={playing} />
         </div>
       ) : null}
 
@@ -586,23 +608,12 @@ function CommanderAlert({
     <div className="commander-alert">
       <div className="commander-alert-header">
         <span>🚨</span>
-        <span>Tactical Commander Decision Required</span>
+        <span>A recovery decision needs your review</span>
       </div>
-      <h2 className="commander-question">
-        Preemptive Micro-Save: Isolate Warning Node & Protect In-Flight Work?
-      </h2>
-      <div style={{ fontSize: "0.9rem", color: "var(--text)" }}>
-        <strong>Proposed Action:</strong>{" "}
-        <code style={{ background: "rgba(0,0,0,0.3)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
-          {action.action_type?.replaceAll("_", " ")} on {action.scope}
-        </code>
-      </div>
-      <div className="commander-analogy-callout">
-        <strong>🚗 Real-World Analogy:</strong> Your car engine's heat gauge is climbing into the red zone on the highway.
-        You can either pull over into the service bay for a 12-second oil top-up (Approve), or keep driving until the engine explodes and strands all 32,768 passengers (Reject).
-      </div>
+      <h2 className="commander-question">Review the proposed {action.action_type.replaceAll("_", " ")}</h2>
+      <p>Scope: {action.scope}. Approval permits an action in this synthetic world. The engine still checks its restore, capability, and capacity prerequisites.</p>
       <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text)" }}>
-        <strong>Hardware Reason:</strong> {action.reason}
+        <strong>Recorded rationale:</strong> {action.reason}
       </p>
       <div className="commander-actions-row">
         <button
@@ -611,7 +622,7 @@ function CommanderAlert({
           onClick={onApprove}
           disabled={playing}
         >
-          🟢 APPROVE PREEMPTIVE MICRO-SAVE (Save 12 Seconds, Protect $115k/hr Run)
+          Approve action
         </button>
         <button
           type="button"
@@ -619,7 +630,7 @@ function CommanderAlert({
           onClick={onReject}
           disabled={playing}
         >
-          🔴 REJECT (Let Dumb Runbook Crash Job & Recompute from Zero)
+          Reject action
         </button>
       </div>
       <p className="muted" style={{ margin: 0, fontSize: "0.78rem" }}>

@@ -8,6 +8,7 @@ import {
   ModelReport,
   Monitoring,
   RunView,
+  RehearsalSettings,
   adapters,
   approve,
   audit,
@@ -100,7 +101,7 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  async function play(id: string, mode: "manual" | "automated", variant: string = "standard") {
+  async function play(id: string, mode: "manual" | "automated", variant: string = "standard", settings: RehearsalSettings = {}) {
     setPlaying(true);
     setError("");
     setFrames([]);
@@ -108,7 +109,7 @@ export function App() {
     try {
       const started = await startStory(session?.token ?? "public", id, mode, (frame) => {
         setFrames((current) => [...current, frame]);
-      }, variant);
+      }, variant, settings);
       let view = await getRun(session?.token ?? "public", started.run_id, false);
       for (let attempt = 0; view.status === "queued" && attempt < 40; attempt += 1) {
         await new Promise((resolve) => window.setTimeout(resolve, 250));

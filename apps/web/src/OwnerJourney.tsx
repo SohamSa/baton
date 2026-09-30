@@ -60,9 +60,10 @@ export function OwnerJourney() {
     </header>
     {!chapter ? <p role="alert">That page is not in this story. <Link to="/">Start with the stalled job.</Link></p> : <>
       <article className="owner-prose" aria-label="The investigation">{chapter.paragraphs.map((p) => <p key={p}>{p}</p>)}</article>
+      {chapterId === "finale" ? <p className="reading-extra"><Link className="owner-button" to={`/desk?scenario=recovery_crossroads&chapter=finale&path=${path}`}>Run the combined recovery scenario</Link></p> : null}
       {chapterId === "finale" ? <details className="reading-extra owner-finale">
         <summary>What would you tell the team? Try the decisions.</summary>
-        <p>You can change your answers. This discussion connects the earlier lessons; it does not run a combined failure simulation.</p>
+        <p>You can change your answers. This discussion is a tabletop exercise. You can also run the related combined scenario below.</p>
         {story.finale.map((q) => <fieldset key={q.id}><legend>{q.prompt}</legend>{q.options.map((option, choice) => <label key={option.label}>
           <input type="radio" name={q.id} checked={journal.choices[q.id] === choice} onChange={() => setJournal((j) => ({ ...j, choices: { ...j.choices, [q.id]: choice } }))} />{option.label}
         </label>)}{journal.choices[q.id] !== undefined ? <p className="owner-feedback" role="status">{q.options[journal.choices[q.id]].feedback}</p> : null}</fieldset>)}

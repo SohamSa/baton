@@ -5,7 +5,9 @@ export type Role = "viewer" | "investigator" | "approver" | "administrator";
 const API = "http://127.0.0.1:8000";
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
 
-type StoredRun = RunView & { variant: string; storyId: string; mode: "manual" | "automated"; approvals: { action_id?: string; decision: string; precondition_hash: string; actor: string }[] };
+export type RehearsalSettings = Record<string, number>;
+export type RehearsalControls = { controls: { key: string; label: string; min: number; max: number; step: number; unit: string; why: string }[]; presets: Record<string, RehearsalSettings> };
+type StoredRun = RunView & { settings: RehearsalSettings; variant: string; storyId: string; mode: "manual" | "automated"; approvals: { action_id?: string; decision: string; precondition_hash: string; actor: string }[] };
 
 const openRuns = new Map<string, StoredRun>();
 
@@ -73,6 +75,7 @@ export type FailureLevel = {
 };
 
 export type StoryItem = {
+  rehearsal_controls?: RehearsalControls;
   id: string;
   title: string;
   summary: string;
@@ -107,16 +110,16 @@ export type LiveFrame = {
   cluster?: RunView["cluster"];
 };
 
-export async function startStory(token: string, id: string, mode: "manual" | "automated", onFrame?: (frame: LiveFrame) => void, variant: string = "standard") {
+export async function startStory(token: string, id: string, mode: "manual" | "automated", onFrame?: (frame: LiveFrame) => void, variant: string = "standard", settings: RehearsalSettings = {}) {
   if (PUBLIC_DEMO) {
-    const view = await engineCall<RunView>("run", { story_id: id, mode, variant, approvals: [] }, (frame) => onFrame?.(frame as LiveFrame));
+    const view = await engineCall<RunView>("run", { story_id: id, mode, variant, settings, approvals: [] }, (frame) => onFrame?.(frame as LiveFrame));
     const runId = `${id}:${mode}:${crypto.randomUUID()}`;
-    openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, variant, approvals: [] });
+    openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, variant, settings, approvals: [] });
     return { run_id: runId, status: view.status };
   }
   return request<{ run_id: string; status: string }>(`/api/v1/stories/${id}/runs`, token, {
     method: "POST",
-    body: JSON.stringify({ mode, variant, presentation: false }),
+    body: JSON.stringify({ mode, variant, settings, presentation: false }),
   });
 }
 
@@ -137,8 +140,8 @@ export async function approve(token: string, id: string, decision: "approve" | "
       throw new ApiError(409, "The preconditions changed, so this approval was not applied.");
     }
     const approvals = [...current.approvals, { action_id: current.pending_action.action_id, decision, precondition_hash: preconditionHash, actor: "public visitor" }];
-    const view = await engineCall<RunView>("run", { story_id: current.storyId, variant: current.variant, mode: "manual", approvals }, (frame) => onFrame?.(frame as LiveFrame));
-    const stored = { ...view, run_id: id, storyId: current.storyId, variant: current.variant, mode: current.mode, approvals };
+    const view = await engineCall<RunView>("run", { story_id: current.storyId, variant: current.variant, settings: current.settings, mode: "manual", approvals }, (frame) => onFrame?.(frame as LiveFrame));
+    const stored = { ...view, run_id: id, storyId: current.storyId, variant: current.variant, settings: current.settings, mode: current.mode, approvals };
     openRuns.set(id, stored);
     return stored;
   }
@@ -261,7 +264,8 @@ export type RunView = {
   status: string;
   narrative: string;
   presentation?: boolean;
-  story?: { variant?: string; id: string; title: string; summary: string; coverage?: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
+  rehearsal?: { settings: RehearsalSettings; effective: RehearsalSettings; config_hash: string; synthetic: boolean };
+  story?: { settings?: RehearsalSettings; variant?: string; id: string; title: string; summary: string; coverage?: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
   hypotheses?: { leading_mechanism: string; abstain: boolean; abstain_reason?: string; alternatives?: { mechanism: string; cause_family: string }[] };
   jobs?: Record<string, { state: string; capability: string; rank_gpu: string[]; useful_new?: number; progress?: number; dropped?: number[] }>;
   actions?: Action[];
@@ -269,7 +273,7 @@ export type RunView = {
   incidents?: { incident_id: string; scope: string; opened_step: number; state: string }[];
   pending_action?: Action | null;
   metrics?: { useful_new: number; recomputation: number; job_interruption_seconds: number; goodput_per_wall_second: number | null };
-  comparison?: { counterfactual: boolean; branches: { policy: string; useful_new: number; interruption_seconds: number; recomputation: number }[]; delta_second_minus_first?: { useful_new: number } | null };
+  comparison?: { config_hash?: string; counterfactual: boolean; branches: { policy: string; useful_new: number; interruption_seconds: number; recomputation: number }[]; delta_second_minus_first?: { useful_new: number } | null };
   timeline?: { entity_id: string; step: number; gpu_temp_c: number | null; power_draw_w: number | null }[];
   gpus?: Record<string, { gpu_temp_c: number | null; power_draw_w: number | null; residual_ewma: number | null; family: string; phase: string; fan_speed_ratio: number | null; step_latency_ms?: number | null; cooling_flow_ratio?: number | null; rack_elevation_u?: number; qualification_state?: string }>;
   provenance?: { seed: number; config_hash: string };

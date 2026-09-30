@@ -48,3 +48,19 @@ for id in CHALLENGES:
         assert _run(str(ROOT / "src")) == _run(str(ROOT / "apps" / "web" / "engine-shims") + os.pathsep + str(ROOT / "src"))
     finally:
         CODE=previous
+
+
+def test_owner_conditions_and_compound_world_match_browser_shim():
+    global CODE
+    previous = CODE
+    CODE = """
+import json
+from baton.simulation.stories import run_story
+for settings in [{}, {'spare_count':0}, {'spare_count':1}, {'collector_lag_steps':8}, {'checkpoint_interval':12,'fault_strength':.2}]:
+    r=run_story('recovery_crossroads',settings=settings)
+    print(json.dumps({'conditions':r['rehearsal'],'metrics':r['metrics'],'checkpoints':r['checkpoints'],'actions':r['actions'],'comparison':r['comparison']},sort_keys=True))
+"""
+    try:
+        assert _run(str(ROOT / 'src')) == _run(str(ROOT / 'apps/web/engine-shims') + os.pathsep + str(ROOT / 'src'))
+    finally:
+        CODE = previous

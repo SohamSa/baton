@@ -156,6 +156,24 @@ class CombinedPolicy:
         return _decision("none", snap["job_id"], "Combined gates did not justify an intervention.", hypotheses)
 
 
+class RecoveryReviewPolicy:
+    """Use fresh observable evidence and existing checkpoint/capacity gates."""
+    name = "recovery_review"
+    # A report can be five ticks old and still pass the freshness gate.
+    # Do not interpret that permitted delivery lag as a missing heartbeat.
+    heartbeat_timeout = 6
+
+    def choose(self, snap):
+        hypotheses = snap["hypotheses"]
+        if not snap["quality_ok"]:
+            return _decision("investigate", snap["job_id"], "Evidence is delayed or incomplete; obtain current corroboration before a disruptive recovery.", hypotheses)
+        if snap["heartbeat_missing_ranks"]:
+            if not snap["eligible_checkpoint_id"]:
+                return _decision("investigate", snap["job_id"], "No verified compatible save is eligible; recovery is blocked.", hypotheses)
+            return _decision("restart", snap["job_id"], "Use a verified compatible save for a coordinated restart; the engine must also verify compatible capacity.", hypotheses)
+        return _decision("none", snap["job_id"], "No missing worker is supported by current evidence.", hypotheses)
+
+
 class ForceReconfigurePolicy:
     """Asks for a local membership change even when the runtime cannot do it."""
 
@@ -254,6 +272,7 @@ from baton.policies.advanced import ADVANCED_POLICIES
 
 POLICIES = {
     **ADVANCED_POLICIES,
+    RecoveryReviewPolicy.name: RecoveryReviewPolicy(),
     StragglerPolicy.name: StragglerPolicy(),
     CoolingPolicy.name: CoolingPolicy(),
     QualificationPolicy.name: QualificationPolicy(),

@@ -1,6 +1,6 @@
 # Implementation status
 
-Current verification: September 2026 Linux review. 77 Python tests passed; normal and public-demo production builds passed. This update adds explicit scenario assumptions, a persistent owner evidence worksheet, six distinct advanced synthetic mechanisms, and nine challenge variants. PostgreSQL, Docker, physical equipment, and empirical calibration remain untested. Earlier counts below are historical.
+Current verification: September 2026 Linux review. 103 Python tests passed; normal and public-demo production builds passed. This update adds explicit scenario assumptions, a persistent owner evidence worksheet, six distinct advanced synthetic mechanisms, and nine challenge variants. PostgreSQL, Docker, physical equipment, and empirical calibration remain untested. Earlier counts below are historical.
 
 ## Foundation
 
@@ -74,3 +74,7 @@ All 17 characters expose actual configuration values, rationale, simplifications
 ## Connected reading revision
 
 The README and default dashboard now start with one stalled job and follow the same continuous investigation through seven passages. Terms are introduced in context. Suite navigation is hidden on reading routes, with optional tool access and one next passage. All scenario assumptions, fields, limits, and challenges remain in the generated `docs/story-reference.md` and closed dashboard evidence drawers. The final discussion remains a tabletop story rather than a new compound engine scenario.
+
+## Owner-directed and compound rehearsals
+
+Owner controls now use a shared Python whitelist and bounded validation. Effective inputs and configuration hashes persist through HTTP/outbox runs, browser execution, approval replay, and paired comparisons. Reusable URLs preserve overrides. Recovery Crossroads is the eighteenth engine-backed problem: delayed evidence, a warning, an interrupted save, two permanent failures, and compatible-capacity gates share one world. Observation delay, spare count, and save spacing independently alter the outcome. The compound policy reads observed snapshots and prevents permitted delivery lag from creating a false missing-heartbeat response.
