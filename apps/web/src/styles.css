@@ -8624,3 +8624,236 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
   }
 }
 
+/* =========================================================================
+   EXECUTIVE DEEP DIVE TRANSLATION HEADERS
+   ========================================================================= */
+
+.deep-dive-exec-header {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  border-left: 5px solid #3b82f6;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+}
+
+.dd-exec-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dd-exec-badge-wrap {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dd-category-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #94a3b8;
+  background: rgba(148, 163, 184, 0.12);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.dd-component-tag {
+  font-size: 0.78rem;
+  color: #cbd5e1;
+}
+
+.dd-component-tag strong {
+  color: #f8fafc;
+}
+
+.dd-roi-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.dd-roi-badge.tone-danger {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.dd-roi-badge.tone-warn {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.dd-roi-badge.tone-ok {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.dd-roi-badge.tone-accent {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.dd-toggle-btn {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  padding: 0.3rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dd-toggle-btn:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #ffffff;
+}
+
+.dd-exec-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.dd-exec-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.dd-analogy-headline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: #93c5fd;
+}
+
+.dd-analogy-icon {
+  font-size: 1.15rem;
+}
+
+.dd-exec-body-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.dd-exec-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.dd-exec-card.dd-card-danger {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(69, 10, 10, 0.1);
+}
+
+.dd-exec-card.dd-card-ok {
+  border-color: rgba(16, 185, 129, 0.25);
+  background: rgba(6, 78, 59, 0.1);
+}
+
+.dd-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dd-card-header h3 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.dd-card-icon {
+  font-size: 1rem;
+}
+
+.dd-card-text {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  line-height: 1.5;
+}
+
+.dd-analogy-box {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-size: 0.76rem;
+  color: #94a3b8;
+  border-top: 1px dashed rgba(148, 163, 184, 0.15);
+  line-height: 1.4;
+}
+
+.dd-analogy-box strong {
+  color: #60a5fa;
+}
+
+.dd-stat-box,
+.dd-action-box {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  border-top: 1px dashed rgba(148, 163, 184, 0.15);
+}
+
+.dd-stat-label,
+.dd-action-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+
+.dd-exec-actions-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  padding-top: 0.85rem;
+}
+
+.dd-actions-left,
+.dd-actions-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+

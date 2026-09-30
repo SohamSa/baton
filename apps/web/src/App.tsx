@@ -34,6 +34,7 @@ import { GridScorecardView } from "./GridScorecardView";
 import { ExecutiveQAView } from "./ExecutiveQAView";
 import { GlobalFleetView } from "./GlobalFleetView";
 import { GreenfieldPlannerView } from "./GreenfieldPlannerView";
+import { ExecutiveDeepDiveHeader } from "./ExecutiveDeepDiveHeader";
 
 type Session = { token: string; role: string; username: string };
 
@@ -232,7 +233,7 @@ export function App() {
           </NavLink>
         </div>
 
-        {location.pathname !== "/" ? (
+        {!isDeepDive && location.pathname !== "/" ? (
           <div className="tour-banner">
             <div>
               <strong>New to Datacenter Operations?</strong>
@@ -243,6 +244,8 @@ export function App() {
             </button>
           </div>
         ) : null}
+
+        <ExecutiveDeepDiveHeader />
 
         {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
