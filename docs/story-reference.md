@@ -32,6 +32,10 @@ Open this reference when you want to inspect a particular problem. These are aut
 - [The Over-Torqued Wrench](#cold_plate_torque_fracture)
 - [The Whispering Voltage Cliff](#silent_subthreshold_cliff)
 
+**Which work can we bring back?**
+
+- [The Recovery Crossroads](#recovery_crossroads)
+
 <a id="gradual_warning"></a>
 
 ## The Feverish Athlete
@@ -732,6 +736,50 @@ Changed inputs: `fault_strength=0.55`.
 
 [Try the challenge](https://sohamsa.github.io/baton/#/desk?scenario=silent_subthreshold_cliff&variant=challenge&chapter=origins)
 
+<a id="recovery_crossroads"></a>
+
+## The Recovery Crossroads
+
+Delayed evidence, an interrupted save, and two failed workers meet inside the same cooperating job. Changing spare capacity or save timing changes which recovery is possible.
+
+**Observe:** Check observation age, independent reported heartbeats, save eligibility, supported membership, and compatible spare capacity together.
+
+**What this explains:** A recovery needs all its prerequisites in the same world. Fresh evidence cannot supply missing capacity, and extra capacity cannot make an incomplete save usable.
+
+**Ask your team:** Can we demonstrate a supported recovery when several prerequisites are stressed at once?
+
+**Evidence fields:** `event_step`, `availability_step`, `heartbeat_age_steps`, `checkpoint_state`, `shards_present`, `shards_expected`, `runtime_capability`, `spare_count`, `useful_new`
+
+**Scope:** A compound engine simulation combining one thermal warning, observation delay, a checkpoint interrupted by two permanent worker failures, and capacity-gated recovery. All values and fault schedules are invented.
+
+[Read the context](https://sohamsa.github.io/baton/#/journey/finale) · [Compare responses](https://sohamsa.github.io/baton/#/desk?scenario=recovery_crossroads&chapter=finale) · [Supporting tool](https://sohamsa.github.io/baton/#/recovery?chapter=finale)
+
+One job experiences rising thermal residual, reports delivered later, a save interrupted while writing, and two permanently failed members. Restore and replacement gates must all pass in that world.
+
+The first complete save precedes the failure. The next write overlaps two failures. The evidence-led policy requests a coordinated restart only with fresh reported evidence and an eligible save; capacity is independently checked by the engine.
+
+| Authored input | Standard value | Purpose |
+| --- | --- | --- |
+| Deterministic seed | 41 seed | Both comparison branches share an invented world. |
+| Rehearsal duration | 64 ticks | Includes writing, failure, recovery, and resumed work. |
+| Save spacing | 8 progress units | The next scheduled save overlaps the authored failure under standard conditions. |
+| Compatible replacement capacity | 2 machines | Two permanent failures require two compatible replacements. |
+| Restart warmup | 2 ticks | A supported recovery has a cost. |
+| Observation delay | 3 ticks | Evidence arrives after the event while remaining within the modeled freshness gate. |
+| Workers in the assigned job | 4 workers | Two permanently fail while their partners wait. |
+
+**Relationship and response gates:** Save spacing is 8 progress units and writing takes 3 ticks. Two permanent failures occur at tick 20. Observation delay is 3 ticks; freshness requires at most 5 ticks. Two compatible spares are supplied in the standard preset. The initial thermal warning has relative strength 0.35.
+
+**What is left out:** The fixed fault timing is invented. Compatible spares are simplified. No physical cause, real data, facility risk, or monetary outcome is inferred. This is a small placed job within a counted cluster population.
+
+**What changes the lesson:** Save timing can remove or worsen the collision. Fewer than two spares blocks replacement; older reports block the evidence-led response. Warning strength changes the first thermal mechanism, not the permanent failure schedule.
+
+**Challenge: The missing prerequisites.** Old reports and only one spare prevent the evidence-led recovery. Restore fresh reports first, then test whether enough compatible capacity exists.
+
+Changed inputs: `spare_count=1`, `collector_lag_steps=8`.
+
+[Try the challenge](https://sohamsa.github.io/baton/#/desk?scenario=recovery_crossroads&variant=challenge&chapter=finale)
+
 ## Shared fictional world
 
 Useful progress is a normalized work unit, not a measured training iteration. The 100 ms latency signal is a relative slowdown proxy; each simulation tick aggregates work over its separately declared duration. Neither clock represents production throughput.
@@ -749,7 +797,7 @@ These inputs were chosen for teachable relationships, reproducibility, and visib
 
 ## The recovery discussion
 
-The ending connects earlier lessons as a tabletop decision exercise. It does not execute a compound event as one engine simulation. Individual rehearsals demonstrate the separate mechanisms.
+The recovery discussion remains a tabletop exercise. The related Recovery Crossroads scenario now executes multiple problems in one engine world. Its authored fault timing is separate from the fictional account, and adjustable conditions can change its outcome.
 
 **The temperature alarm is fresh, but the facility report is old. What do you tell the team?**
 

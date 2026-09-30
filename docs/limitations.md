@@ -28,3 +28,5 @@ Needs real data before any operational claim:
 Do not describe a virtual fleet run as a test of a real-scale deployment.
 
 Advanced mechanisms and nine challenge variants are invented teaching models. Thermal, power, strain, voltage, and progress constants are not measurements or predictions for a vendor device. The owner worksheet records questions and evidence references locally; it does not ingest telemetry, certify a facility, or execute equipment controls.
+
+Recovery Crossroads combines a warning, delayed observations, two permanent failures, an interrupted checkpoint, and capacity-gated recovery in one virtual job. Its fixed failures at tick 20 are authored, not forecasts. Owner controls explore bounded variations of these teaching models; they do not import real workloads, tune live infrastructure, or estimate real reliability. Changing save timing can remove the particular write/failure collision.

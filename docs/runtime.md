@@ -14,3 +14,5 @@ Useful progress credits surviving data-parallel groups over the original group c
 Collective wait and compute can share a step. The ledger assigns fractions that sum to 1 for each accelerator so the same second is not counted twice. Idle spares are accounted.
 
 Story requests accept `variant: "standard" | "challenge"`; unknown or unavailable variants fail validation. The browser engine uses the same scenario and policy sources. Owner worksheet data remains in browser local storage and can be downloaded or cleared; it is not sent to the API.
+
+Owner rehearsals accept a bounded `settings` object. Supported keys are `spare_count`, `checkpoint_interval`, `collector_lag_steps`, and, only for supported first-warning mechanisms, `fault_strength`. Unknown, nonfinite, nonnumeric, out-of-range, and noninteger count values are rejected by the shared Python validator. Story metadata publishes controls and preset values. Queued runs, browser runs, approval replay, and paired comparisons preserve the selected inputs and configuration hash. No facility identifiers or actual equipment settings are accepted.

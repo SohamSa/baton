@@ -25,7 +25,7 @@ export function subscribeEngine(listener: (message: string) => void) {
 export function startEngine(): Promise<void> {
   if (!PUBLIC_DEMO) return Promise.resolve();
   if (ready) return ready;
-  worker = new Worker(`${import.meta.env.BASE_URL}engine-worker.js?engine=8`);
+  worker = new Worker(`${import.meta.env.BASE_URL}engine-worker.js?engine=9`);
   ready = new Promise((resolve, reject) => {
     worker!.onmessage = (event: MessageEvent) => {
       const data = event.data as { type: string; id?: number; message?: string; value?: unknown };

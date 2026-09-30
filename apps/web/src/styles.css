@@ -8971,3 +8971,16 @@ body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
 @media print { .reading-sitebar, .reading-pagination, .reading-evidence { display: none !important; } }
 
 #reading-title:focus { outline: none; }
+
+.rehearsal-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+.rehearsal-controls label { display: grid; gap: .6rem; }
+.rehearsal-controls output { color: var(--accent); }
+.rehearsal-controls input { width: 100%; }
+.rehearsal-controls span { color: var(--muted); line-height: 1.5; }
+.rehearsal-lab dl { display: grid; gap: .7rem; }
+.rehearsal-lab dd { margin: .2rem 0; }
+.interaction-review li { margin: .7rem 0; overflow-wrap: anywhere; }
+
+/* Keep owner rehearsal navigation inside the viewport on small screens. */
+.view-mode-bar { display: flex; width: auto; max-width: 100%; flex-wrap: wrap; }
+.rehearsal-lab, .interaction-review { min-width: 0; overflow-wrap: anywhere; }

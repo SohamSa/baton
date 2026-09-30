@@ -20,11 +20,11 @@ def render():
         for paragraph in chapter['paragraphs']:
             lines += [paragraph, '']
         if chapter['id'] == 'finale':
-            lines += [f"[What would you tell the team? Try the decisions.]({URL}#/journey/finale)", '']
+            lines += [f"[Try the recovery discussion]({URL}#/journey/finale) · [Run the combined scenario]({URL}#/desk?scenario=recovery_crossroads&chapter=finale)", '']
         if chapter['id'] == 'dawn':
             lines += [f"[Build your facility review worksheet]({URL}#/worksheet) · [Revisit the investigation]({URL})", '']
     lines += ['---', '', '## Explore what happened', '',
-        'The dashboard follows the same investigation. You can read without starting the simulation engine, then open a rehearsal to compare responses. Standard and challenge conditions show why an intervention can help, waste work, or fail when a prerequisite is missing.', '',
+        'The dashboard follows the same investigation. You can read without starting the simulation engine, then open a rehearsal to compare responses. Standard and challenge conditions show why an intervention can help, waste work, or fail when a prerequisite is missing. Owner controls let you change spare capacity, save spacing, observation delay, and supported warning strength, then rerun both policies under the same conditions. A reusable link preserves your choices.', '',
         '[The evidence companion](docs/story-reference.md) keeps every problem’s observations, invented inputs, response gates, limitations, and challenge conditions together. The [data catalog](' + URL + '#/data) explains the wider field dictionary. The [owner worksheet](' + URL + '#/worksheet) starts blank and saves your questions locally, with download and print options.', '',
         '## Run and contribute', '',
         'The Python engine owns simulation and decisions. The public dashboard runs it in a browser worker; rehearsal startup requires network access for Pyodide. No physical telemetry or equipment control is connected. The checked learned model did not beat its baseline, so rules remain the operational default.', '',
@@ -65,7 +65,7 @@ def render_reference():
     for a in story['worldAssumptions']['inputs']:
         lines += [f"| {a['label']} | {a['value']} | {a['why']} |"]
     lines += ['', story['worldAssumptions']['boundary'], '', '## The recovery discussion', '',
-        'The ending connects earlier lessons as a tabletop decision exercise. It does not execute a compound event as one engine simulation. Individual rehearsals demonstrate the separate mechanisms.', '']
+        'The recovery discussion remains a tabletop exercise. The related Recovery Crossroads scenario now executes multiple problems in one engine world. Its authored fault timing is separate from the fictional account, and adjustable conditions can change its outcome.', '']
     for q in story['finale']:
         lines += ['**' + q['prompt'] + '**', '']
         for o in q['options']:

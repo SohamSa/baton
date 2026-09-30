@@ -13,7 +13,7 @@ const ready = (async () => {
   status("Loading the decision engine into this browser.");
   pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.29.0/full/" });
   const base = self.location.pathname.replace(/engine-worker\.js$/, "");
-  const response = await fetch(base + "browser-engine.json?pack=7");
+  const response = await fetch(base + "browser-engine.json?pack=8");
   if (!response.ok) throw new Error("The engine source did not load.");
   const pack = await response.json();
   pyodide.FS.mkdirTree("/shims");
@@ -49,10 +49,10 @@ def op_stories():
 def op_begin(payload):
     data = json.loads(payload)
     spec = STORIES[data["story_id"]]
-    cfg = story_config(data["story_id"], data.get("variant", "standard"))
+    cfg = story_config(data["story_id"], data.get("variant", "standard"), data.get("settings") or {})
     run = ScenarioRun(cfg, spec["primary_policy"], data["mode"], data.get("approvals") or [])
     _live.clear()
-    _live.update(run=run, spec=spec, cfg=cfg, story_id=data["story_id"], variant=data.get("variant", "standard"), mode=data["mode"], approvals=list(data.get("approvals") or []))
+    _live.update(run=run, spec=spec, cfg=cfg, story_id=data["story_id"], variant=data.get("variant", "standard"), settings=dict(data.get("settings") or {}), mode=data["mode"], approvals=list(data.get("approvals") or []))
     return "ok"
 
 def op_tick():
@@ -60,7 +60,9 @@ def op_tick():
     if frame["done"]:
         result = _live["run"].result()
         view = public_view(result, presentation=False)
-        view["story"] = {"id": _live["story_id"], "variant": _live["variant"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"], "owner_playbook": _live["spec"].get("owner_playbook"), "failure_level": _live["spec"].get("failure_level"), "coverage": _live["spec"].get("coverage")}
+        view["story"] = {"id": _live["story_id"], "variant": _live["variant"], "settings": _live["settings"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"], "owner_playbook": _live["spec"].get("owner_playbook"), "failure_level": _live["spec"].get("failure_level"), "coverage": _live["spec"].get("coverage")}
+        from baton.simulation.rehearsal import run_conditions
+        view["rehearsal"] = run_conditions(_live["cfg"], _live["settings"])
         view["approvals"] = _live["approvals"]
         view["operator_view"] = True
         _live["view"] = publish(view)

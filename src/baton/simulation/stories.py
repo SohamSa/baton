@@ -386,6 +386,23 @@ CHALLENGES = {
 }
 
 
+# One world combines delayed reports, an interrupted save, and two failed workers.
+STORIES["recovery_crossroads"] = {
+    "title": "The Recovery Crossroads", "summary": "A warning, delayed evidence, an unfinished save, and two failed workers meet in one job.",
+    "primary_policy": "recovery_review", "comparison": ["force_reconfigure", "recovery_review"],
+    "coverage": "One compound synthetic world; no physical diagnosis or facility control.",
+    "owner_playbook": {"title": "An evidence-led recovery discussion"},
+    "failure_level": {"tier": "Job and recovery dependencies", "component": "Observations, storage, membership, and compatible capacity"},
+    "config": {"scenario_id": "story-recovery-crossroads", "seed": 41, "steps": 64, "hosts_per_rack": 2, "gpus_per_host": 2,
+        "capability": "redundant", "checkpoint_interval": 8, "checkpoint_write_steps": 3, "collector_lag_steps": 3, "spare_count": 2,
+        "scripted_faults": [
+            {"fault_id": "rising-warning", "target_type": "accelerator", "target_id": "gpu-r0-h0-d0", "cause": "physical_hardware", "mechanism": "cooling_degradation", "onset": 12, "ramp": 8, "severity": .35},
+            *[{"fault_id": "interrupted-worker-" + str(i), "target_type": "accelerator", "target_id": "gpu-r0-h0-d" + str(i), "cause": "physical_hardware", "mechanism": "unknown", "onset": 20, "hard_fail": 20, "severity": 1., "fail_mode": "permanent_hardware"} for i in range(2)],
+        ]},
+}
+CHALLENGES["recovery_crossroads"] = {"spare_count": 1, "collector_lag_steps": 8}
+
+
 from baton.catalog.owner_metadata import OWNER_CHARACTERS
 
 for _story_id, _character in OWNER_CHARACTERS.items():
@@ -398,7 +415,7 @@ for _story_id, _character in OWNER_CHARACTERS.items():
     _spec["failure_level"]["redundancy_strategy"] = _character["lesson"]
 
 
-def story_config(story_id: str, variant: str = "standard") -> ScenarioConfig:
+def story_config(story_id: str, variant: str = "standard", settings: dict | None = None) -> ScenarioConfig:
     from copy import deepcopy
     if variant not in {"standard", "challenge"} or (variant == "challenge" and story_id not in CHALLENGES):
         raise ValueError("unknown rehearsal variant")
@@ -410,30 +427,41 @@ def story_config(story_id: str, variant: str = "standard") -> ScenarioConfig:
                 config["scripted_faults"][0]["severity" if key == "fault_strength" else key] = changes.pop(key)
         config.update(changes)
         config["scenario_id"] += "-challenge"
+    from baton.simulation.rehearsal import apply_settings
+    apply_settings(config, settings)
     return ScenarioConfig(**config, story_id=story_id)
 
 
-def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | None = None, policy: str | None = None, presentation: bool = False, variant: str = "standard") -> dict:
+def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | None = None, policy: str | None = None, presentation: bool = False, variant: str = "standard", settings: dict | None = None) -> dict:
     spec = STORIES[story_id]
-    cfg = story_config(story_id, variant)
+    cfg = story_config(story_id, variant, settings)
     name = policy or spec["primary_policy"]
     result = run_scenario(cfg, name, mode=mode, approvals=approvals or [])
     view = public_view(result, presentation=presentation)
     view["story"] = {
         "id": story_id,
         "variant": variant,
+        "settings": dict(settings or {}),
         "title": spec["title"],
         "summary": spec["summary"],
         "owner_playbook": spec.get("owner_playbook"),
         "failure_level": spec.get("failure_level"),
         "coverage": spec.get("coverage"),
     }
+    from baton.simulation.rehearsal import run_conditions
+    view["rehearsal"] = run_conditions(cfg, settings)
     view["approvals"] = list(approvals or [])
     if mode == "automated":
         view["comparison"] = compare_policies(cfg, spec["comparison"])
     view["operator_view"] = True
     view["_evaluator"] = result["evaluator"]
     return view
+
+
+def rehearsal_controls(story_id):
+    from baton.simulation.rehearsal import controls_for, effective_settings
+    variants = ["standard"] + (["challenge"] if story_id in CHALLENGES else [])
+    return {"controls": controls_for(STORIES[story_id]["config"]), "presets": {v: effective_settings(story_config(story_id, v)) for v in variants}}
 
 
 def list_stories() -> list[dict]:
@@ -443,6 +471,7 @@ def list_stories() -> list[dict]:
             "title": spec["title"],
             "summary": spec["summary"],
             "primary_policy": spec["primary_policy"],
+            "rehearsal_controls": rehearsal_controls(story_id),
             "owner_playbook": spec.get("owner_playbook"),
             "failure_level": spec.get("failure_level"),
             "coverage": spec.get("coverage"),

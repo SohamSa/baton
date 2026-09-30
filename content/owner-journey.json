@@ -1470,6 +1470,95 @@
           "fault_strength": 0.55
         }
       }
+    },
+    {
+      "id": "recovery_crossroads",
+      "name": "The Recovery Crossroads",
+      "chapter": "finale",
+      "scene": "Delayed evidence, an interrupted save, and two failed workers meet inside the same cooperating job. Changing spare capacity or save timing changes which recovery is possible.",
+      "clue": "Check observation age, independent reported heartbeats, save eligibility, supported membership, and compatible spare capacity together.",
+      "lesson": "A recovery needs all its prerequisites in the same world. Fresh evidence cannot supply missing capacity, and extra capacity cannot make an incomplete save usable.",
+      "question": "Can we demonstrate a supported recovery when several prerequisites are stressed at once?",
+      "fields": [
+        "event_step",
+        "availability_step",
+        "heartbeat_age_steps",
+        "checkpoint_state",
+        "shards_present",
+        "shards_expected",
+        "runtime_capability",
+        "spare_count",
+        "useful_new"
+      ],
+      "route": "/recovery",
+      "coverage": "A compound engine simulation combining one thermal warning, observation delay, a checkpoint interrupted by two permanent worker failures, and capacity-gated recovery. All values and fault schedules are invented.",
+      "assumptions": [
+        {
+          "key": "seed",
+          "label": "Deterministic seed",
+          "value": 41,
+          "unit": "seed",
+          "reason": "Both comparison branches share an invented world."
+        },
+        {
+          "key": "steps",
+          "label": "Rehearsal duration",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "Includes writing, failure, recovery, and resumed work."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Save spacing",
+          "value": 8,
+          "unit": "progress units",
+          "reason": "The next scheduled save overlaps the authored failure under standard conditions."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible replacement capacity",
+          "value": 2,
+          "unit": "machines",
+          "reason": "Two permanent failures require two compatible replacements."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Restart warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "A supported recovery has a cost."
+        },
+        {
+          "key": "collector_lag_steps",
+          "label": "Observation delay",
+          "value": 3,
+          "unit": "ticks",
+          "reason": "Evidence arrives after the event while remaining within the modeled freshness gate."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Workers in the assigned job",
+          "value": 4,
+          "unit": "workers",
+          "reason": "Two permanently fail while their partners wait."
+        }
+      ],
+      "model": {
+        "relationship": "One job experiences rising thermal residual, reports delivered later, a save interrupted while writing, and two permanently failed members. Restore and replacement gates must all pass in that world.",
+        "rationale": "The first complete save precedes the failure. The next write overlaps two failures. The evidence-led policy requests a coordinated restart only with fresh reported evidence and an eligible save; capacity is independently checked by the engine.",
+        "chosen_values": "Save spacing is 8 progress units and writing takes 3 ticks. Two permanent failures occur at tick 20. Observation delay is 3 ticks; freshness requires at most 5 ticks. Two compatible spares are supplied in the standard preset. The initial thermal warning has relative strength 0.35.",
+        "limits": "The fixed fault timing is invented. Compatible spares are simplified. No physical cause, real data, facility risk, or monetary outcome is inferred. This is a small placed job within a counted cluster population.",
+        "sensitivity": "Save timing can remove or worsen the collision. Fewer than two spares blocks replacement; older reports block the evidence-led response. Warning strength changes the first thermal mechanism, not the permanent failure schedule."
+      },
+      "challenge": {
+        "title": "The missing prerequisites",
+        "lesson": "Old reports and only one spare prevent the evidence-led recovery. Restore fresh reports first, then test whether enough compatible capacity exists.",
+        "outcome": "blocked",
+        "parameters": {
+          "spare_count": 1,
+          "collector_lag_steps": 8
+        }
+      }
     }
   ],
   "finale": [

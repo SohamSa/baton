@@ -11,7 +11,7 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
@@ -44,6 +44,7 @@ class LoginBody(BaseModel):
 
 class StoryRunBody(BaseModel):
     variant: str = "standard"
+    settings: dict = Field(default_factory=dict)
     mode: str = "automated"
     presentation: bool = False
     approvals: list[dict] = []
@@ -208,7 +209,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
         if story_id not in {item["id"] for item in list_stories()}:
             raise HTTPException(404, "unknown story")
         try:
-            story_config(story_id, body.variant)
+            story_config(story_id, body.variant, body.settings)
         except ValueError as exc:
             raise HTTPException(400, str(exc)) from exc
         run_id = str(uuid.uuid4())
@@ -232,6 +233,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
                             "story_id": story_id,
                             "mode": body.mode,
                             "variant": body.variant,
+                            "settings": body.settings,
                             "approvals": body.approvals,
                             "presentation": body.presentation,
                             "actor": user.username,
@@ -242,7 +244,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
             )
             db.commit()
             return {"run_id": run_id, "status": "queued", "synthetic": True}
-        produced = run_story(story_id, mode=body.mode, approvals=body.approvals, presentation=body.presentation, variant=body.variant)
+        produced = run_story(story_id, mode=body.mode, approvals=body.approvals, presentation=body.presentation, variant=body.variant, settings=body.settings)
         evaluator = produced.pop("_evaluator", {})
         _persist_run(db, run_id, story_id, produced, evaluator, user, request)
         return {"run_id": run_id, "status": produced["status"], "synthetic": True}
@@ -287,7 +289,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
                 "actor": user.username,
             }
         )
-        view = run_story(current["story"]["id"], mode="manual", approvals=approvals, presentation=False, variant=current["story"].get("variant", "standard"))
+        view = run_story(current["story"]["id"], mode="manual", approvals=approvals, presentation=False, variant=current["story"].get("variant", "standard"), settings=current["story"].get("settings", {}))
         evaluator = view.pop("_evaluator", {})
         _persist_run(db, run_id, current["story"]["id"], view, evaluator, user, request, replace=True)
         db.add(
@@ -358,6 +360,7 @@ def _execute_outbox(session_factory, event_id: str) -> None:
             approvals=payload.get("approvals") or [],
             presentation=bool(payload.get("presentation")),
             variant=payload.get("variant", "standard"),
+            settings=payload.get("settings", {}),
         )
         evaluator = produced.pop("_evaluator", {})
         actor = type("Actor", (), {"username": payload.get("actor", "worker")})()
