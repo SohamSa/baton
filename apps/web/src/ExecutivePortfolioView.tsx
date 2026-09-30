@@ -256,6 +256,69 @@ export const EXECUTIVE_QUESTIONS: QAItem[] = [
   },
 ];
 
+const CAMPUS_PRESETS = [
+  {
+    id: "all",
+    label: "🌐 All Campuses (131k Chips)",
+    badge: "GLOBAL FLEET AGGREGATE",
+    chips: "131,072 Chips",
+    racks: "1,024 Racks",
+    capex: "$600 Million",
+    stallBurn: "$458,752 / hr",
+    power: "162.0 MW Fleet Total",
+    location: "Global Fleet (VA, TX, OR, Norway)",
+    desc: "Aggregated 4-Campus Global Fleet across 4 electric grids.",
+  },
+  {
+    id: "alpha",
+    label: "🇺🇸 Campus Alpha (32k / Virginia)",
+    badge: "DOMINION VIRGINIA",
+    chips: "32,768 Chips",
+    racks: "256 Racks",
+    capex: "$150 Million",
+    stallBurn: "$114,688 / hr",
+    power: "40.0 MW (Dominion Virginia)",
+    location: "Ashburn, Northern Virginia",
+    desc: "High-density LLM pretraining cluster under PPA ratchet protection.",
+  },
+  {
+    id: "lonestar",
+    label: "🇺🇸 Lone Star (65k / Texas)",
+    badge: "ERCOT WEST TEXAS",
+    chips: "65,536 Chips",
+    racks: "512 Racks",
+    capex: "$300 Million",
+    stallBurn: "$229,376 / hr",
+    power: "80.0 MW (ERCOT West Texas)",
+    location: "Pecos, West Texas",
+    desc: "Gigawatt-scale AI factory participating in $75k/day automated demand-response.",
+  },
+  {
+    id: "cascade",
+    label: "🇺🇸 Cascade (16k / Oregon)",
+    badge: "BPA CLEAN HYDRO",
+    chips: "16,384 Chips",
+    racks: "128 Racks",
+    capex: "$75 Million",
+    stallBurn: "$57,344 / hr",
+    power: "22.0 MW (BPA Hydro)",
+    location: "The Dalles, Oregon Columbia Basin",
+    desc: "100% renewable run-of-river hydro power at $0.041/kWh with zero carbon footprint.",
+  },
+  {
+    id: "fjord",
+    label: "🇳🇴 Fjord (16k / Norway)",
+    badge: "STATNETT ARCTIC HYDRO",
+    chips: "16,384 Chips",
+    racks: "128 Racks",
+    capex: "$75 Million",
+    stallBurn: "$57,344 / hr",
+    power: "20.0 MW (Statnett Arctic Hydro)",
+    location: "Narvik, Northern Norway",
+    desc: "Arctic free-cooling with liquid heat export powering local municipal district heating.",
+  },
+];
+
 export function ExecutivePortfolioView({
   run,
   frames,
@@ -272,9 +335,11 @@ export function ExecutivePortfolioView({
   onOpenTour: () => void;
 }) {
   const [expandedId, setExpandedId] = useState<string>("gradual_warning");
+  const [selectedCampusId, setSelectedCampusId] = useState<string>("all");
 
   const live = frames[frames.length - 1];
   const cluster = live?.cluster ?? run?.cluster;
+  const activeCampus = CAMPUS_PRESETS.find((c) => c.id === selectedCampusId) ?? CAMPUS_PRESETS[0];
 
   const featuredQuestions = useMemo(() => {
     return EXECUTIVE_QUESTIONS.filter((q) =>
@@ -290,22 +355,73 @@ export function ExecutivePortfolioView({
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
             <span className="executive-badge">EXECUTIVE CONTINUITY PORTFOLIO</span>
             <div className="portfolio-live-chip-status">
-              <span>Cluster Scope: <strong>{cluster ? cluster.accelerator_count.toLocaleString() : "32,768"} Accelerators</strong></span>
+              <span>Selected Scope: <strong>{activeCampus.chips}</strong></span>
+              <span>· Region: <strong>{activeCampus.location}</strong></span>
               <span>· Status: <strong className={run?.pending_action ? "text-warn" : playing ? "text-accent" : "text-ok"}>{run?.pending_action ? "Awaiting Decision" : playing ? "Simulating Live" : "Ready"}</strong></span>
+              {cluster ? <span style={{ opacity: 0.85 }}>· Live Pod: <strong>{cluster.accelerator_count.toLocaleString()} Chips</strong></span> : null}
             </div>
           </div>
+
+          {/* Interactive Campus Scope Selector */}
+          <div style={{ display: "flex", gap: "0.4rem", alignItems: "center", flexWrap: "wrap", marginTop: "0.85rem", marginBottom: "0.6rem" }}>
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#94a3b8", marginRight: "0.25rem" }}>
+              🌐 Portfolio Scope:
+            </span>
+            {CAMPUS_PRESETS.map((campus) => (
+              <button
+                key={campus.id}
+                type="button"
+                onClick={() => setSelectedCampusId(campus.id)}
+                style={{
+                  background: selectedCampusId === campus.id ? "#2563eb" : "rgba(30, 41, 59, 0.75)",
+                  color: selectedCampusId === campus.id ? "#ffffff" : "#cbd5e1",
+                  border: selectedCampusId === campus.id ? "1px solid #60a5fa" : "1px solid rgba(148, 163, 184, 0.2)",
+                  borderRadius: "9999px",
+                  padding: "0.22rem 0.65rem",
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                {campus.label}
+              </button>
+            ))}
+            <NavLink
+              to="/fleet"
+              style={{
+                background: "rgba(96, 165, 250, 0.18)",
+                color: "#93c5fd",
+                border: "1px solid rgba(96, 165, 250, 0.4)",
+                borderRadius: "9999px",
+                padding: "0.22rem 0.65rem",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.3rem",
+              }}
+            >
+              🌐 Open Fleet Console →
+            </NavLink>
+          </div>
+
           <h1 className="portfolio-title">
             When 1 Chip Stumbles, Why Does a $150 Million Datacenter Freeze?
           </h1>
           <p className="portfolio-subtitle">
             In modern AI pre-training, 32,768 processors advance in lockstep like runners in a relay race or singers in a choir.
             If just 1 chip overheats or drops, the baton stops and the entire facility freezes while electric power, cooling, and staff burn $114,688 every hour.
-            Here is how continuity engineering protects your capital, eliminates idle stall waste, and keeps the choir singing.
+            Across our 4-campus global fleet (131,072 accelerators / $600M CapEx), continuity engineering protects your capital, eliminates idle stall waste, and keeps the choir singing.
           </p>
           <div className="portfolio-hero-actions">
             <button type="button" className="hero-primary-btn" onClick={onOpenPracticeFloor}>
               ⚡ Open Live Practice Floor (32k GPU Simulator)
             </button>
+            <NavLink to="/fleet" className="hero-secondary-btn" style={{ textDecoration: "none", color: "#60a5fa", borderColor: "rgba(96, 165, 250, 0.4)", background: "rgba(30, 58, 138, 0.25)" }}>
+              🌐 Global Fleet Console (4 Sites)
+            </NavLink>
             <NavLink to="/grid" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
               ⚡ Utility Grid & PPA Scorecard
             </NavLink>
@@ -322,14 +438,14 @@ export function ExecutivePortfolioView({
       {/* 2. THE FOUR EXECUTIVE FINANCIAL PILLARS */}
       <section className="portfolio-metrics-grid">
         <div className="exec-stat-card">
-          <span className="stat-label">CLUSTER CAPITAL VALUE</span>
-          <strong className="stat-value text-accent">$150 Million</strong>
-          <p className="stat-desc">32,768 Synchronous AI Accelerators across 256 liquid-cooled server racks.</p>
+          <span className="stat-label">CLUSTER CAPITAL VALUE ({activeCampus.id === "all" ? "GLOBAL FLEET" : activeCampus.badge})</span>
+          <strong className="stat-value text-accent">{activeCampus.capex}</strong>
+          <p className="stat-desc">{activeCampus.chips} across {activeCampus.racks} liquid-cooled server racks ({activeCampus.power}).</p>
         </div>
         <div className="exec-stat-card">
           <span className="stat-label">CLUSTER STALL BURN RATE</span>
-          <strong className="stat-value text-danger">$114,688 / hr</strong>
-          <p className="stat-desc">Cash lost every hour all 32,768 chips sit idle. <NavLink to="/grid" style={{ color: "#38bdf8", fontWeight: 700 }}>View Power Scorecard →</NavLink></p>
+          <strong className="stat-value text-danger">{activeCampus.stallBurn}</strong>
+          <p className="stat-desc">Cash lost every hour all {activeCampus.chips} sit idle waiting. <NavLink to="/grid" style={{ color: "#38bdf8", fontWeight: 700 }}>View Power Scorecard →</NavLink></p>
         </div>
         <div className="exec-stat-card">
           <span className="stat-label">PREEMPTIVE WORK PRESERVED</span>

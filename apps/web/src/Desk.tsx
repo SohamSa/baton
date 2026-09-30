@@ -118,6 +118,13 @@ export function Desk({
         </p>
         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
           <NavLink
+            to="/fleet"
+            className="hero-secondary-btn"
+            style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#60a5fa", borderColor: "rgba(96, 165, 250, 0.4)" }}
+          >
+            🌐 Global Fleet
+          </NavLink>
+          <NavLink
             to="/grid"
             className="hero-secondary-btn"
             style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}

@@ -32,6 +32,7 @@ import { YieldView } from "./YieldView";
 import { FieldDispatchView } from "./FieldDispatchView";
 import { GridScorecardView } from "./GridScorecardView";
 import { ExecutiveQAView } from "./ExecutiveQAView";
+import { GlobalFleetView } from "./GlobalFleetView";
 
 type Session = { token: string; role: string; username: string };
 
@@ -175,6 +176,7 @@ export function App() {
 
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
+        <NavLink to="/fleet">🌐 Global Fleet (4 Sites)</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
         <NavLink to="/grid">⚡ Utility Grid & PPA Scorecard</NavLink>
         <NavLink to="/dispatch">🔧 Field Operations & Dispatch</NavLink>
@@ -208,14 +210,17 @@ export function App() {
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🌟 Executive Portfolio
           </NavLink>
+          <NavLink to="/fleet" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            🌐 Global Fleet (131k)
+          </NavLink>
           <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            ⚡ Live Practice Floor (32k Cluster)
+            ⚡ Live Practice Floor
           </NavLink>
           <NavLink to="/grid" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             ⚡ Utility Grid & PPA
           </NavLink>
           <NavLink to="/dispatch" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🔧 Field Operations & Dispatch
+            🔧 Field Operations
           </NavLink>
           <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             💡 Executive Q&A (17)
@@ -255,6 +260,7 @@ export function App() {
               />
             }
           />
+          <Route path="/fleet" element={<GlobalFleetView run={run} />} />
           <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
           <Route path="/dispatch" element={<FieldDispatchView run={run} frames={frames} onRehearse={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} />} />
           <Route path="/stories" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />
