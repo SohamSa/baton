@@ -32,7 +32,6 @@ import { PassportView } from "./PassportView";
 import { RackView } from "./RackView";
 import { SiliconView } from "./SiliconView";
 import { YieldView } from "./YieldView";
-import { CleanHandsPortalView } from "./CleanHandsPortalView";
 
 type Session = { token: string; role: string; username: string };
 
@@ -176,7 +175,6 @@ export function App() {
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
-        <NavLink to="/clean-hands">🛡️ Tenant Dispute & Clean Hands</NavLink>
         <NavLink to="/stories">💡 Executive Q&A (17)</NavLink>
 
         <details className="nav-deep-dives" open={isDeepDive}>
@@ -209,9 +207,6 @@ export function App() {
           </NavLink>
           <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             ⚡ Live Practice Floor (32k Cluster)
-          </NavLink>
-          <NavLink to="/clean-hands" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🛡️ Tenant Dispute & Clean Hands
           </NavLink>
           <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             💡 Incident Rehearsals (17)
@@ -252,19 +247,6 @@ export function App() {
             }
           />
           <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
-          <Route
-            path="/clean-hands"
-            element={
-              <CleanHandsPortalView
-                run={run}
-                frames={frames}
-                onRehearse={(storyId) => {
-                  void play(storyId, "manual");
-                  navigate("/desk");
-                }}
-              />
-            }
-          />
           <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
           <Route path="/silicon" element={<SiliconView run={run} />} />
           <Route path="/lineage" element={<LineageView run={run} />} />

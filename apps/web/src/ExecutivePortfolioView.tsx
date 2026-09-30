@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { NavLink } from "react-router-dom";
 import { LiveFrame, RunView } from "./api";
 
 export interface QAItem {
@@ -316,9 +315,6 @@ export function ExecutivePortfolioView({
             <button type="button" className="hero-primary-btn" onClick={onOpenPracticeFloor}>
               ⚡ Open Live Practice Floor (32k GPU Simulator)
             </button>
-            <NavLink to="/clean-hands" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
-              🛡️ Tenant Dispute & Clean Hands Portal
-            </NavLink>
             <button type="button" className="hero-secondary-btn" onClick={onOpenTour}>
               ✦ Take the 2-Minute Executive Tour
             </button>
