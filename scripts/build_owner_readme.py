@@ -15,6 +15,14 @@ def render():
     lines = [f"# {story['title']}", '',
         f"[Read and explore in the dashboard]({URL}) · [Evidence and model reference](docs/story-reference.md)", '',
         '*A fictional learning story. Its evidence and simulations are synthetic; real facility decisions require site-specific engineering.*', '']
+    foundations = json.loads((ROOT / 'content/owner-foundations.json').read_text(encoding='utf-8'))
+    lines += ['## Before the story: understand the world', '', foundations['basicsIntro'], '']
+    for item in foundations['basics']:
+        lines += ['**' + item['term'] + '.** ' + item['explanation'], '']
+    lines += ['## Before the story: read the evidence', '', foundations['dataIntro'], '']
+    for paragraph in foundations['dataPrinciples']:
+        lines += [paragraph, '']
+    lines += ['The dashboard introduces the essential questions, then lets you search the full catalog in the same view. Continue from the basics to the data, then into the investigation; specialist tools stay optional.', '']
     for chapter in story['chapters']:
         lines += [f"## {chapter['title']}", '']
         for paragraph in chapter['paragraphs']:
@@ -30,7 +38,7 @@ def render():
         'The Python engine owns simulation and decisions. The public dashboard runs it in a browser worker; rehearsal startup requires network access for Pyodide. No physical telemetry or equipment control is connected. The checked learned model did not beat its baseline, so rules remain the operational default.', '',
         '```bash', 'git clone https://github.com/SohamSa/baton.git', 'cd baton', 'python -m venv .venv', 'source .venv/bin/activate  # Windows: .venv\\Scripts\\activate', 'pip install -e ".[dev]"', 'python -m pytest', 'python scripts/stage_browser_engine.py', 'cd apps/web', 'npm ci', '```', '',
         'Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$env:VITE_PUBLIC_DEMO="true"; npm run dev`). For the authenticated API, see the [quickstart](docs/quickstart.md).', '',
-        '`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files.', '',
+        '`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files. Foundation text comes from `content/owner-foundations.json`; regenerate the standalone catalog with `python scripts/build_learning_catalog.py` after dictionary changes.', '',
         'Technical detail: [runtime](docs/runtime.md) · [limitations](docs/limitations.md) · [model card](docs/model-card.md) · [validation](docs/validation.md).', '']
     return '\n'.join(lines)
 

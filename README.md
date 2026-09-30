@@ -4,6 +4,42 @@
 
 *A fictional learning story. Its evidence and simulations are synthetic; real facility decisions require site-specific engineering.*
 
+## Before the story: understand the world
+
+Before the investigation begins, get to know the equipment, the work, and the systems they share. You do not need chip expertise to start.
+
+**Chip or accelerator.** A processor does calculations. In these rehearsals, an accelerator is one worker assigned to a training job. Its activity does not by itself prove that useful work is advancing.
+
+**Server, rack, and facility.** A server houses accelerators. A rack groups servers. A datacenter facility contains racks and supporting infrastructure. These are different scopes: a problem in one worker does not automatically stop the whole building.
+
+**Training job and rank.** Training adjusts a model using examples. A job assigns cooperating workers to that task. A rank is a worker’s assigned position. In a synchronized job, fast workers can wait for a missing or slow partner before the next step.
+
+**Network.** Connections carry the results workers exchange. Delays and retries can slow the team even when its chips remain present. A heartbeat is a regular message reporting that a worker is still responding.
+
+**Power and cooling.** Power supplies energy; cooling removes heat. Machines can share a power feed or cooling path. A dependency map shows those relationships, so a shared problem is not mistaken for many unrelated chip failures.
+
+**Storage and checkpoint.** A checkpoint is saved training state. A job may return to it after an interruption and repeat later work. The save must be complete, verified, reachable, and compatible. A recent file or a save still being written is not enough.
+
+**Recovery, compatible spares, and qualification.** Recovery depends on the software’s supported procedures and available compatible machines. Qualification tests whether a repaired candidate meets defined return-to-service conditions. A successful idle reboot is not proof of fitness for the workload.
+
+**Useful progress and tradeoffs.** Goodput means new useful progress per elapsed time. Repeated calculations do not count as new work. Saves, restarts, slower pacing, and unnecessary interventions all consume time; a response must be assessed against those costs.
+
+## Before the story: read the evidence
+
+A catalog tells you what a field means and where it belongs. It is not a live feed and does not mean every listed measurement exists in every rehearsal.
+
+A table groups related records. A row is one record; a column is one factor. Shared identifiers connect records: a chip reading needs its chip identity and time; a saved state needs its job identity.
+
+An observation is a reported reading. A derived field summarizes or compares readings. A control input describes an authored choice. Audit records document what happened. Latent truth and training labels are evaluator material, not evidence the operator may use.
+
+Unknown is not zero. A null reading can mean missing or unsupported information. Zero is a measured value only when an observation actually supports it.
+
+When something happened and when the report arrived are different times. Old evidence can be accurate about the past and still be unsuitable for a present decision.
+
+The dictionary is broader than generated observations or model inputs. The operational decision uses a smaller supported evidence set. A definition alone does not establish that a sensor is connected or that a diagnosis is proven.
+
+The dashboard introduces the essential questions, then lets you search the full catalog in the same view. Continue from the basics to the data, then into the investigation; specialist tools stay optional.
+
 ## The number that stopped moving
 
 “Everything is running,” the report says. You look through the glass. Fans turn, lights blink, and the room hums with expensive activity. Then you notice the number showing completed work. It has not moved.
@@ -136,6 +172,6 @@ npm ci
 
 Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$env:VITE_PUBLIC_DEMO="true"; npm run dev`). For the authenticated API, see the [quickstart](docs/quickstart.md).
 
-`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files.
+`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files. Foundation text comes from `content/owner-foundations.json`; regenerate the standalone catalog with `python scripts/build_learning_catalog.py` after dictionary changes.
 
 Technical detail: [runtime](docs/runtime.md) · [limitations](docs/limitations.md) · [model card](docs/model-card.md) · [validation](docs/validation.md).
