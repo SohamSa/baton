@@ -8937,3 +8937,37 @@ body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
   .owner-worksheet .panel, .owner-worksheet .worksheet-topic { break-inside: auto; }
   .owner-worksheet p, .owner-worksheet li { color: #111; }
 }
+
+/* A quiet reading surface; diagnostic navigation remains in the tool rooms. */
+.shell-reading { display: block; }
+.shell-reading > nav, .shell-reading .view-mode-bar { display: none; }
+.shell-reading > main { max-width: 1080px; margin: 0 auto; padding: 1.5rem 2rem 4rem; }
+.reading-sitebar { display: flex; justify-content: space-between; align-items: center; margin: 0 0 2rem; gap: 1rem; }
+.reading-sitebar > a { font-weight: 700; font-size: 1.2rem; text-decoration: none; }
+.reading-sitebar > div { display: flex; align-items: center; gap: 1rem; }
+.owner-reading { max-width: 880px; }
+.owner-reading .owner-masthead { background: none; border: 0; padding: 1rem 0; }
+.owner-reading .owner-masthead h1 { max-width: 22ch; }
+.owner-reading .owner-prose { max-width: 65ch; margin: 1.5rem 0 2.5rem; }
+.owner-reading .owner-prose p { margin: 0 0 1.35em; }
+.reading-extra { border-top: 1px solid var(--line); padding: 1.1rem 0; margin-top: .8rem; }
+.reading-extra > summary, .reading-problem > summary { cursor: pointer; font-weight: 600; padding: .5rem 0; }
+.reading-extra p { line-height: 1.7; }
+.reading-problem { padding: .8rem 0; border-bottom: 1px solid var(--line); }
+.reading-problem .scenario-notes { margin-top: 1rem; }
+.reading-pagination { align-items: center; border-top: 1px solid var(--line); padding-top: 1.4rem; margin: 0 0 2rem; }
+.reading-pagination > span { color: var(--muted); font-size: .9rem; }
+.reading-path { display: grid; gap: .5rem; margin: 1.5rem 0; max-width: 400px; }
+.owner-reading .owner-pack > details { margin: 1.5rem 0; }
+.owner-reading .owner-finale label { display: flex; gap: .6rem; align-items: baseline; margin: .8rem 0; }
+.owner-reading .owner-pack textarea { width: 100%; }
+@media (max-width: 700px) {
+  .shell-reading > main { padding: 1rem 1.15rem 3rem; }
+  .reading-sitebar { margin-bottom: 1rem; }
+  .reading-sitebar > div { gap: .7rem; font-size: .85rem; }
+  .owner-reading .owner-prose { font-size: 1.1rem; line-height: 1.8; }
+  .reading-pagination { flex-direction: column; align-items: stretch; gap: 1rem; }
+}
+@media print { .reading-sitebar, .reading-pagination, .reading-evidence { display: none !important; } }
+
+#reading-title:focus { outline: none; }

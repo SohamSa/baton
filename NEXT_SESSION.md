@@ -11,3 +11,5 @@
 - No credentials or generated browser-engine bundles should be committed.
 
 - `/worksheet` is the blank, locally saved owner evidence review. Assumptions and challenge controls come from the canonical source. Keep fictional constants and measured facility evidence distinguishable.
+
+- The default entrance begins reading immediately. Keep technical tables in the generated evidence companion and optional drawers, not the main narrative. No visible act/climax scaffolding. The README, companion, and dashboard share one source; regenerate both Markdown files with `build_owner_readme.py`.
