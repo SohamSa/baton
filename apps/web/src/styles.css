@@ -8997,3 +8997,25 @@ body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
 .reading-tool-switch { position: relative; }
 .reading-tool-switch summary { cursor: pointer; }
 .reading-tool-switch > div { position: absolute; z-index: 20; right: 0; top: 2rem; min-width: 200px; display: grid; gap: 1rem; padding: 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+
+/* One workspace shell for reading and practical tools. */
+.shell-unified { display: block; }
+.shell-unified > main { max-width: 1440px; margin: auto; padding: 1.5rem 2rem 4rem; }
+.shell-unified.shell-reading > main { max-width: 1080px; }
+.workspace-header { margin-bottom: 2rem; border-bottom: 1px solid var(--border, #64748b); padding-bottom: 1rem; }
+.workspace-brand { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.workspace-brand > a { font-size: 1.35rem; font-weight: 700; text-decoration: none; }
+.workspace-brand > span { flex: 1; color: var(--muted); }
+.workspace-navigation { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: 1rem; align-items: center; }
+.workspace-navigation > a, .workspace-tools > summary { padding: .55rem .7rem; border-radius: .4rem; cursor: pointer; }
+.workspace-navigation > a.active { background: var(--surface, #263449); box-shadow: inset 0 -2px currentColor; font-weight: 700; }
+.workspace-tools { position: relative; }
+.workspace-tools > div { position: absolute; right: 0; z-index: 30; width: min(340px, 80vw); max-height: 65vh; overflow: auto; padding: 1rem; background: var(--bg, #111827); border: 1px solid var(--border, #64748b); border-radius: .6rem; box-shadow: 0 8px 24px #0004; }
+.workspace-tools a { display: block; padding: .45rem; }
+.workspace-tools section { margin-top: .75rem; }
+.workspace-return { display: flex; flex-wrap: wrap; gap: .8rem; margin-bottom: 0; font-size: .9rem; }
+.owner-apply { border-left: 3px solid var(--border, #64748b); padding: .5rem 1rem; }
+@media (max-width: 700px) { .shell-unified > main { padding: 1rem 1rem 3rem; } .workspace-brand > span { flex-basis: 100%; order: 3; } .workspace-brand > button { margin-left: auto; } .workspace-tools > div { right: auto; left: 0; } }
+@media print { .workspace-header, .owner-apply { display: none !important; } }
+.workspace-navigation { flex-direction: row; border-right: 0; padding: 0; }
+.workspace-navigation > a.active { background: var(--panel); }

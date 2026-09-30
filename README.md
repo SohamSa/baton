@@ -2,6 +2,8 @@
 
 [Read and explore in the dashboard](https://sohamsa.github.io/baton/) · [Evidence and model reference](docs/story-reference.md)
 
+One dashboard carries you from basic ideas and data into the story, facility planning, rehearsals, and operating reviews. The same navigation stays with you throughout; practical steps in each passage keep your place in the story.
+
 *A fictional learning story. Its evidence and simulations are synthetic; real facility decisions require site-specific engineering.*
 
 ## Before the story: understand the world

@@ -1,7 +1,8 @@
+import { OwnerWorkspaceNav } from "./OwnerWorkspaceNav";
 import { OwnerBasics, OwnerDataIntroduction } from "./OwnerFoundations";
 import { OwnerWorksheet } from "./OwnerWorksheet";
 import { FormEvent, useEffect, useState } from "react";
-import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
   Adapter,
   LiveFrame,
@@ -36,8 +37,7 @@ import { ExecutiveQAView } from "./ExecutiveQAView";
 import { GlobalFleetView } from "./GlobalFleetView";
 import { GreenfieldPlannerView } from "./GreenfieldPlannerView";
 import { OwnerToolsProvider } from "./OwnerRooms";
-import { OwnerJourney, OwnerJourneyContext } from "./OwnerJourney";
-import { ExecutiveDeepDiveHeader } from "./ExecutiveDeepDiveHeader";
+import { OwnerJourney } from "./OwnerJourney";
 
 type Session = { token: string; role: string; username: string };
 
@@ -151,96 +151,13 @@ export function App() {
   if (!session) return <Login onSuccess={setSession} />;
 
   const isReading = location.pathname === "/" || location.pathname.startsWith("/journey") || location.pathname.startsWith("/learn") || location.pathname === "/data";
-  const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
   return (
-    <OwnerToolsProvider token={session.token}><div className={`shell ${isReading ? "shell-reading" : ""}`}>
+    <OwnerToolsProvider token={session.token}><div className={`shell shell-unified ${isReading ? "shell-reading" : ""}`}>
       <a className="skip" href="#content">Skip to content</a>
-      <nav aria-label="Primary">
-        <strong>Baton</strong>
-        <p className="muted">{session.username} · {session.role}</p>
-        <button type="button" className="tour-nav-btn" onClick={() => setShowTour(true)}>
-          ✦ 2-Min Executive Tour
-        </button>
-
-        <div className="nav-section-title">Executive Suite</div>
-        <NavLink to="/" end>The Owner’s Story</NavLink>
-        <NavLink to="/worksheet">My facility worksheet</NavLink>
-        <NavLink to="/portfolio">🌟 Executive Portfolio</NavLink>
-        <NavLink to="/fleet">🌐 Facility Map (4 Examples)</NavLink>
-        <NavLink to="/planner">🏗️ Greenfield DC Planner</NavLink>
-        <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
-        <NavLink to="/grid">⚡ Utility Grid & PPA Scorecard</NavLink>
-        <NavLink to="/dispatch">🔧 Field Operations & Dispatch</NavLink>
-        <NavLink to="/stories">💡 Executive Q&A (17)</NavLink>
-
-        <details className="nav-deep-dives" open={isDeepDive}>
-          <summary>System Diagnostics & Deep Dives (19) ▾</summary>
-          <div className="nav-deep-dives-list">
-            {DEEP_DIVES.map((group) => (
-              <div key={group.category}>
-                <div className="nav-section-title">{group.category}</div>
-                {group.links.map(([path, label]) => (
-                  <NavLink key={path} to={path}>
-                    {label}
-                  </NavLink>
-                ))}
-              </div>
-            ))}
-          </div>
-        </details>
-
-        <div style={{ marginTop: "auto", paddingTop: "1rem" }}>
-          <button type="button" onClick={() => setTheme((value) => (value === "dark" ? "light" : "dark"))}>
-            {theme === "dark" ? "Light theme" : "Dark theme"}
-          </button>
-          {PUBLIC_DEMO ? null : <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>}
-        </div>
-      </nav>
       <main id="content">
-        {isReading ? <div className="reading-sitebar"><NavLink to="/">Baton</NavLink><div><details key={location.pathname} className="reading-tool-switch"><summary>Explore when ready</summary><div><NavLink to="/learn/basics">Basics</NavLink><NavLink to="/learn/data">Data catalog</NavLink><NavLink to="/journey/arrival">Story</NavLink><NavLink to="/desk">Rehearsals</NavLink><NavLink to="/worksheet">My facility review</NavLink><NavLink to="/portfolio">All supporting tools</NavLink></div></details><button type="button" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")}>{theme === "dark" ? "Light theme" : "Dark theme"}</button></div></div> : null}
-        <div className="view-mode-bar">
-          <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            Owner’s Story
-          </NavLink>
-          <NavLink to="/worksheet">My facility worksheet</NavLink>
-          <NavLink to="/portfolio" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🌟 Executive Portfolio
-          </NavLink>
-          <NavLink to="/fleet" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🌐 Fictional Facility Map
-          </NavLink>
-          <NavLink to="/planner" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🏗️ Greenfield Planner
-          </NavLink>
-          <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            ⚡ Live Practice Floor
-          </NavLink>
-          <NavLink to="/grid" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            ⚡ Utility Grid & PPA
-          </NavLink>
-          <NavLink to="/dispatch" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🔧 Field Operations
-          </NavLink>
-          <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            💡 Executive Q&A (17)
-          </NavLink>
-        </div>
-
-        {!isDeepDive && !isReading ? (
-          <div className="tour-banner">
-            <div>
-              <strong>New to Datacenter Operations?</strong>
-              <p>Follow a synthetic training job, explore interruptions, and learn which questions to ask.</p>
-            </div>
-            <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
-              ✦ Take the 2-Minute Executive Tour
-            </button>
-          </div>
-        ) : null}
-
-        <OwnerJourneyContext />
-        {!isReading ? <ExecutiveDeepDiveHeader /> : null}
+        <OwnerWorkspaceNav groups={DEEP_DIVES} theme={theme} onTheme={() => setTheme((value) => value === "dark" ? "light" : "dark")} />
+        {!PUBLIC_DEMO ? <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button> : null}
 
         {PUBLIC_DEMO && playing && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}

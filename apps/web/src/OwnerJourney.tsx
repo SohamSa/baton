@@ -60,6 +60,15 @@ export function OwnerJourney() {
     </header>
     {!chapter ? <p role="alert">That page is not in this story. <Link to="/">Start with the stalled job.</Link></p> : <>
       <article className="owner-prose" aria-label="The investigation">{chapter.paragraphs.map((p) => <p key={p}>{p}</p>)}</article>
+      <section className="owner-apply reading-extra" aria-label="Apply this part of the story">
+        <h2>Put this question to work</h2><p>{chapter.question}</p>
+        <div className="owner-actions">
+          <Link to={`${chapter.route}?chapter=${chapter.id}&path=${path}`}>{chapter.routeLabel}</Link>
+          {cast.length ? <Link to={`/desk?scenario=${cast[0].id}&chapter=${chapter.id}&path=${path}`}>Rehearse this problem</Link> : null}
+          <Link to={`/worksheet?chapter=${chapter.id}&path=${path}`}>Add evidence to my facility review</Link>
+        </div>
+        <p className="muted">Explore here when you are ready, or continue reading below. Your place in the story stays with you.</p>
+      </section>
       {chapterId === "finale" ? <p className="reading-extra"><Link className="owner-button" to={`/desk?scenario=recovery_crossroads&chapter=finale&path=${path}`}>Run the combined recovery scenario</Link></p> : null}
       {chapterId === "finale" ? <details className="reading-extra owner-finale">
         <summary>What would you tell the team? Try the decisions.</summary>
@@ -111,7 +120,9 @@ export function OwnerJourneyContext() {
   const location = useLocation();
   if (location.pathname === "/" || location.pathname.startsWith("/journey") || location.pathname.startsWith("/learn") || location.pathname === "/data") return null;
   const query = new URLSearchParams(location.search);
-  const source = story.chapters.find((c) => c.id === query.get("chapter"));
-  const path = pathFrom(location.search) ?? "explore";
-  return <aside className="owner-context" aria-label="Owner journey context"><div><strong>{source ? source.title : "Follow the work"}</strong><p>{source ? source.question : "Follow one stalled job to understand how these systems connect."} These tools use synthetic evidence and simplified models.</p></div><Link to={source ? chapterLink(source.id, path) : "/"}>{source ? "Return to my reading" : "Read the investigation"}</Link></aside>;
+  let saved: { chapter?: string; path?: string } = {};
+  try { saved = JSON.parse(localStorage.getItem("baton-workspace-context-v1") ?? "{}") ?? {}; } catch { /* Use route context. */ }
+  const source = story.chapters.find((c) => c.id === (query.get("chapter") ?? saved.chapter));
+  const path = pathFrom(location.search) ?? pathFrom(`?path=${saved.path ?? "explore"}`) ?? "explore";
+  return <aside className="owner-context" aria-label="Owner journey context"><div><strong>{source ? source.title : "Follow the work"}</strong><p>{source ? source.question : "Follow one stalled job to understand how these systems connect."} These tools use synthetic evidence and simplified models.</p></div><Link to={source ? chapterLink(source.id, path) : "/journey/arrival"}>{source ? "Return to my reading" : "Read the investigation"}</Link></aside>;
 }

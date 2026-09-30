@@ -84,3 +84,5 @@ Owner controls now use a shared Python whitelist and bounded validation. Effecti
 The main entrance teaches basic concepts before introducing essential data and the complete in-page catalog. Definitions retain roles, units, missingness, purpose, and table relationships from the engine dictionary. Catalog learning uses a generated static definition export and does not start Pyodide. Existing story and supporting-tool routes remain available.
 
 This foundations review passed 105 Python tests and both production builds. Browser checks confirmed the sequential learning flow and full catalog without engine startup.
+
+- Unified owner workspace: the same Basics, Data, Story, Plan, Rehearse, Operations, and My review navigation appears on reading and practical pages. Specialist tools use one expandable menu. Chapter and build/operate context survive tool navigation and reload; story passages offer contextual practical steps.

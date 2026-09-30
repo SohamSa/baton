@@ -17,3 +17,5 @@
 - Rehearsal controls are declared and validated in `simulation/rehearsal.py`; keep browser/API/approval/outbox conditions aligned. Recovery Crossroads is a compound engine world, linked from the concluding reading passage. Save timing can remove the collision; one spare cannot replace two permanent failures. Keep actual-run inputs separate from next-run controls.
 
 - The main URL starts with basics, followed by data and story. Foundations use `content/owner-foundations.json`. After dictionary changes, run `python scripts/build_learning_catalog.py` and commit `apps/web/public/learning-catalog.json`; tests verify exact backend parity. Keep the full catalog in the learning view, and specialist navigation optional.
+
+- Unified owner workspace: the same Basics, Data, Story, Plan, Rehearse, Operations, and My review navigation appears on reading and practical pages. Specialist tools use one expandable menu. Chapter and build/operate context survive tool navigation and reload; story passages offer contextual practical steps.
