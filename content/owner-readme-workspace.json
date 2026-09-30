@@ -1,0 +1,64 @@
+{
+  "opening": [
+    "You do not need to know how a chip is built to ask the question that starts this story: if the machines are busy, why has the work stopped?",
+    "Perhaps your first datacenter is still an idea. Perhaps you already own buildings full of equipment and depend on other people to explain what happens inside them. Baton puts you beside an owner who starts with the same uncertainty. You meet the systems one by one, discover how they can let each other down, and learn what a supported response needs.",
+    "Then the investigation becomes something you can use. You shape a fictional facility plan, rehearse competing responses, examine recovery evidence, and leave with a review for your own team. Everything lives in one dashboard, with your place in the story preserved as you move between its tools."
+  ],
+  "basicsLead": "Before Mira asks you to interpret an alarm, she draws the room. There are workers inside machines, machines inside racks, and work that crosses their boundaries. These are the few ideas you need to follow her investigation.",
+  "dataLead": "Next she opens the records. The screen contains more columns than you could reasonably remember. You do not need to memorize them. You need to know which question a record can answer, how it connects to other records, and when it cannot support a decision.",
+  "dataEnd": "In the dashboard, Data introduces these questions before the full catalog. You can expand the catalog right there, search by field, table, or topic, and filter by evidence role. Definitions explain meaning, units, missing values, source relationships, consumers, and the impact of missing evidence. A wide dictionary becomes useful when you can choose the smaller set that answers the question in front of you.",
+  "storyLead": "Now the records have a purpose. You walk into the facility with Mira. The problem is no longer a vocabulary exercise: someone must decide what to do while useful work is slipping away. Each passage in the dashboard offers a relevant tool, a rehearsal when available, and a way to record the evidence you still need. You can follow those steps or keep reading.",
+  "sections": [
+    {
+      "label": "Plan",
+      "route": "/planner",
+      "title": "Put the next building on the table",
+      "paragraphs": [
+        "The investigation is over, but Mira keeps the dependency drawing. You place your proposed building beside it. This time, the questions arrive before the equipment does: what work will share a power supply, where will heat go, and how will a stopped job return?",
+        "In Plan, you can change the fictional inventory, assumed accelerator power, additional IT power, and facility PUE. PUE compares total facility power with IT power; it accounts for supporting loads rather than making them disappear. The planner calculates an illustrative IT load and applies PUE once to show facility load. You can also choose a cooling approach to discuss. That choice is a label for the review, not proof of a safe design.",
+        "The same planning assumptions appear in the executive overview, facility map, and power tool. You do not have to reconcile several competing versions of your example. The facility map offers fictional campuses focused on different dependencies: shared power, compatible spares, cooling, and checkpoint storage. Separate campuses are not one globally synchronized job, and their inventory is not multiplied into a rehearsal result.",
+        "The power tool takes the conversation further. Can the supply tolerate the workload? What energy would operation consume? How does the contract measure billed demand? Capacity, energy, and billing need different evidence. A planning total cannot answer an electrical-transient question, and a power-domain rehearsal does not produce a utility bill.",
+        "You leave this step with assumptions to challenge and records to request: dependency maps, supplier limits, restore procedures, compatible spare arrangements, and qualification requirements. Changing the facility example does not resize the simulated job. Those are different scopes, and the dashboard keeps that distinction visible."
+      ]
+    },
+    {
+      "label": "Rehearse",
+      "route": "/desk",
+      "title": "Try the response before the emergency",
+      "paragraphs": [
+        "Back at the practice floor, you can ask the question an emergency rarely allows: what would have happened if we had responded differently?",
+        "Rehearse lets you choose one of the problems you met in the story. Compare two responses under the same synthetic conditions, or use the interactive mode to review a proposed action yourself. The observations, decisions, saved work, repeated work, and new useful progress come from the Python engine. A successful-looking screen is not the result; the work that actually survives is.",
+        "Standard conditions explain the intended lesson. Challenge conditions test its limits. A save can protect progress when a warning is useful; unnecessary intervention can interrupt healthy work. Pacing can prevent a modeled power-domain failure; with sufficient headroom, it can simply slow the job. A repaired candidate can pass an idle check and still fail qualification under load.",
+        "You can change compatible spare capacity, checkpoint spacing, observation delay, and supported warning strength. Rerun the comparison and inspect the inputs actually used. A reusable link preserves the selected conditions, and reset brings back the preset. These controls change declared teaching conditions; they do not calibrate the example to your hardware.",
+        "Recovery Crossroads brings several problems into one engine world: delayed evidence, failed workers, a save interrupted while being written, and replacement capacity that may or may not be sufficient. An older eligible save and enough compatible capacity can support a coordinated restart. Remove a prerequisite and the response may be blocked. The concluding story discussion and this executable scenario serve different purposes: one develops your reasoning; the other lets you examine consequences under specified conditions."
+      ]
+    },
+    {
+      "label": "Operations",
+      "route": "/dispatch",
+      "title": "Ask whether the work is really back",
+      "paragraphs": [
+        "A replacement has arrived. It boots. Someone is ready to declare the incident closed. You remember the Revolving Door Patient and ask what happened under the workload it must actually carry.",
+        "Operations opens the return-to-service investigation and its qualification rehearsal. Inspect the matching scenario’s observed evidence and the questions your team should answer. A candidate that fails the modeled checks stays out of the job; a browser timer does not award it a pass. This is a place to practise operating decisions, not a connection to physical equipment or a technician-dispatch service.",
+        "When the explanation is uncertain, the supporting tools help you follow the chain rather than accept a headline. Dependencies show shared systems. Device and incident views locate affected workers and grouped symptoms. Checkpoints expose saved-state status; recovery exposes the proposed response and its prerequisites; audit records expose decisions. Experiments compare the recorded consequences of different responses.",
+        "Other investigations follow the black box outward: processor pace, board power, rack cooling, manufacturing families, packages, installation history, and computation validity. Their records help you ask what would distinguish one explanation from another. A retry does not reveal a microscopic crack, and a shared batch identifier does not convict every chip in that batch.",
+        "The evidence and uncertainty tool also makes the intelligence boundary visible. Support rankings are not calibrated failure probabilities; missing evidence can justify abstaining. The checked learned model did not beat the simpler baseline, so rules remain the operational default. The model and monitoring views expose the project’s evaluation and monitoring information rather than turning synthetic evidence into a real-fleet prediction.",
+        "Your closing question is the one that began the night: has new useful work resumed? You want a supported restore, qualified capacity, and evidence of progress beyond the point already reached. A green indicator alone cannot supply them."
+      ]
+    },
+    {
+      "label": "My review",
+      "route": "/worksheet",
+      "title": "Leave with a question your team can answer",
+      "paragraphs": [
+        "The most useful thing you take away is not a fictional answer about your building. It is a sharper request for evidence.",
+        "My review starts with a blank facility worksheet. Name the review, choose whether you are building or operating, and record the affected job size if you know it. Your facility details stay separate from the planning example and do not silently recalibrate the rehearsals.",
+        "For each topic, the worksheet explains the question, suggests records and a responsible team, and gives you space for evidence status, an owner, record references, unresolved questions, and the next demonstration to request. You can move from a review question back into its related rehearsal. The list of unresolved topics counts your answers; it is not a readiness score or independent validation.",
+        "Reading progress, story decisions, and notes stay in this browser. Worksheet answers can be downloaded as a readable review or as worksheet data, or printed for a meeting. Shared planning and financial assumptions are also browser-local; export the worksheet when you need a copy to keep or share.",
+        "If you want to discuss financial implications, the executive overview and supporting tools offer an assumption-based illustration. Currency, job size, value per accelerator-hour, incident frequency, downtime, repeated work, investment, and recurring costs must come from you. Blank inputs stay unknown. The illustration uses the affected job and your stated assumptions; it is not measured savings, a predicted return, or a promise about your whole fleet.",
+        "You can now enter a design review or operating meeting with a concrete request: show us which systems share this failure, which save we can restore, what the runtime supports, who qualifies the replacement, and how we will confirm useful progress. You still need site-specific expertise. You can participate in that conversation with a connected understanding of what the evidence must establish."
+      ]
+    }
+  ],
+  "closing": "The next time someone says “Everything is running,” you have somewhere to start and a way to follow through. Begin with the basics, read the evidence, follow the story, test a response, and carry an unanswered question into your review. Baton keeps those steps together."
+}

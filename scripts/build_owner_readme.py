@@ -12,35 +12,50 @@ def source():
 
 def render():
     story = source()
-    lines = [f"# {story['title']}", '',
-        f"[Read and explore in the dashboard]({URL}) · [Evidence and model reference](docs/story-reference.md)", '',
-        "One dashboard carries you from basic ideas and data into the story, facility planning, rehearsals, and operating reviews. The same navigation stays with you throughout; practical steps in each passage keep your place in the story.", '',
-        '*A fictional learning story. Its evidence and simulations are synthetic; real facility decisions require site-specific engineering.*', '']
     foundations = json.loads((ROOT / 'content/owner-foundations.json').read_text(encoding='utf-8'))
-    lines += ['## Before the story: understand the world', '', foundations['basicsIntro'], '']
+    workspace = json.loads((ROOT / 'content/owner-readme-workspace.json').read_text(encoding='utf-8'))
+    lines = [f"# {story['title']}", '', f"[Open Baton: the complete owner workspace]({URL})", '']
+    for paragraph in workspace['opening']:
+        lines += [paragraph, '']
+    lines += ['*The facilities, evidence, and simulations are fictional. Baton supports learning and evidence reviews; real designs and operating decisions need site-specific engineering.*', '',
+        'In the dashboard, the same navigation stays with you: **Basics → Data → Story → Plan → Rehearse → Operations → My review**. This is a suggested journey, not a locked sequence. Experienced readers can go straight to a tool. More tools holds the specialist investigations, and returning to Story keeps your chapter and build-or-operate context.', '',
+        '## Basics: get to know the room', '', workspace['basicsLead'], '', foundations['basicsIntro'], '']
     for item in foundations['basics']:
         lines += ['**' + item['term'] + '.** ' + item['explanation'], '']
-    lines += ['## Before the story: read the evidence', '', foundations['dataIntro'], '']
+    lines += ['## Data: turn the records into questions', '', workspace['dataLead'], '', foundations['dataIntro'], '']
     for paragraph in foundations['dataPrinciples']:
         lines += [paragraph, '']
-    lines += ['The dashboard introduces the essential questions, then lets you search the full catalog in the same view. Continue from the basics to the data, then into the investigation; specialist tools stay optional.', '']
+    lines += ['Mira starts with the evidence that connects directly to the work:', '', '| Question to ask | Fields to read together | Why they belong together |', '| --- | --- | --- |']
+    for group in foundations['essentials']:
+        lines += [f"| {group['label']} | {', '.join('`' + f + '`' for f in group['fields'])} | {group['why']} |"]
+    lines += ['', workspace['dataEnd'], '', '## Story: follow the work', '', workspace['storyLead'], '']
     for chapter in story['chapters']:
-        lines += [f"## {chapter['title']}", '']
+        lines += [f"### {chapter['title']}", '']
         for paragraph in chapter['paragraphs']:
             lines += [paragraph, '']
-        if chapter['id'] == 'finale':
-            lines += [f"[Try the recovery discussion]({URL}#/journey/finale) · [Run the combined scenario]({URL}#/desk?scenario=recovery_crossroads&chapter=finale)", '']
-        if chapter['id'] == 'dawn':
-            lines += [f"[Build your facility review worksheet]({URL}#/worksheet) · [Revisit the investigation]({URL})", '']
-    lines += ['---', '', '## Explore what happened', '',
-        'The dashboard follows the same investigation. You can read without starting the simulation engine, then open a rehearsal to compare responses. Standard and challenge conditions show why an intervention can help, waste work, or fail when a prerequisite is missing. Owner controls let you change spare capacity, save spacing, observation delay, and supported warning strength, then rerun both policies under the same conditions. A reusable link preserves your choices.', '',
-        '[The evidence companion](docs/story-reference.md) keeps every problem’s observations, invented inputs, response gates, limitations, and challenge conditions together. The [data catalog](' + URL + '#/data) explains the wider field dictionary. The [owner worksheet](' + URL + '#/worksheet) starts blank and saves your questions locally, with download and print options.', '',
+    for section in workspace['sections']:
+        lines += [f"## {section['label']}: {section['title']}", '']
+        for paragraph in section['paragraphs']:
+            lines += [paragraph, '']
+    lines += ['### Where the supporting tools fit', '',
+        'These tools live inside the same dashboard. Open More tools when you need a closer look; the owner navigation remains available.', '',
+        '| Follow this question | Tools inside Baton |', '| --- | --- |',
+        '| How do the example, current rehearsal, and financial assumptions relate? | Executive overview and facility map |',
+        '| Is the issue in a worker, its board, its package, or a shared rack? | Processor health, baseboard power, multi-chip assembly, rack plumbing and power |',
+        '| What history might the affected machines share? | Manufacturing batches, factory quality and bins, digital chip passport |',
+        '| Does the proposed explanation have enough support? | AI early warning, AI helper models, monitoring |',
+        '| What failed, what can restore, and what action was reviewed? | Dependencies, devices, incidents, checkpoints, operator decisions, audit, experiments |',
+        '| What should the owner ask about power and recurring problems? | Utility grid and PPA scorecard, problem questions |', '',
+        workspace['closing'], '', f"[Continue in the complete Baton dashboard]({URL})", '',
+        '<details>', '<summary>For readers who want the model evidence or want to run the project</summary>', '',
+        'The [evidence companion](docs/story-reference.md) contains every problem’s observations, invented inputs, response gates, limitations, and challenge conditions. The full searchable field catalog is available inside the dashboard’s Data page.', '',
         '## Run and contribute', '',
         'The Python engine owns simulation and decisions. The public dashboard runs it in a browser worker; rehearsal startup requires network access for Pyodide. No physical telemetry or equipment control is connected. The checked learned model did not beat its baseline, so rules remain the operational default.', '',
         '```bash', 'git clone https://github.com/SohamSa/baton.git', 'cd baton', 'python -m venv .venv', 'source .venv/bin/activate  # Windows: .venv\\Scripts\\activate', 'pip install -e ".[dev]"', 'python -m pytest', 'python scripts/stage_browser_engine.py', 'cd apps/web', 'npm ci', '```', '',
         'Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$env:VITE_PUBLIC_DEMO="true"; npm run dev`). For the authenticated API, see the [quickstart](docs/quickstart.md).', '',
-        '`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files. Foundation text comes from `content/owner-foundations.json`; regenerate the standalone catalog with `python scripts/build_learning_catalog.py` after dictionary changes.', '',
+        '`content/owner-journey.json` supplies the dashboard, README, and evidence companion. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit the generated files. Foundation text comes from `content/owner-foundations.json` and the README’s practical narrative from `content/owner-readme-workspace.json`; regenerate the standalone catalog with `python scripts/build_learning_catalog.py` after dictionary changes.', '',
         'Technical detail: [runtime](docs/runtime.md) · [limitations](docs/limitations.md) · [model card](docs/model-card.md) · [validation](docs/validation.md).', '']
+    lines += ['</details>', '']
     return '\n'.join(lines)
 
 
