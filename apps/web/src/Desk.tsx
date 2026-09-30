@@ -344,10 +344,11 @@ export function Desk({
               ) : (
                 placed.map((gpu) => {
                   const gpuTone = tone(gpu);
+                  const devNum = gpu.id.includes("-d") ? gpu.id.split("-d")[1] : gpu.id.split("-").slice(-1)[0].replace("d", "");
                   return (
                     <div key={gpu.id} className={`arena-cell ${gpuTone}`} title={cellTitle(gpu)}>
                       <div className="arena-cell-top">
-                        <span>Chip {gpu.id.split("-").slice(-1)[0]}</span>
+                        <span>Chip #{devNum} <small style={{ opacity: 0.75, fontSize: "0.7rem", fontWeight: 500 }}>(Slot d{devNum})</small></span>
                         <span className="arena-led" />
                       </div>
                       <div className="arena-cell-temp">
@@ -1208,7 +1209,8 @@ function tone(gpu: { functional: boolean; quarantined: boolean; temp: number | n
 }
 
 function cellTitle(gpu: { id: string; temp: number | null; functional: boolean; quarantined: boolean }) {
-  const state = !gpu.functional ? "not functional" : gpu.quarantined ? "quarantined" : "in the job";
-  if (gpu.temp === null) return `${gpu.id}, ${state}`;
-  return `${gpu.id}, ${gpu.temp.toFixed(1)}°C, ${state}`;
+  const state = !gpu.functional ? "not functional (offline)" : gpu.quarantined ? "quarantined" : "computing in the job";
+  const devNum = gpu.id.includes("-d") ? gpu.id.split("-d")[1] : gpu.id.split("-").slice(-1)[0].replace("d", "");
+  const tempStr = gpu.temp === null ? "no temperature reading" : `${gpu.temp.toFixed(1)}°C`;
+  return `Chip #${devNum} (Physical Slot d${devNum} in Rack 0, Host Server 0) · Temp: ${tempStr} · State: ${state}`;
 }
