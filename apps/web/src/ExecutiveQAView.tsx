@@ -219,7 +219,7 @@ export function ExecutiveQAView({
 
                     {/* How Continuity Solves It */}
                     <div className="qa-reading-section">
-                      <div className="section-pill-tag tag-solution">🛡️ How Continuity Engineering Solves It</div>
+                      <div className="section-pill-tag tag-solution">🛡️ How Baton Solves It</div>
                       <p className="qa-plain-text">{qa.solution}</p>
                     </div>
 

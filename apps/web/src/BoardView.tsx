@@ -389,7 +389,7 @@ export function BoardView({
         </div>
 
         <div className="board-takeaway">
-          <strong>💡 Executive Board Diagnostics Takeaway:</strong> In high-power AI clusters, over 38% of returned chips have zero silicon defects. By treating the <strong>accelerator and the baseboard as an integrated physical system</strong>, TrainingContinuity saves over <strong>${Math.round(totalAnnualValue).toLocaleString()} annually</strong> and stops the devastating cycle of duplicate cluster crashes.
+          <strong>💡 Executive Board Diagnostics Takeaway:</strong> In high-power AI clusters, over 38% of returned chips have zero silicon defects. By treating the <strong>accelerator and the baseboard as an integrated physical system</strong>, Baton saves over <strong>${Math.round(totalAnnualValue).toLocaleString()} annually</strong> and stops the devastating cycle of duplicate cluster crashes.
         </div>
       </div>
     </section>

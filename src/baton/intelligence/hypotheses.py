@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 
-from training_continuity.domain.enums import CAUSE_OF_MECHANISM, Mechanism
+from baton.domain.enums import CAUSE_OF_MECHANISM, Mechanism
 
 
 @dataclass

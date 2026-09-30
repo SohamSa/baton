@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from training_continuity.features.compute import ewma, thermal_residual
-from training_continuity.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
+from baton.features.compute import ewma, thermal_residual
+from baton.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
 
 FORBIDDEN_INPUTS = {
     "r_multiplier",

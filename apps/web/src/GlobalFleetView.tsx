@@ -206,7 +206,7 @@ export function GlobalFleetView({
           <strong className="f-val text-ok">+${((totalMonthlySavings * 12) / 1_000_000).toFixed(2)}M / yr</strong>
           <p className="f-desc">Direct power waste avoided, ratchet penalties stopped, and MTTR reduced from 42m to 2m.</p>
           <div className="f-sub">
-            <span className="text-ok"><strong>14.2x ROI Multiple</strong> on Continuity Software</span>
+            <span className="text-ok"><strong>14.2x ROI Multiple</strong> on Baton Architecture</span>
           </div>
         </div>
       </div>
@@ -339,7 +339,7 @@ export function GlobalFleetView({
                 <th>Carbon Intensity</th>
                 <th>Clean Match</th>
                 <th>Monthly Electric Bill</th>
-                <th>Continuity Savings</th>
+                <th>Baton Savings</th>
               </tr>
             </thead>
             <tbody>
@@ -426,7 +426,7 @@ export function GlobalFleetView({
               <span className="result-icon">🛡️</span>
               <div>
                 <strong>Simulation Result: Fleet-Wide Resilience Confirmed</strong>
-                <span className="result-sub">Cross-Campus Continuity Protocol Executed in 4.2 Seconds</span>
+                <span className="result-sub">Cross-Campus Baton Protocol Executed in 4.2 Seconds</span>
               </div>
             </div>
             <div className="dr-result-details">

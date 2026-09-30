@@ -6,22 +6,22 @@ import copy
 
 import pytest
 
-from training_continuity.accounting.economics import assumption_estimate, evaluate_economics
-from training_continuity.accounting.ledger import Ledger
-from training_continuity.catalog.atlas import catalog_atlas
-from training_continuity.catalog.dictionary import build_catalog, catalog_counts
-from training_continuity.checkpoints import eligibility, select_restore_checkpoint
-from training_continuity.domain.enums import CheckpointState
-from training_continuity.domain.machines import TransitionError, transition_action, transition_checkpoint
-from training_continuity.domain.enums import ActionState
-from training_continuity.domain.workflow import ActionConflict, ActionService, MemoryActionRepo
-from training_continuity.features.assess import assess_series
-from training_continuity.features.compute import counter_rates, mean_skip_null
-from training_continuity.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
-from training_continuity.policies.library import POLICIES, SERVING_POLICIES
-from training_continuity.security import hash_password, verify_password
-from training_continuity.simulation.engine import OBS_KEYS, ScenarioConfig, compare_policies, public_view, run_scenario
-from training_continuity.simulation.stories import run_story
+from baton.accounting.economics import assumption_estimate, evaluate_economics
+from baton.accounting.ledger import Ledger
+from baton.catalog.atlas import catalog_atlas
+from baton.catalog.dictionary import build_catalog, catalog_counts
+from baton.checkpoints import eligibility, select_restore_checkpoint
+from baton.domain.enums import CheckpointState
+from baton.domain.machines import TransitionError, transition_action, transition_checkpoint
+from baton.domain.enums import ActionState
+from baton.domain.workflow import ActionConflict, ActionService, MemoryActionRepo
+from baton.features.assess import assess_series
+from baton.features.compute import counter_rates, mean_skip_null
+from baton.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
+from baton.policies.library import POLICIES, SERVING_POLICIES
+from baton.security import hash_password, verify_password
+from baton.simulation.engine import OBS_KEYS, ScenarioConfig, compare_policies, public_view, run_scenario
+from baton.simulation.stories import run_story
 
 
 def _temps(result, gpu_id="gpu-r0-h0-d0"):
@@ -234,7 +234,7 @@ def test_silent_subthreshold_cliff_story():
 
 
 def test_job_isolation_and_elastic_restart():
-    from training_continuity.simulation.engine import FaultConfig
+    from baton.simulation.engine import FaultConfig
 
     isolated = run_scenario(
         ScenarioConfig(
@@ -405,8 +405,8 @@ def test_ledger_conservation_and_no_double_counted_progress():
 
 
 def test_stepwise_playback_matches_a_full_run():
-    from training_continuity.simulation.engine import ScenarioRun
-    from training_continuity.simulation.stories import story_config
+    from baton.simulation.engine import ScenarioRun
+    from baton.simulation.stories import story_config
 
     cfg = story_config("healthy_workload_shift")
     full = run_scenario(cfg, "combined", mode="manual")
@@ -525,7 +525,7 @@ def test_research_world_is_a_gpu_cluster_of_tens_of_thousands():
 
 
 def test_queue_backpressure_is_visible():
-    from training_continuity.generation.queue import BoundedQueue
+    from baton.generation.queue import BoundedQueue
 
     queue = BoundedQueue(2)
     assert queue.put(1) and queue.put(2)

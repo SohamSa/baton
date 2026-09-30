@@ -7,13 +7,13 @@ import os
 import secrets
 from pathlib import Path
 
-from training_continuity.persistence.db import make_session_factory
-from training_continuity.persistence.orm import Base
-from training_continuity.api.app import seed_user
+from baton.persistence.db import make_session_factory
+from baton.persistence.orm import Base
+from baton.api.app import seed_user
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="TrainingContinuity local commands")
+    parser = argparse.ArgumentParser(description="Baton local commands")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("bootstrap")
     sub.add_parser("train")
@@ -32,7 +32,7 @@ def main() -> None:
         creds.write_text("\n".join(lines) + "\n", encoding="utf-8")
         print(f"Wrote new local passwords to {creds}. They are not a published default.")
     elif args.command == "train":
-        from training_continuity.intelligence.train import train
+        from baton.intelligence.train import train
 
         report = train(range(12), Path("artifacts"))
         print(report["default_operational_policy"], report["beats_baseline"])

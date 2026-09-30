@@ -27,12 +27,12 @@ const ready = (async () => {
 import sys
 sys.path.insert(0, "/shims")
 sys.path.insert(0, "/pkg")
-from training_continuity.accounting.economics import assumption_estimate
-from training_continuity.adapters.registry import ADAPTERS
-from training_continuity.catalog.atlas import catalog_atlas
-from training_continuity.catalog.dictionary import build_catalog, catalog_counts
-from training_continuity.simulation.engine import ScenarioRun, compare_policies, public_view
-from training_continuity.simulation.stories import STORIES, list_stories, story_config
+from baton.accounting.economics import assumption_estimate
+from baton.adapters.registry import ADAPTERS
+from baton.catalog.atlas import catalog_atlas
+from baton.catalog.dictionary import build_catalog, catalog_counts
+from baton.simulation.engine import ScenarioRun, compare_policies, public_view
+from baton.simulation.stories import STORIES, list_stories, story_config
 import json
 
 _live = {}
@@ -85,8 +85,8 @@ def op_adapters():
 
 def op_train(payload):
     from pathlib import Path
-    from training_continuity.intelligence.train import train
-    report = train(range(12), Path("/tmp/training-continuity-model"))
+    from baton.intelligence.train import train
+    report = train(range(12), Path("/tmp/baton-model"))
     return json.dumps({
         "operational_default": report["default_operational_policy"],
         "trained_report": report,

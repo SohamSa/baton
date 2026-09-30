@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "training-continuity"
+name = "baton"
 version = "0.1.0"
 description = "Synthetic research platform for studying checkpoint protection and capability-aware recovery during distributed pre-training."
 readme = "README.md"
@@ -28,7 +28,7 @@ dependencies = [
 dev = ["pytest>=8.3"]
 
 [project.scripts]
-training-continuity = "training_continuity.cli:main"
+baton = "baton.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

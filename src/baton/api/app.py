@@ -15,12 +15,12 @@ from pydantic import BaseModel
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
-from training_continuity import ORGANIZATION_MODE, PRODUCT_CLAIM, __version__
-from training_continuity.adapters.registry import ADAPTERS
-from training_continuity.catalog.atlas import catalog_atlas
-from training_continuity.catalog.dictionary import build_catalog, catalog_counts
-from training_continuity.persistence.db import enable_sqlite_fk, make_session_factory
-from training_continuity.persistence.orm import (
+from baton import ORGANIZATION_MODE, PRODUCT_CLAIM, __version__
+from baton.adapters.registry import ADAPTERS
+from baton.catalog.atlas import catalog_atlas
+from baton.catalog.dictionary import build_catalog, catalog_counts
+from baton.persistence.db import enable_sqlite_fk, make_session_factory
+from baton.persistence.orm import (
     ActionRow,
     AuditEvent,
     Base,
@@ -30,9 +30,9 @@ from training_continuity.persistence.orm import (
     RunRow,
     UserRow,
 )
-from training_continuity.security import hash_password, issue_token, read_token, verify_password
-from training_continuity.accounting.economics import assumption_estimate
-from training_continuity.simulation.stories import list_stories, run_story
+from baton.security import hash_password, issue_token, read_token, verify_password
+from baton.accounting.economics import assumption_estimate
+from baton.simulation.stories import list_stories, run_story
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -64,7 +64,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
     engine, SessionLocal = make_session_factory(database_url)
     enable_sqlite_fk(engine)
     Base.metadata.create_all(engine)
-    app = FastAPI(title="TrainingContinuity", version=__version__)
+    app = FastAPI(title="Baton", version=__version__)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
@@ -149,7 +149,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
     @app.get("/api/v1/meta")
     def meta():
         return {
-            "product": "TrainingContinuity",
+            "product": "Baton",
             "synthetic": True,
             "organization_mode": ORGANIZATION_MODE,
             "claim": PRODUCT_CLAIM,

@@ -8,7 +8,7 @@ apps/web  ->  FastAPI  ->  simulation engine, features, policies, ledger
                       ->  Parquet partitions for offline observations
 ```
 
-`training_continuity.asgi:app` starts a daemon thread that drains `outbox` rows. The request that starts a story inserts a queued run and returns HTTP 202. Tests that need an immediate body use `sync_worker=True`.
+`baton.asgi:app` starts a daemon thread that drains `outbox` rows. The request that starts a story inserts a queued run and returns HTTP 202. Tests that need an immediate body use `sync_worker=True`.
 
 There is no Kafka broker. Do not describe one.
 

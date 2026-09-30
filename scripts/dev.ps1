@@ -7,6 +7,6 @@ if (-not (Test-Path .venv\Scripts\python.exe)) {
 }
 & .\.venv\Scripts\python.exe -m pip install -r requirements.lock.txt
 $env:PYTHONPATH = "src"
-& .\.venv\Scripts\python.exe -m training_continuity.cli bootstrap
-Write-Host "API: .\.venv\Scripts\python.exe -m uvicorn training_continuity.asgi:app --host 127.0.0.1 --port 8000"
+& .\.venv\Scripts\python.exe -m baton.cli bootstrap
+Write-Host "API: .\.venv\Scripts\python.exe -m uvicorn baton.asgi:app --host 127.0.0.1 --port 8000"
 Write-Host "Web: cd apps\web; npm install; npm run dev"

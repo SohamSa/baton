@@ -1,5 +1,5 @@
-"""Compatibility entry. Prefer training_continuity.asgi:app."""
+"""Compatibility entry. Prefer baton.asgi:app."""
 
-from training_continuity.asgi import app
+from baton.asgi import app
 
 __all__ = ["app"]

@@ -381,7 +381,7 @@ export function GridScorecardView({
                 <p className="col-sub">Grid Status: {selectedScenario.gridStatus}</p>
               </div>
               <div className="breakdown-col">
-                <span className="col-label">🛡️ HOW TRAININGCONTINUITY PROTECTS YOU</span>
+                <span className="col-label">🛡️ HOW BATON PROTECTS YOU</span>
                 <p className="col-text">{selectedScenario.howWeSolve}</p>
               </div>
             </div>
@@ -594,7 +594,7 @@ export function GridScorecardView({
             <span className="output-label">ANNUAL POWER CAPITAL PROTECTED</span>
             <strong className="output-val text-ok">${Math.round(annualPowerProtected).toLocaleString()} / yr</strong>
             <p className="output-desc">
-              Direct electricity savings and penalty avoidance delivered by TrainingContinuity's energy management.
+              Direct electricity savings and penalty avoidance delivered by Baton's energy management.
             </p>
           </div>
         </div>

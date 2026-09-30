@@ -170,7 +170,7 @@ export function App() {
     <div className="shell">
       <a className="skip" href="#content">Skip to content</a>
       <nav aria-label="Primary">
-        <strong>TrainingContinuity</strong>
+        <strong>Baton</strong>
         <p className="muted">{session.username} · {session.role}</p>
         <button type="button" className="tour-nav-btn" onClick={() => setShowTour(true)}>
           ✦ 2-Min Executive Tour
@@ -237,7 +237,7 @@ export function App() {
           <div className="tour-banner">
             <div>
               <strong>New to Datacenter Operations?</strong>
-              <p>See how 1 failing chip stalls a $150M cluster, and how continuity engineering saves millions.</p>
+              <p>See how 1 failing chip stalls a $150M cluster, and how Baton saves millions.</p>
             </div>
             <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
               ✦ Take the 2-Minute Executive Tour
@@ -327,7 +327,7 @@ function Login({ onSuccess }: { onSuccess: (session: Session) => void }) {
   }
   return (
     <main>
-      <h1>TrainingContinuity</h1>
+      <h1>Baton</h1>
       <p className="banner">Research workspace for hardware disruption inside a large GPU pre-training cluster.</p>
       <form className="panel" onSubmit={submit}>
         <label>Username<br /><input value={username} onChange={(event) => setUsername(event.target.value)} autoComplete="username" /></label>
@@ -642,9 +642,9 @@ function ExecutiveTourModal({ onClose, onRunDemo }: { onClose: () => void; onRun
       metric: "Using the wrong remedy on the wrong leak is how careful operators lose the race anyway.",
     },
     {
-      badge: "PROACTIVE CONTINUITY",
+      badge: "PROACTIVE BATON PASS",
       title: "Catching the Wave Before the Crash",
-      body: "Standard data centers wait for a chip to die, crashing the job. TrainingContinuity tracks the thermal slope (dT/dt) early. It detects the climb, triggers a lightweight micro-checkpoint right before failure, and performs a fast-path coordinated restart.",
+      body: "Standard data centers wait for a chip to die, crashing the job. Baton tracks the thermal slope (dT/dt) early. It detects the climb, triggers a lightweight micro-checkpoint right before failure, and performs a fast-path coordinated restart.",
       metric: "Preserves up to 90% of in-flight work and slashes downtime from 40 mins to 2 mins.",
     },
     {

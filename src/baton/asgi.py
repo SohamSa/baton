@@ -2,7 +2,7 @@
 
 import os
 
-from training_continuity.api.app import create_app
+from baton.api.app import create_app
 
 app = create_app(
     database_url=os.environ.get("DATABASE_URL", "sqlite+pysqlite:///./.local/training.db"),

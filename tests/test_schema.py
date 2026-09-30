@@ -10,8 +10,8 @@ from alembic.config import Config
 from sqlalchemy import inspect, text
 from sqlalchemy.exc import IntegrityError
 
-from training_continuity.persistence.db import enable_sqlite_fk, make_engine
-from training_continuity.persistence.orm import Base, Site, Zone
+from baton.persistence.db import enable_sqlite_fk, make_engine
+from baton.persistence.orm import Base, Site, Zone
 
 
 def test_foreign_keys_reject_dangling_zones(tmp_path: Path):

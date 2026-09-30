@@ -8,8 +8,8 @@ from pathlib import Path
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-from training_continuity.generation.queue import BoundedQueue
-from training_continuity.simulation.engine import ScenarioConfig, run_scenario
+from baton.generation.queue import BoundedQueue
+from baton.simulation.engine import ScenarioConfig, run_scenario
 
 
 def materialize(out_dir: Path, seeds: list[int], queue_size: int = 5000) -> dict:

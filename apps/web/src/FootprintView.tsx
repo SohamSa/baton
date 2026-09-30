@@ -139,7 +139,7 @@ export function FootprintView({
           <span className="kpi-label">Watchdog Telemetry Footprint</span>
           <div className="kpi-val">&lt; 0.02% CPU · 0 GPU Cores</div>
           <p className="kpi-desc">
-            TrainingContinuity's streaming physics residual engine runs entirely on host BMCs, leaving 100% of GPU compute for pretraining.
+            Baton's streaming physics residual engine runs entirely on host BMCs, leaving 100% of GPU compute for pretraining.
           </p>
           <div className="kpi-highlight">Zero Compute Theft from LLM Training</div>
         </div>

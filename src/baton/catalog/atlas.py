@@ -6,7 +6,7 @@ tables would be joined, and which columns are allowed to change a decision.
 
 from __future__ import annotations
 
-from training_continuity.catalog.dictionary import FieldSpec, build_catalog
+from baton.catalog.dictionary import FieldSpec, build_catalog
 
 # title, what the table is, where a real hall would get it, the tag that joins it
 TABLES: dict[str, tuple[str, str, str, str]] = {

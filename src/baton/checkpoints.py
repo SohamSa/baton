@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from training_continuity.domain.enums import CheckpointState
+from baton.domain.enums import CheckpointState
 
 
 def eligibility(checkpoint: dict, *, topology_signature: str, allow_reshard: bool, storage_reachable: bool, decision_step: int) -> tuple[bool, str]:

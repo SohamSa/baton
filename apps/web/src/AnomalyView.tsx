@@ -397,7 +397,7 @@ export function AnomalyView({
                 <td><span className="badge-warning">Noisy & Costly</span></td>
               </tr>
               <tr className="row-highlight">
-                <td><strong>Silicon-Context AI (TrainingContinuity)</strong><br /><small className="muted">(Physics-informed Digital Twin + Vmin)</small></td>
+                <td><strong>Silicon-Context AI (Baton)</strong><br /><small className="muted">(Physics-informed Digital Twin + Vmin)</small></td>
                 <td><strong className="text-ok">0.12%</strong></td>
                 <td><strong className="text-ok">180 seconds</strong></td>
                 <td><strong className="text-ok">99.4% (Guaranteed)</strong></td>

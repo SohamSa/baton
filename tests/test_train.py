@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
-from training_continuity.intelligence.train import FEATURE_NAMES, serve_scores, split_name, train
+from baton.intelligence.train import FEATURE_NAMES, serve_scores, split_name, train
 
 
 def test_splits_follow_scenario_identity_not_rows():

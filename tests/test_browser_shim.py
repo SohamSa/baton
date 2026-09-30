@@ -9,8 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CODE = """
-from training_continuity.simulation.engine import config_hash
-from training_continuity.simulation.stories import run_story, story_config
+from baton.simulation.engine import config_hash
+from baton.simulation.stories import run_story, story_config
 
 cfg = story_config("healthy_workload_shift")
 view = run_story("healthy_workload_shift", mode="manual")

@@ -1,8 +1,8 @@
 # Next session
 
 - Branch: main, tracking origin/main.
-- Last commit: see `git log -1`. The Data catalog lives on the public page under Data catalog (`/#/data`) and in `src/training_continuity/catalog/atlas.py`. The overview still steps the decision engine one step at a time.
-- Remote: https://github.com/SohamSa/training-continuity (public). The browser demonstration is https://sohamsa.github.io/training-continuity/. Do not touch siliconpulse-ai.
+- Last commit: see `git log -1`. The Data catalog lives on the public page under Data catalog (`/#/data`) and in `src/baton/catalog/atlas.py`. The overview still steps the decision engine one step at a time.
+- Remote: https://github.com/SohamSa/baton (public). The browser demonstration is https://sohamsa.github.io/baton/. Do not touch siliconpulse-ai.
 - Python: 3.14.4 virtual environment at `.venv`.
 - Commands that passed: `python -m pytest` (32 passed) and `apps/web` `npm run build`. A local public-demo browser pass opened the Data catalog, switched 10 and 30 drawers, and opened the Buildings drawer. An earlier pass stepped the opening story and checked that return stays undefined until the accounting form is complete.
 - Commands not run successfully: Docker Compose and PostgreSQL. `docker info` failed because `npipe:////./pipe/dockerDesktopLinuxEngine` was missing.

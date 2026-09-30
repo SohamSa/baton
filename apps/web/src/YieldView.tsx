@@ -250,7 +250,7 @@ export function YieldView({
           </div>
         </div>
         <p className="muted">
-          Hardware vendors routinely dispute warranty claims by blaming customer datacenter cooling or dirty power. TrainingContinuity generates an irrefutable audit dossier with ambient inlet telemetry, fan RPM, and thermal resistance proofs:
+          Hardware vendors routinely dispute warranty claims by blaming customer datacenter cooling or dirty power. Baton generates an irrefutable audit dossier with ambient inlet telemetry, fan RPM, and thermal resistance proofs:
         </p>
 
         <div className="dossier-box">

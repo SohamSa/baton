@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "src" / "training_continuity"
+SOURCE = ROOT / "src" / "baton"
 SHIM = ROOT / "apps" / "web" / "engine-shims" / "pydantic.py"
 OUT = ROOT / "apps" / "web" / "public" / "browser-engine.json"
 
@@ -14,7 +14,7 @@ OUT = ROOT / "apps" / "web" / "public" / "browser-engine.json"
 def main() -> None:
     files = {}
     for path in SOURCE.rglob("*.py"):
-        key = "training_continuity/" + path.relative_to(SOURCE).as_posix()
+        key = "baton/" + path.relative_to(SOURCE).as_posix()
         files[key] = path.read_text(encoding="utf-8")
     payload = {"shim": SHIM.read_text(encoding="utf-8"), "files": files}
     OUT.parent.mkdir(parents=True, exist_ok=True)

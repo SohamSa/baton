@@ -12,15 +12,15 @@ from dataclasses import dataclass, field
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from training_continuity.accounting.ledger import EXCLUSIVE_STATES, Ledger
-from training_continuity.checkpoints import select_restore_checkpoint
-from training_continuity.domain.enums import CheckpointState
-from training_continuity.domain.machines import transition_checkpoint
-from training_continuity.features.compute import ewma, mean_skip_null, thermal_residual
-from training_continuity.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
-from training_continuity.policies.library import POLICIES, OraclePolicy
-from training_continuity.rngutil import normal, uniform, weighted_choice
-from training_continuity.simulation.capabilities import reconfigure_possible
+from baton.accounting.ledger import EXCLUSIVE_STATES, Ledger
+from baton.checkpoints import select_restore_checkpoint
+from baton.domain.enums import CheckpointState
+from baton.domain.machines import transition_checkpoint
+from baton.features.compute import ewma, mean_skip_null, thermal_residual
+from baton.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
+from baton.policies.library import POLICIES, OraclePolicy
+from baton.rngutil import normal, uniform, weighted_choice
+from baton.simulation.capabilities import reconfigure_possible
 
 PROFILES = {
     "northspan-n8": {
@@ -683,7 +683,7 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
         quality_ok = False
     functional = {gpu.gpu_id: gpu.functional for gpu in world.gpus.values()}
     quarantined = {gpu.gpu_id: gpu.quarantined for gpu in world.gpus.values()}
-    from training_continuity.simulation.capabilities import bad_ranks
+    from baton.simulation.capabilities import bad_ranks
 
     bad = bad_ranks(job.rank_gpu, job.dropped, functional, quarantined)
     supported, support_reason = reconfigure_possible(job.capability, len(job.rank_gpu), job.tp_size, job.dropped, bad or [0])
@@ -927,7 +927,7 @@ def _execute(world: World, cfg: ScenarioConfig, job: Job, decision: dict, step: 
     if action_name == "reconfigure":
         functional = {gpu.gpu_id: gpu.functional for gpu in world.gpus.values()}
         quarantined = {gpu.gpu_id: gpu.quarantined for gpu in world.gpus.values()}
-        from training_continuity.simulation.capabilities import bad_ranks
+        from baton.simulation.capabilities import bad_ranks
 
         bad = bad_ranks(job.rank_gpu, job.dropped, functional, quarantined)
         ok, reason = reconfigure_possible(job.capability, len(job.rank_gpu), job.tp_size, job.dropped, bad)
@@ -1011,7 +1011,7 @@ def _apply_effect(world, cfg, job, decision, step) -> tuple[bool, str]:
     if action == "reconfigure":
         functional = {gpu.gpu_id: gpu.functional for gpu in world.gpus.values()}
         quarantined = {gpu.gpu_id: gpu.quarantined for gpu in world.gpus.values()}
-        from training_continuity.simulation.capabilities import bad_ranks
+        from baton.simulation.capabilities import bad_ranks
 
         bad = bad_ranks(job.rank_gpu, job.dropped, functional, quarantined)
         groups = [list(range(i, i + job.tp_size)) for i in range(0, len(job.rank_gpu), job.tp_size)]

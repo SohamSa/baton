@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from training_continuity.domain.enums import ActionState, CheckpointState
+from baton.domain.enums import ActionState, CheckpointState
 
 
 class TransitionError(ValueError):

@@ -353,7 +353,7 @@ export function ExecutivePortfolioView({
       <header className="portfolio-hero">
         <div className="portfolio-hero-left">
           <div style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
-            <span className="executive-badge">EXECUTIVE CONTINUITY PORTFOLIO</span>
+            <span className="executive-badge">EXECUTIVE BATON PORTFOLIO</span>
             <div className="portfolio-live-chip-status">
               <span>Selected Scope: <strong>{activeCampus.chips}</strong></span>
               <span>· Region: <strong>{activeCampus.location}</strong></span>
@@ -413,7 +413,7 @@ export function ExecutivePortfolioView({
           <p className="portfolio-subtitle">
             In modern AI pre-training, 32,768 processors advance in lockstep like runners in a relay race or singers in a choir.
             If just 1 chip overheats or drops, the baton stops and the entire facility freezes while electric power, cooling, and staff burn $114,688 every hour.
-            Across our 4-campus global fleet (131,072 accelerators / $600M CapEx), continuity engineering protects your capital, eliminates idle stall waste, and keeps the choir singing.
+            Across our 4-campus global fleet (131,072 accelerators / $600M CapEx), Baton protects your capital, eliminates idle stall waste, and keeps the choir singing.
           </p>
           <div className="portfolio-hero-actions">
             <button type="button" className="hero-primary-btn" onClick={onOpenPracticeFloor}>
@@ -576,7 +576,7 @@ export function ExecutivePortfolioView({
                         <p>{qa.plainEnglish}</p>
                       </div>
                       <div className="qa-col">
-                        <h4>🛡️ How Continuity Engineering Solves It</h4>
+                        <h4>🛡️ How Baton Solves It</h4>
                         <p>{qa.solution}</p>
                       </div>
                     </div>
@@ -623,7 +623,7 @@ export function ExecutivePortfolioView({
       {/* 5. BOTTOM CTA TO PRACTICE FLOOR */}
       <section className="portfolio-bottom-cta panel">
         <div>
-          <h2>Ready to See Continuity Engineering in Action?</h2>
+          <h2>Ready to See Baton in Action?</h2>
           <p>
             Switch to the Live Practice Floor to simulate how all 32,768 chips behave in real time across all 17 rehearsals.
           </p>

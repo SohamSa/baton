@@ -269,7 +269,7 @@ export const DEEP_DIVE_TRANSLATIONS: Record<string, DeepDiveTranslation> = {
     path: "/recovery",
     category: "Operations & Telemetry",
     title: "Operator Decisions & Automated Failover Actions",
-    componentName: "Continuity Orchestrator & Action Approval Gate",
+    componentName: "Baton Orchestrator & Action Approval Gate",
     financialBadge: "Cuts Downtime from 40m to 2m ($57k saved)",
     badgeTone: "ok",
     whatIsIt:
@@ -306,12 +306,12 @@ export const DEEP_DIVE_TRANSLATIONS: Record<string, DeepDiveTranslation> = {
   "/experiments": {
     path: "/experiments",
     category: "Operations & Telemetry",
-    title: "Continuity Strategy Comparison & A/B Benchmarks",
+    title: "Baton Strategy Comparison & A/B Benchmarks",
     componentName: "Empirical A/B Rehearsal Comparison Matrix",
-    financialBadge: "Proves 14.2x ROI on Continuity Engineering",
+    financialBadge: "Proves 14.2x ROI on Baton Architecture",
     badgeTone: "ok",
     whatIsIt:
-      "Side-by-side benchmark comparing traditional datacenter runbooks against automated continuity engineering under identical failure conditions.",
+      "Side-by-side benchmark comparing traditional datacenter runbooks against automated Baton engineering under identical failure conditions.",
     analogyTitle: "Crash-Testing Two Cars Under Identical Conditions",
     analogyIcon: "🏎️",
     analogyDesc:
@@ -433,11 +433,11 @@ export function ExecutiveDeepDiveHeader() {
             </div>
           </div>
 
-          {/* Column 3: How Continuity Solves It */}
+          {/* Column 3: How Baton Solves It */}
           <div className="dd-exec-card dd-card-ok">
             <div className="dd-card-header">
               <span className="dd-card-icon">🛡️</span>
-              <h3>How Continuity Engineering Protects It</h3>
+              <h3>How Baton Protects It</h3>
             </div>
             <p className="dd-card-text">{translation.continuityFix}</p>
             <div className="dd-action-box">

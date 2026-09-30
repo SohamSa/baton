@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from training_continuity.domain.enums import HIGH_IMPACT, ActionType
+from baton.domain.enums import HIGH_IMPACT, ActionType
 
 
 def _decision(action: str, scope: str, rationale: str, hypotheses: dict, **extra) -> dict:

@@ -448,7 +448,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
           </h1>
           <p className="portfolio-subtitle">
             Planning a new hyperscale AI datacenter from bare earth? Model your total upfront CapEx, monthly utility power bills,
-            cooling efficiency (PUE), warm standby spares, and multi-million-dollar continuity return on investment before pouring concrete.
+            cooling efficiency (PUE), warm standby spares, and multi-million-dollar Baton return on investment before pouring concrete.
           </p>
 
           <div className="portfolio-hero-actions">
@@ -527,7 +527,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
         <div className="section-head">
           <span className="eyebrow">Interactive Sizing Controls</span>
           <h2>Customize Your Physical & Financial Parameters</h2>
-          <p className="muted">Adjust scale, electric grid, thermal cooling, and continuity standby redundancy in real time.</p>
+          <p className="muted">Adjust scale, electric grid, thermal cooling, and Baton standby redundancy in real time.</p>
         </div>
 
         <div className="planner-steps-grid">
@@ -731,10 +731,10 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
             </div>
           </div>
 
-          {/* Step 4: Continuity Redundancy */}
+          {/* Step 4: Baton Redundancy */}
           <div className="planner-step-box">
             <div className="step-badge">STEP 4</div>
-            <h3>Continuity Redundancy & Warm Standby Ratio</h3>
+            <h3>Baton Redundancy & Warm Standby Ratio</h3>
             <p className="step-desc">
               When 1 processor crashes, does the $150M datacenter wait 45 minutes for a technician, or failover in 2 minutes?
             </p>
@@ -777,7 +777,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
             </div>
 
             <div className="step-insight-callout">
-              <strong>🛡️ Continuity Shield:</strong> Reserving{" "}
+              <strong>🛡️ Baton Shield:</strong> Reserving{" "}
               <strong>{financialModel.warmSparesCount.toLocaleString()} warm spares</strong> ({standby.pct}%) cuts annual downtime from{" "}
               <strong>{financialModel.legacyDowntimeHours.toFixed(0)} hours</strong> down to{" "}
               <strong>{financialModel.continuityDowntimeHours.toFixed(1)} hours</strong>.
@@ -836,7 +836,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
           </div>
 
           <div className="proforma-kpi-card">
-            <span className="kpi-label">ANNUAL CONTINUITY SAVINGS</span>
+            <span className="kpi-label">ANNUAL BATON SAVINGS</span>
             <strong className="kpi-val text-ok">
               +${(financialModel.netAnnualCapitalSaved / 1000000).toFixed(2)} Million / yr
             </strong>
@@ -920,9 +920,9 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
             </table>
           </div>
 
-          {/* Column C: Continuity Shield ROI */}
+          {/* Column C: Baton Shield ROI */}
           <div className="proforma-col-box highlight-shield">
-            <h3>🛡️ Continuity Shield Financial ROI</h3>
+            <h3>🛡️ Baton Shield Financial ROI</h3>
             <p style={{ fontSize: "0.82rem", color: "#94a3b8", marginBottom: "0.75rem" }}>
               Projected based on {financialModel.annualHardwareIncidents} expected annual hardware incidents across {chips.toLocaleString()} accelerators.
             </p>
@@ -933,7 +933,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
                   <td className="text-right text-danger">-${(financialModel.totalLegacyAnnualLoss / 1000000).toFixed(2)}M / yr</td>
                 </tr>
                 <tr>
-                  <td>With Continuity Shield ({standby.pct}% Spares, 2m MTTR)</td>
+                  <td>With Baton Shield ({standby.pct}% Spares, 2m MTTR)</td>
                   <td className="text-right text-accent">-${(financialModel.totalContinuityAnnualLoss / 1000000).toFixed(2)}M / yr</td>
                 </tr>
                 <tr>
@@ -945,7 +945,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
                   <td className="text-right text-ok"><strong>+${(financialModel.netAnnualCapitalSaved / 1000000).toFixed(2)}M / yr</strong></td>
                 </tr>
                 <tr>
-                  <td><strong>Continuity Investment Payback</strong></td>
+                  <td><strong>Baton Investment Payback</strong></td>
                   <td className="text-right text-ok">
                     <strong>{financialModel.paybackMonths < 1 ? "< 30 Days" : `${financialModel.paybackMonths.toFixed(1)} Months`}</strong>
                   </td>
@@ -961,7 +961,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
         <div className="term-sheet-header">
           <div>
             <span className="memo-tag">CONFIDENTIAL · FOR INVESTMENT COMMITTEE / BANK SYNDICATION</span>
-            <h2>HYPERSCALE AI DATACENTER CAPITAL & CONTINUITY TERM SHEET</h2>
+            <h2>HYPERSCALE AI DATACENTER CAPITAL & BATON TERM SHEET</h2>
             <p className="muted">
               Project Specification: <strong>{chips.toLocaleString()} Accelerators</strong> ·{" "}
               <strong>{financialModel.totalFacilityPowerMw} MW Grid Interconnect</strong> ·{" "}
@@ -996,7 +996,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
               <strong className="ts-val">${(financialModel.monthlyPowerBill / 1000000).toFixed(2)}M / mo</strong>
             </div>
             <div>
-              <span className="ts-label">Continuity Net ROI</span>
+              <span className="ts-label">Baton Net ROI</span>
               <strong className="ts-val text-ok">+${(financialModel.netAnnualCapitalSaved / 1000000).toFixed(1)}M / yr</strong>
             </div>
           </div>
@@ -1015,7 +1015,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
               Crucially, by allocating <strong>{standby.pct}% warm unassigned standby accelerators</strong> (
               {financialModel.warmSparesCount} nodes) with preemptive thermal slope micro-saving, the facility mitigates the catastrophic{" "}
               <strong>${Math.round(financialModel.clusterStallBurnPerHour).toLocaleString()}/hr</strong> cluster stall burn that plagues legacy datacenters.
-              This continuity architecture preserves an estimated{" "}
+              This Baton architecture preserves an estimated{" "}
               <strong>${(financialModel.netAnnualCapitalSaved / 1000000).toFixed(2)} Million per year</strong> in eliminated idle waste,
               delivering a full software and standby capital payback in{" "}
               <strong>{financialModel.paybackMonths < 1 ? "< 1 month" : `${financialModel.paybackMonths.toFixed(1)} months`}</strong>.
@@ -1024,7 +1024,7 @@ export function GreenfieldPlannerView({ run }: { run: RunView | null }) {
         </div>
 
         <div className="term-sheet-footer">
-          <span>Prepared by TrainingContinuity Greenfield Architecture Engine</span>
+          <span>Prepared by Baton Greenfield Architecture Engine</span>
           <span>Simulation Status: {run?.status ?? "Verified Pro-Forma"} · 100% Non-Dispute Infrastructure Ops</span>
         </div>
       </section>

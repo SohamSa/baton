@@ -14,7 +14,7 @@ Bootstrap:
 
 ```powershell
 $env:PYTHONPATH = "src"
-.\.venv\Scripts\python.exe -m training_continuity.cli bootstrap
+.\.venv\Scripts\python.exe -m baton.cli bootstrap
 ```
 
 Passwords are written to `.local\dev-credentials.txt`. Rotate them by deleting the users or using a fresh database file. Do not copy that file into the repository.
@@ -23,4 +23,4 @@ High-impact actions include pause, quarantine, spare allocation, restart, reconf
 
 Audit rows are append-only in application behavior. They live in a normal database table. That is not tamper-proof storage.
 
-If a story stays `queued`, the API process was started without the outbox thread. Use `training_continuity.asgi:app`, which sets `sync_worker=False` and starts the worker.
+If a story stays `queued`, the API process was started without the outbox thread. Use `baton.asgi:app`, which sets `sync_worker=False` and starts the worker.

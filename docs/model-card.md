@@ -12,4 +12,4 @@ Artifact: `artifacts/model_report.json` and `artifacts/model_weights.npz`.
 - Abstention: stale or thin evidence yields an unknown hypothesis rather than a forced cause.
 - Oracle: evaluator-only. `choose` raises if something tries to serve it.
 
-Retrain with `python -m training_continuity.cli train`. Replace the report only with the new measured file. Do not edit the metrics by hand.
+Retrain with `python -m baton.cli train`. Replace the report only with the new measured file. Do not edit the metrics by hand.

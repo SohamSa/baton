@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from training_continuity.simulation.engine import ScenarioConfig, compare_policies, public_view, run_scenario
+from baton.simulation.engine import ScenarioConfig, compare_policies, public_view, run_scenario
 
 STORIES: dict[str, dict] = {
     "gradual_warning": {

@@ -1,6 +1,6 @@
 """Partitioned observation files and a DuckDB read."""
 
-from training_continuity.generation.materialize import materialize
+from baton.generation.materialize import materialize
 
 
 def test_materialize_resumes_and_is_queryable(tmp_path):

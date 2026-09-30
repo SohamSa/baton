@@ -15,8 +15,8 @@ from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, brier_score_loss
 
-from training_continuity.features.compute import ewma, thermal_residual
-from training_continuity.simulation.engine import ScenarioConfig, run_scenario
+from baton.features.compute import ewma, thermal_residual
+from baton.simulation.engine import ScenarioConfig, run_scenario
 
 FEATURE_NAMES = ["residual_ewma", "freshness_steps", "util", "power_limit_ratio", "support_count"]
 HORIZON = 8

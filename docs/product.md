@@ -1,8 +1,8 @@
 # Product
 
-A pre-training job on a large GPU cluster advances only when its ranks finish the same step. TrainingContinuity places that problem in a simulated cluster of 32,768 accelerators: 256 racks, 4,096 hosts, and 8 accelerators on each host. The operator investigates the placed ranks. The other accelerators stay in the quiescent population and are not drawn as if each one had a full sensor history.
+A pre-training job on a large GPU cluster advances only when its ranks finish the same step. Baton places that problem in a simulated cluster of 32,768 accelerators: 256 racks, 4,096 hosts, and 8 accelerators on each host. The operator investigates the placed ranks. The other accelerators stay in the quiescent population and are not drawn as if each one had a full sensor history.
 
-TrainingContinuity lets a person walk through that decision with synthetic evidence:
+Baton lets a person walk through that decision with synthetic evidence:
 
 - Which signals are fresh enough to trust?
 - Which jobs and ranks depend on the affected component?

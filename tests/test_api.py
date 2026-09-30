@@ -7,9 +7,9 @@ import uuid
 
 from fastapi.testclient import TestClient
 
-from training_continuity.api.app import create_app
-from training_continuity.persistence.orm import UserRow
-from training_continuity.security import hash_password
+from baton.api.app import create_app
+from baton.persistence.orm import UserRow
+from baton.security import hash_password
 
 
 def _app():
@@ -95,7 +95,7 @@ def viewer_headers(client: TestClient) -> dict:
 def test_background_story_returns_before_the_engine_finishes(tmp_path, monkeypatch):
     import threading
 
-    from training_continuity.api import app as api
+    from baton.api import app as api
 
     gate = threading.Event()
     original = api.run_story

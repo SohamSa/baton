@@ -497,7 +497,7 @@ export function RackView({
         <p>
           Traditional monitoring agents run in-band inside the Linux host OS, querying GPU metrics via kernel drivers.
           Under massive collective all-reduce operations, in-band polling causes kernel interrupts that introduce collective jitter, stalling 32,768 GPUs.
-          TrainingContinuity connects directly to dedicated Baseboard Management Controllers (BMCs) over an isolated 1GbE Out-of-Band network.
+          Baton connects directly to dedicated Baseboard Management Controllers (BMCs) over an isolated 1GbE Out-of-Band network.
         </p>
         <div className="oob-pillars-grid">
           <div className="oob-pillar">

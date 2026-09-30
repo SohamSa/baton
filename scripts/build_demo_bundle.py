@@ -9,9 +9,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from training_continuity.adapters.registry import ADAPTERS
-from training_continuity.catalog.dictionary import build_catalog, catalog_counts
-from training_continuity.simulation.stories import list_stories, run_story
+from baton.adapters.registry import ADAPTERS
+from baton.catalog.dictionary import build_catalog, catalog_counts
+from baton.simulation.stories import list_stories, run_story
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "apps" / "web" / "public" / "demo-bundle.json"
