@@ -125,6 +125,13 @@ export function Desk({
             🌐 Global Fleet
           </NavLink>
           <NavLink
+            to="/planner"
+            className="hero-secondary-btn"
+            style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#34d399", borderColor: "rgba(52, 211, 153, 0.4)" }}
+          >
+            🏗️ DC Planner
+          </NavLink>
+          <NavLink
             to="/grid"
             className="hero-secondary-btn"
             style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}

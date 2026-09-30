@@ -422,6 +422,9 @@ export function ExecutivePortfolioView({
             <NavLink to="/fleet" className="hero-secondary-btn" style={{ textDecoration: "none", color: "#60a5fa", borderColor: "rgba(96, 165, 250, 0.4)", background: "rgba(30, 58, 138, 0.25)" }}>
               🌐 Global Fleet Console (4 Sites)
             </NavLink>
+            <NavLink to="/planner" className="hero-secondary-btn" style={{ textDecoration: "none", color: "#34d399", borderColor: "rgba(52, 211, 153, 0.4)", background: "rgba(6, 78, 59, 0.25)" }}>
+              🏗️ Greenfield DC Planner
+            </NavLink>
             <NavLink to="/grid" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
               ⚡ Utility Grid & PPA Scorecard
             </NavLink>

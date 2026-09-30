@@ -150,6 +150,17 @@ export function GlobalFleetView({
           Enterprise datacenter owners don't operate a single server room—they manage a global fleet of campuses spanning different electric utility grids, local climate zones, and power purchase agreements.
           This console provides high-level capital visibility across all <strong>131,072 accelerators</strong>, balances power tariffs across regions, and enables cross-campus workload resilience.
         </p>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap", marginTop: "1rem" }}>
+          <NavLink to="/planner" className="hero-secondary-btn" style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#34d399", borderColor: "rgba(52, 211, 153, 0.4)", background: "rgba(6, 78, 59, 0.25)" }}>
+            🏗️ Greenfield DC Planner
+          </NavLink>
+          <NavLink to="/grid" className="hero-secondary-btn" style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}>
+            ⚡ Utility Grid & PPA Scorecard
+          </NavLink>
+          <NavLink to="/desk" className="hero-secondary-btn" style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}>
+            ⚡ Live Practice Floor
+          </NavLink>
+        </div>
       </header>
 
       {/* 2. GLOBAL FLEET AGGREGATION HUD (5 PILLARS) */}
