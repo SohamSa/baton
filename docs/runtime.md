@@ -12,3 +12,5 @@ This is not model pre-training. No tensors are stored. A job has ranks, a data-p
 Useful progress credits surviving data-parallel groups over the original group count. Work below the high-water mark after a restore is recomputation, not new progress.
 
 Collective wait and compute can share a step. The ledger assigns fractions that sum to 1 for each accelerator so the same second is not counted twice. Idle spares are accounted.
+
+Story requests accept `variant: "standard" | "challenge"`; unknown or unavailable variants fail validation. The browser engine uses the same scenario and policy sources. Owner worksheet data remains in browser local storage and can be downloaded or cleared; it is not sent to the API.

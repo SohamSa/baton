@@ -1,6 +1,6 @@
 # Implementation status
 
-Current verification: September 2026 Linux review. 52 Python tests passed; normal and public-demo production builds passed. Browser checks covered the cinematic journey, all owner rooms, the three distinct engine comparisons, shared planning inputs, blank financial defaults, negative financial outcomes, persistent assumptions, and mobile layout. PostgreSQL, Docker, and physical equipment were not tested. Earlier counts below are historical.
+Current verification: September 2026 Linux review. 77 Python tests passed; normal and public-demo production builds passed. This update adds explicit scenario assumptions, a persistent owner evidence worksheet, six distinct advanced synthetic mechanisms, and nine challenge variants. PostgreSQL, Docker, physical equipment, and empirical calibration remain untested. Earlier counts below are historical.
 
 ## Foundation
 
@@ -16,7 +16,7 @@ Observable features, hypothesis ranking, incident grouping, manual approval, rej
 
 ## Rich data
 
-Catalog counts from `catalog_counts()`: 349 unique concepts, 2 aliases, 80 window aggregations, 431 catalog rows. Roles include observed, derived, latent truth, training label, control input, and audit. Partitioned Parquet generation resumes from a manifest and can be read with DuckDB.
+Catalog counts from `catalog_counts()`: 405 unique concepts, 2 aliases, 80 window aggregations, 487 catalog rows. Roles include observed, derived, latent truth, training label, control input, and audit. Partitioned Parquet generation resumes from a manifest and can be read with DuckDB.
 
 ## Learned intelligence
 
@@ -66,3 +66,7 @@ The canonical character source now generates `src/baton/catalog/owner_metadata.p
 One fictional physical plan is shared by the design, facility-map, power, and portfolio rooms. PUE is applied once. Financial inputs start blank and persist between rooms in the current browser; the Python economics engine computes the explicit one-year illustration. It values owner-assumed interruption and repeated work for the affected job, subtracts upfront and annual costs, and keeps negative results visible. No measured cash savings are asserted.
 
 Current catalog: 58 logical tables; 397 unique concepts, 2 aliases, 80 window aggregations, 479 catalog rows. A catalog definition is not a promise that every field is physically measured or materialized.
+
+## Owner evidence and advanced rehearsals
+
+All 17 characters expose actual configuration values, rationale, simplifications, and sensitivities. The shared source generates the README and Python metadata. The worksheet starts blank, stores locally, and exports evidence requests and named follow-up owners; it does not score facility readiness. Package retries, lot-linked errors, persistent board faults, assembly strain, voltage validity, and power headroom have separate engine mechanisms. Challenge variants include unnecessary intervention, scarce spares, and stale evidence. Approval replay preserves the variant.

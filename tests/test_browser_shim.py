@@ -33,3 +33,18 @@ def test_browser_config_shim_matches_installed_pydantic():
     real = _run(str(ROOT / "src"))
     shim = _run(str(ROOT / "apps" / "web" / "engine-shims") + os.pathsep + str(ROOT / "src"))
     assert shim == real
+
+
+def test_advanced_challenges_match_browser_config_shim():
+    global CODE
+    previous=CODE
+    CODE="""
+from baton.simulation.stories import run_story, CHALLENGES
+for id in CHALLENGES:
+    view=run_story(id,variant="challenge")
+    print(id,view['story']['variant'],round(view['metrics']['useful_new'],6),round(view['comparison']['delta_second_minus_first']['useful_new'],6))
+"""
+    try:
+        assert _run(str(ROOT / "src")) == _run(str(ROOT / "apps" / "web" / "engine-shims") + os.pathsep + str(ROOT / "src"))
+    finally:
+        CODE=previous

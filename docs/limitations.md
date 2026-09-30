@@ -3,7 +3,7 @@
 Works locally:
 
 - A simulated GPU cluster of 32,768 accelerators, with detailed traces for the placed ranks and a counted quiescent population for the rest.
-- Eight engine-backed stories, checkpoint rejection, approvals, audit, rule policies, a trained model that lost to the baseline, Parquet resume, and the React build.
+- Seventeen engine-backed stories, checkpoint rejection, approvals, audit, rule policies, a trained model that lost to the baseline, Parquet resume, and the React build.
 
 The cluster is the research population. This process does not open a device handle to those accelerators. A display GPU on the workstation, if one is present, is outside the cluster.
 
@@ -26,3 +26,5 @@ Needs real data before any operational claim:
 - Whether a runtime actually supports the reconfigurable or redundant profile you select.
 
 Do not describe a virtual fleet run as a test of a real-scale deployment.
+
+Advanced mechanisms and nine challenge variants are invented teaching models. Thermal, power, strain, voltage, and progress constants are not measurements or predictions for a vendor device. The owner worksheet records questions and evidence references locally; it does not ingest telemetry, certify a facility, or execute equipment controls.

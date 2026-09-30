@@ -1,3 +1,5 @@
+import storyNotes from "../../../content/owner-journey.json";
+import { ScenarioNotes } from "./ScenarioNotes";
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -38,7 +40,7 @@ export function Desk({
   run: RunView | null;
   frames: LiveFrame[];
   playing: boolean;
-  onPlay: (id: string, mode: "manual" | "automated") => void;
+  onPlay: (id: string, mode: "manual" | "automated", variant?: string) => void;
   onDecide: (decision: "approve" | "reject") => void;
 }) {
   const location = useLocation();
@@ -46,6 +48,9 @@ export function Desk({
   const [items, setItems] = useState<StoryItem[]>([]);
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const [selected, setSelected] = useState("gradual_warning");
+  const [variant, setVariant] = useState("standard");
+  const requestedVariant = new URLSearchParams(location.search).get("variant");
+  useEffect(() => { setVariant(requestedVariant === "challenge" && storyNotes.characters.find((c) => c.id === selected)?.challenge ? "challenge" : "standard"); }, [selected, requestedVariant]);
   const [activeTab, setActiveTab] = useState<"arena" | "battle" | "roi" | "cascade">("arena");
 
   useEffect(() => {
@@ -70,6 +75,7 @@ export function Desk({
 
   return (
     <section className="desk">
+      <ScenarioNotes id={selected} variant={variant} onVariant={setVariant} disabled={playing} />
       <RehearsalEvidence run={run} frames={frames} />
       {/* Top Header & Navigation Bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.5rem" }}>
@@ -290,7 +296,7 @@ export function Desk({
                 <button
                   type="button"
                   className="game-launch-btn"
-                  onClick={() => onPlay(selected, mode)}
+                  onClick={() => onPlay(selected, mode, variant)}
                   disabled={playing}
                 >
                   {playing ? (
@@ -437,7 +443,7 @@ export function Desk({
       {/* TAB 2: HEAD-TO-HEAD BATTLE (TWO WAYS, ONE BREAKDOWN) */}
       {activeTab === "battle" ? (
         <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-          <Comparison run={run} onCompare={() => onPlay(selected, "automated")} playing={playing} />
+          <Comparison run={run} onCompare={() => onPlay(selected, "automated", variant)} playing={playing} />
         </div>
       ) : null}
 

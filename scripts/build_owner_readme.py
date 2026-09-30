@@ -10,7 +10,7 @@ def render():
     lines = [f"# {story['title']}", '', f"> {story['subtitle']}", '',
         '**You are the owner. The datacenter is your world. Every problem is a character.**', '',
         'Read the story here, or step into its scenes in the [interactive dashboard](' + URL + '). No chip expertise is required.', '',
-        '> This is a fictional learning story with synthetic data and simplified rehearsals. Costs and outcomes elsewhere in the dashboard are illustrations, not tested savings or production promises. Some advanced characters introduce proposed diagnostics rather than implemented capabilities.', '',
+        '> This is a fictional learning story with synthetic data and simplified rehearsals. Costs and outcomes elsewhere in the dashboard are illustrations, not tested savings or production promises. Advanced scenes now have distinct synthetic mechanisms; specialist diagnostics, microscopic causes, and actual facility controls remain outside the model.', '',
         '## Choose your seat', '',
         '| Your situation | Enter the dashboard | What you take away |',
         '| --- | --- | --- |',
@@ -40,6 +40,20 @@ def render():
                 '**Open the evidence drawer:** ' + ', '.join('`'+f+'`' for f in character['fields']) + '.', '',
                 f"*Rehearsal scope: {character['coverage']}*", '',
                 f"[Enter this character’s scene]({URL}#/journey/{chapter['id']}) · [Open the rehearsal]({URL}#/desk?scenario={character['id']}&chapter={chapter['id']}) · [Visit the supporting room]({URL}#{character['route']}?chapter={chapter['id']})", '']
+            lines += ['<details>', '<summary>Behind this scene: invented assumptions, tradeoffs, and limits</summary>', '',
+                character['model']['relationship'], '', character['model']['rationale'], '',
+                '| Authored input | Standard value | Purpose |', '| --- | --- | --- |']
+            for assumption in character['assumptions']:
+                lines += [f"| {assumption['label']} | {assumption['value']} {assumption['unit']} | {assumption['reason']} |"]
+            lines += ['', '**Relationship and response gates:** ' + character['model']['chosen_values'], '',
+                '**What is left out:** ' + character['model']['limits'], '',
+                '**What changes the lesson:** ' + character['model']['sensitivity'], '']
+            if character.get('challenge'):
+                challenge = character['challenge']
+                lines += ['**A second ending: ' + challenge['title'] + '.** ' + challenge['lesson'], '',
+                    'Changed inputs: ' + ', '.join('`' + key + '=' + str(value) + '`' for key,value in challenge['parameters'].items()) + '.', '',
+                    f"[Explore these challenge conditions]({URL}#/desk?scenario={character['id']}&variant=challenge&chapter={chapter['id']})", '']
+            lines += ['</details>', '']
         if chapter['id'] == 'finale':
             lines += ['### You have the floor', '', 'Pause before reading the resolution. What would you ask the team to do?', '']
             for turn in story['finale']:
@@ -62,6 +76,19 @@ def render():
                 f'[Create and print your owner’s action pack]({URL}#/journey/dawn) with your questions and notes. Progress and notes stay in your browser; no account is needed for the public story.', '']
         lines += [f"> **The question you carry forward:** {chapter['question']}", '',
             f"[Step into this chapter]({URL}#/journey/{chapter['id']}) · [{chapter['routeLabel']}]({URL}#{chapter['route']}?chapter={chapter['id']})", '']
+    lines += ['', '## The fictional world under every scene', '', story['worldAssumptions']['explanation'], '', '| Shared input | Authored value | Purpose |', '| --- | --- | --- |']
+    for input in story['worldAssumptions']['inputs']:
+        lines += [f"| {input['label']} | {input['value']} | {input['why']} |"]
+    lines += ['', story['worldAssumptions']['boundary'], '']
+    lines += ['', '## Bring your facility into the story', '', story['worksheet']['intro'], '',
+        f"[Open the guided owner worksheet]({URL}#/worksheet)", '',
+        'Start with unknowns. Choose planning or operating context, record the affected job size if known, name who will bring evidence, and write the demonstration you want to see. A reported demonstration still needs independent record review.', '',
+        '| Review question | Evidence to request | Suggested team | Relevant characters |',
+        '| --- | --- | --- | --- |']
+    names = {c['id']:c['name'] for c in story['characters']}
+    for topic in story['worksheet']['topics']:
+        lines += [f"| {topic['question']} | {', '.join(topic['records'])} | {topic['owner']} | {', '.join(names[id] for id in topic['characters'])} |"]
+    lines += ['', 'The worksheet starts blank, retains answers in your browser, and downloads a Markdown meeting review or JSON copy. You can print the full notes and return to each linked rehearsal. It does not score readiness, predict facility risk, resize the engine, or certify the reported evidence.', '']
     lines += ['---', '', '## Behind the story: how evidence becomes a decision', '',
         'A large dictionary is a map of possibilities. A particular decision needs a smaller evidence set. The character drawers show that narrowing:', '',
         '| Owner question | Evidence to examine | Decision it informs |', '| --- | --- | --- |',

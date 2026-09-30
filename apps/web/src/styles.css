@@ -8921,3 +8921,19 @@ body:has(.owner-story) .view-mode-bar { flex-wrap: wrap; }
 .owner-room button:disabled { opacity: .55; cursor: not-allowed; }
 body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
 @media print { .owner-room-guide, .owner-room button, .owner-financial .owner-actions { display:none!important; } .owner-room, .owner-room .panel { color:#111;background:white; } }
+
+/* Scenario assumptions and an owner-led evidence review. */
+.scenario-notes details { margin: 1rem 0; }
+.scenario-notes summary { cursor: pointer; font-weight: 600; }
+.scenario-challenge { border-left: 3px solid var(--warn); padding: 0.2rem 1rem; margin: 1rem 0; }
+.scenario-challenge select { width: min(100%, 38rem); }
+.owner-worksheet .worksheet-form { display: grid; gap: 1rem; }
+.worksheet-form label { display: grid; gap: 0.4rem; }
+.worksheet-form textarea, .worksheet-form input, .worksheet-form select { width: 100%; max-width: 100%; padding: 0.65rem; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; }
+.worksheet-print-notes { display: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media print {
+  .owner-worksheet .worksheet-form, .owner-worksheet .owner-actions { display: none; }
+  .owner-worksheet .worksheet-print-notes { display: block; }
+  .owner-worksheet .panel, .owner-worksheet .worksheet-topic { break-inside: auto; }
+  .owner-worksheet p, .owner-worksheet li { color: #111; }
+}

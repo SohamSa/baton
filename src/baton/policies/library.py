@@ -250,7 +250,10 @@ class QualificationPolicy:
         return _decision("qualified_restart", snap["job_id"], "Use observed qualification results: a failed candidate stays quarantined and requires compatible spare capacity.", h)
 
 
+from baton.policies.advanced import ADVANCED_POLICIES
+
 POLICIES = {
+    **ADVANCED_POLICIES,
     StragglerPolicy.name: StragglerPolicy(),
     CoolingPolicy.name: CoolingPolicy(),
     QualificationPolicy.name: QualificationPolicy(),

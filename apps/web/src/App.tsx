@@ -1,3 +1,4 @@
+import { OwnerWorksheet } from "./OwnerWorksheet";
 import { FormEvent, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -99,7 +100,7 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  async function play(id: string, mode: "manual" | "automated") {
+  async function play(id: string, mode: "manual" | "automated", variant: string = "standard") {
     setPlaying(true);
     setError("");
     setFrames([]);
@@ -107,7 +108,7 @@ export function App() {
     try {
       const started = await startStory(session?.token ?? "public", id, mode, (frame) => {
         setFrames((current) => [...current, frame]);
-      });
+      }, variant);
       let view = await getRun(session?.token ?? "public", started.run_id, false);
       for (let attempt = 0; view.status === "queued" && attempt < 40; attempt += 1) {
         await new Promise((resolve) => window.setTimeout(resolve, 250));
@@ -163,6 +164,7 @@ export function App() {
 
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🎬 The Owner’s Story</NavLink>
+        <NavLink to="/worksheet">My facility worksheet</NavLink>
         <NavLink to="/portfolio">🌟 Executive Portfolio</NavLink>
         <NavLink to="/fleet">🌐 Facility Map (4 Examples)</NavLink>
         <NavLink to="/planner">🏗️ Greenfield DC Planner</NavLink>
@@ -199,6 +201,7 @@ export function App() {
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🎬 Owner’s Story
           </NavLink>
+          <NavLink to="/worksheet">My facility worksheet</NavLink>
           <NavLink to="/portfolio" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🌟 Executive Portfolio
           </NavLink>
@@ -264,6 +267,7 @@ export function App() {
           <Route path="/fleet" element={<GlobalFleetView run={run} />} />
           <Route path="/planner" element={<GreenfieldPlannerView run={run} />} />
           <Route path="/build" element={<GreenfieldPlannerView run={run} />} />
+          <Route path="/worksheet" element={<OwnerWorksheet />} />
           <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
           <Route path="/dispatch" element={<FieldDispatchView run={run} frames={frames} onRehearse={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} />} />
           <Route path="/stories" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />

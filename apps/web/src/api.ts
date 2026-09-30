@@ -5,7 +5,7 @@ export type Role = "viewer" | "investigator" | "approver" | "administrator";
 const API = "http://127.0.0.1:8000";
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
 
-type StoredRun = RunView & { storyId: string; mode: "manual" | "automated"; approvals: { action_id?: string; decision: string; precondition_hash: string; actor: string }[] };
+type StoredRun = RunView & { variant: string; storyId: string; mode: "manual" | "automated"; approvals: { action_id?: string; decision: string; precondition_hash: string; actor: string }[] };
 
 const openRuns = new Map<string, StoredRun>();
 
@@ -107,16 +107,16 @@ export type LiveFrame = {
   cluster?: RunView["cluster"];
 };
 
-export async function startStory(token: string, id: string, mode: "manual" | "automated", onFrame?: (frame: LiveFrame) => void) {
+export async function startStory(token: string, id: string, mode: "manual" | "automated", onFrame?: (frame: LiveFrame) => void, variant: string = "standard") {
   if (PUBLIC_DEMO) {
-    const view = await engineCall<RunView>("run", { story_id: id, mode, approvals: [] }, (frame) => onFrame?.(frame as LiveFrame));
+    const view = await engineCall<RunView>("run", { story_id: id, mode, variant, approvals: [] }, (frame) => onFrame?.(frame as LiveFrame));
     const runId = `${id}:${mode}:${crypto.randomUUID()}`;
-    openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, approvals: [] });
+    openRuns.set(runId, { ...view, run_id: runId, storyId: id, mode, variant, approvals: [] });
     return { run_id: runId, status: view.status };
   }
   return request<{ run_id: string; status: string }>(`/api/v1/stories/${id}/runs`, token, {
     method: "POST",
-    body: JSON.stringify({ mode, presentation: false }),
+    body: JSON.stringify({ mode, variant, presentation: false }),
   });
 }
 
@@ -137,8 +137,8 @@ export async function approve(token: string, id: string, decision: "approve" | "
       throw new ApiError(409, "The preconditions changed, so this approval was not applied.");
     }
     const approvals = [...current.approvals, { action_id: current.pending_action.action_id, decision, precondition_hash: preconditionHash, actor: "public visitor" }];
-    const view = await engineCall<RunView>("run", { story_id: current.storyId, mode: "manual", approvals }, (frame) => onFrame?.(frame as LiveFrame));
-    const stored = { ...view, run_id: id, storyId: current.storyId, mode: current.mode, approvals };
+    const view = await engineCall<RunView>("run", { story_id: current.storyId, variant: current.variant, mode: "manual", approvals }, (frame) => onFrame?.(frame as LiveFrame));
+    const stored = { ...view, run_id: id, storyId: current.storyId, variant: current.variant, mode: current.mode, approvals };
     openRuns.set(id, stored);
     return stored;
   }
@@ -261,7 +261,7 @@ export type RunView = {
   status: string;
   narrative: string;
   presentation?: boolean;
-  story?: { id: string; title: string; summary: string; coverage?: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
+  story?: { variant?: string; id: string; title: string; summary: string; coverage?: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
   hypotheses?: { leading_mechanism: string; abstain: boolean; abstain_reason?: string; alternatives?: { mechanism: string; cause_family: string }[] };
   jobs?: Record<string, { state: string; capability: string; rank_gpu: string[]; useful_new?: number; progress?: number; dropped?: number[] }>;
   actions?: Action[];

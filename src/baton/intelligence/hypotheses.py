@@ -9,6 +9,11 @@ from baton.domain.enums import CAUSE_OF_MECHANISM, Mechanism
 
 @dataclass
 class EvidenceSummary:
+    board_ripple_mv: float | None = None
+    pcb_strain_microstrain: float | None = None
+    voltage_margin_mv: float | None = None
+    power_headroom_w: float | None = None
+    lot_ecc: bool = False
     step_latency_ratio: float | None = None
     cooling_flow_ratio: float | None = None
     rack_gradient_c: float | None = None
@@ -55,6 +60,20 @@ def rank_hypotheses(summary: EvidenceSummary) -> dict:
         scores[Mechanism.cooling_restriction.value] += 3.2
     if summary.qualification_failed:
         scores[Mechanism.repair_instability.value] += 3.4
+    if (summary.link_error_rate or 0) >= 2:
+        scores[Mechanism.package_link.value] += 3.6
+        missing.append("specialist confirmation of microscopic package cause")
+    if summary.lot_ecc:
+        scores[Mechanism.wafer_cohort.value] += 3.5
+        missing.append("independent qualification of each associated member")
+    if (summary.board_ripple_mv or 0) > 20:
+        scores[Mechanism.board_vrm.value] += 3.7
+    if (summary.pcb_strain_microstrain or 0) > 250:
+        scores[Mechanism.assembly_strain.value] += 3.8
+    if summary.voltage_margin_mv is not None and summary.voltage_margin_mv < 15:
+        scores[Mechanism.voltage_margin.value] += 3.9
+    if summary.power_headroom_w is not None and summary.power_headroom_w < 80:
+        scores[Mechanism.power_capacity.value] += 3.6
     residual = summary.residual_ewma or 0.0
     if summary.temp_tracks_power and summary.util_jump and residual < 4:
         scores[Mechanism.workload_shift.value] += 2.4

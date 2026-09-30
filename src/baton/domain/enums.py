@@ -16,6 +16,12 @@ class CauseFamily(str, Enum):
 
 
 class Mechanism(str, Enum):
+    package_link = "package_link"
+    wafer_cohort = "wafer_cohort"
+    board_vrm = "board_vrm"
+    assembly_strain = "assembly_strain"
+    voltage_margin = "voltage_margin"
+    power_capacity = "power_capacity"
     cooling_degradation = "cooling_degradation"
     straggler = "straggler"
     cooling_restriction = "cooling_restriction"
@@ -34,6 +40,7 @@ class Mechanism(str, Enum):
 
 
 CAUSE_OF_MECHANISM = {
+    **{m: CauseFamily.physical_hardware for m in (Mechanism.package_link, Mechanism.wafer_cohort, Mechanism.board_vrm, Mechanism.assembly_strain, Mechanism.voltage_margin, Mechanism.power_capacity)},
     Mechanism.cooling_degradation: CauseFamily.physical_hardware,
     Mechanism.straggler: CauseFamily.physical_hardware,
     Mechanism.cooling_restriction: CauseFamily.physical_hardware,
@@ -92,6 +99,11 @@ class ActionState(str, Enum):
 
 
 class ActionType(str, Enum):
+    replace_cohort = "replace_cohort"
+    service_board = "service_board"
+    swap_chip = "swap_chip"
+    pace_rank = "pace_rank"
+    pace_domain = "pace_domain"
     none = "none"
     request_checkpoint = "request_checkpoint"
     investigate = "investigate"
@@ -110,6 +122,8 @@ class ActionType(str, Enum):
 
 
 HIGH_IMPACT = {
+    ActionType.replace_cohort, ActionType.service_board, ActionType.swap_chip,
+    ActionType.pace_rank, ActionType.pace_domain,
     ActionType.replace_rank,
     ActionType.restore_cooling,
     ActionType.qualified_restart,
