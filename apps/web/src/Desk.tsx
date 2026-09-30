@@ -118,6 +118,13 @@ export function Desk({
         </p>
         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
           <NavLink
+            to="/grid"
+            className="hero-secondary-btn"
+            style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#38bdf8", borderColor: "rgba(56, 189, 248, 0.4)" }}
+          >
+            ⚡ Utility Grid & PPA
+          </NavLink>
+          <NavLink
             to="/dispatch"
             className="hero-secondary-btn"
             style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none", color: "#f59e0b", borderColor: "rgba(245, 158, 11, 0.4)" }}

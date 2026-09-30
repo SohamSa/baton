@@ -25,7 +25,6 @@ import { AnomalyView } from "./AnomalyView";
 import { BoardView } from "./BoardView";
 import { Desk } from "./Desk";
 import { ExecutivePortfolioView } from "./ExecutivePortfolioView";
-import { FootprintView } from "./FootprintView";
 import { LineageView } from "./LineageView";
 import { MCMView } from "./MCMView";
 import { PassportView } from "./PassportView";
@@ -33,6 +32,7 @@ import { RackView } from "./RackView";
 import { SiliconView } from "./SiliconView";
 import { YieldView } from "./YieldView";
 import { FieldDispatchView } from "./FieldDispatchView";
+import { GridScorecardView } from "./GridScorecardView";
 
 type Session = { token: string; role: string; username: string };
 
@@ -51,7 +51,7 @@ const DEEP_DIVES = [
     links: [
       ["/boards", "Baseboard Power"],
       ["/racks", "Rack Plumbing & Power"],
-      ["/footprint", "Electric Bill & Grid"],
+      ["/grid", "Utility Grid & PPA Scorecard"],
     ],
   },
   {
@@ -177,6 +177,7 @@ export function App() {
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
+        <NavLink to="/grid">⚡ Utility Grid & PPA Scorecard</NavLink>
         <NavLink to="/dispatch">🔧 Field Operations & Dispatch</NavLink>
         <NavLink to="/stories">💡 Executive Q&A (17)</NavLink>
 
@@ -210,6 +211,9 @@ export function App() {
           </NavLink>
           <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             ⚡ Live Practice Floor (32k Cluster)
+          </NavLink>
+          <NavLink to="/grid" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            ⚡ Utility Grid & PPA
           </NavLink>
           <NavLink to="/dispatch" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🔧 Field Operations & Dispatch
@@ -263,7 +267,8 @@ export function App() {
           <Route path="/racks" element={<RackView run={run} />} />
           <Route path="/passport" element={<PassportView run={run} />} />
           <Route path="/anomalies" element={<AnomalyView run={run} />} />
-          <Route path="/footprint" element={<FootprintView run={run} />} />
+          <Route path="/grid" element={<GridScorecardView run={run} />} />
+          <Route path="/footprint" element={<GridScorecardView run={run} />} />
           <Route path="/dependencies" element={<Dependencies run={run} />} />
           <Route path="/devices" element={<Devices run={run} />} />
           <Route path="/incidents" element={<Incidents run={run} />} />

@@ -316,6 +316,9 @@ export function ExecutivePortfolioView({
             <button type="button" className="hero-primary-btn" onClick={onOpenPracticeFloor}>
               ⚡ Open Live Practice Floor (32k GPU Simulator)
             </button>
+            <NavLink to="/grid" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
+              ⚡ Utility Grid & PPA Scorecard
+            </NavLink>
             <NavLink to="/dispatch" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
               🔧 Boots-on-Ground Dispatch
             </NavLink>
@@ -336,7 +339,7 @@ export function ExecutivePortfolioView({
         <div className="exec-stat-card">
           <span className="stat-label">CLUSTER STALL BURN RATE</span>
           <strong className="stat-value text-danger">$114,688 / hr</strong>
-          <p className="stat-desc">Cash lost every hour all 32,768 chips sit idle waiting for 1 crashed node.</p>
+          <p className="stat-desc">Cash lost every hour all 32,768 chips sit idle. <NavLink to="/grid" style={{ color: "#38bdf8", fontWeight: 700 }}>View Power Scorecard →</NavLink></p>
         </div>
         <div className="exec-stat-card">
           <span className="stat-label">PREEMPTIVE WORK PRESERVED</span>
