@@ -32,3 +32,5 @@ Goodput is newly committed useful progress divided by elapsed wall seconds. Util
 
 
 The supporting-room financial illustration uses explicit owner assumptions for a one-year incident count, interruption and repeated-work hours, affected-job size, accelerator-hour value, upfront investment, and annual operating cost. It is separate from the rehearsal score and is not a tariff or electricity-bill model. Inputs are blank by default; both positive and negative outcomes are retained.
+
+Advanced observable policies: `link_aware`, `cohort_aware`, `board_aware`, `strain_aware`, `margin_aware`, and `power_aware`. `chip_swap` intentionally demonstrates replacing a chip while the faulty board remains. High-impact actions remain approval gated; variants preserve their conditions on approval replay. Challenges deliberately show policy mistakes and blocked recovery.

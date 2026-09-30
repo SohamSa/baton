@@ -127,3 +127,17 @@ def test_background_story_returns_before_the_engine_finishes(tmp_path, monkeypat
             break
     assert body["status"] == "completed"
     assert "_evaluator" not in body
+
+
+def test_challenge_variant_survives_manual_approval_and_rejects_unknown_inputs():
+    client=TestClient(_app());headers=_login(client,"approver")
+    assert client.post("/api/v1/stories/power_cliff/runs",json={"variant":"invented"},headers=headers).status_code==400
+    assert client.post("/api/v1/stories/gradual_warning/runs",json={"variant":"challenge"},headers=headers).status_code==400
+    started=client.post("/api/v1/stories/silent_subthreshold_cliff/runs",json={"mode":"manual","variant":"challenge"},headers=headers).json()
+    path=f"/api/v1/runs/{started['run_id']}"
+    view=client.get(path,headers=headers).json();assert view['story']['variant']=='challenge'
+    pending=view['pending_action'];assert pending['action_type']=='pace_rank'
+    approved=client.post(path+'/approvals',json={'decision':'approve','precondition_hash':pending['precondition_hash']},headers=headers).json()
+    assert approved['story']['variant']=='challenge'
+    assert any(a['action_type']=='pace_rank' and a['effect_applied'] and a['actor_kind']=='human' for a in approved['actions'])
+    assert {'_evaluator','evaluator','observations','condition','advanced'}.isdisjoint(approved)

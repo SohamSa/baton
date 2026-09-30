@@ -352,6 +352,40 @@ STORIES = {'gradual_warning': {'primary_policy': 'risk_aware',
                                                  'component': 'Sub-Threshold Dynamic Vmin Timing Cliff'}}}
 
 
+# Advanced scenarios have independent observed mechanisms and paired responses.
+_records = {f"gpu-r0-h{host}-d{device}": {"lot_id": "LOT-A" if host == 0 else "LOT-B", "assembly_batch_id": "BUILD-A" if host == 0 else "BUILD-B", "mounting_torque_nm": 6.0 if host == 0 else 3.0} for host in range(2) for device in range(2)}
+_advanced = {
+    "power_cliff": ("power_aware", "power_capacity", "power_domain", "power-r0-h0", .8, 0),
+    "fractured_microbump": ("link_aware", "package_link", "accelerator", "gpu-r0-h0-d1", .8, 1),
+    "wafer_lot_contagion": ("cohort_aware", "wafer_cohort", "wafer_lot", "LOT-A", .8, 2),
+    "innocent_chip_dying_board": ("board_aware", "board_vrm", "host", "host-r0-h0", .8, 2),
+    "cold_plate_torque_fracture": ("strain_aware", "assembly_strain", "assembly_batch", "BUILD-A", 1., 2),
+    "silent_subthreshold_cliff": ("margin_aware", "voltage_margin", "accelerator", "gpu-r0-h0-d1", .8, 0),
+}
+for _id, (_policy, _mechanism, _type, _target, _strength, _spares) in _advanced.items():
+    STORIES[_id].update(primary_policy=_policy, comparison=["chip_swap" if _id == "innocent_chip_dying_board" else "reactive", _policy], config={
+        "scenario_id": "story-" + _id, "seed": 30 + list(_advanced).index(_id), "steps": 64,
+        "hosts_per_rack": 2, "gpus_per_host": 2, "checkpoint_interval": 8,
+        "warmup_steps": 2, "spare_count": _spares, "capability": "redundant",
+        "record_map": _records if _id in {"wafer_lot_contagion", "cold_plate_torque_fracture"} else {},
+        "workload": [{"start": 0, "util": .55, "phase": "steady"}, {"start": 12, "util": .85 if _id != "power_cliff" else .98, "phase": "busy"}],
+        "scripted_faults": [{"fault_id": "advanced-" + _id, "target_type": _type, "target_id": _target,
+            "cause": "physical_hardware", "mechanism": _mechanism, "onset": 10, "severity": _strength}],
+    })
+
+CHALLENGES = {
+    "silent_straggler": {"spare_count": 0},
+    "rack_thermal_shadow": {"collector_lag_steps": 10},
+    "revolving_door": {"spare_count": 0},
+    "power_cliff": {"fault_strength": 1.05},
+    "fractured_microbump": {"spare_count": 0},
+    "wafer_lot_contagion": {"fault_strength": .2, "affected_members": 1, "warmup_steps": 16},
+    "innocent_chip_dying_board": {"collector_lag_steps": 10},
+    "cold_plate_torque_fracture": {"fault_strength": .72, "affected_members": 1, "warmup_steps": 16},
+    "silent_subthreshold_cliff": {"fault_strength": .55},
+}
+
+
 from baton.catalog.owner_metadata import OWNER_CHARACTERS
 
 for _story_id, _character in OWNER_CHARACTERS.items():
@@ -364,19 +398,30 @@ for _story_id, _character in OWNER_CHARACTERS.items():
     _spec["failure_level"]["redundancy_strategy"] = _character["lesson"]
 
 
-def story_config(story_id: str) -> ScenarioConfig:
-    spec = STORIES[story_id]
-    return ScenarioConfig(**spec["config"], story_id=story_id)
+def story_config(story_id: str, variant: str = "standard") -> ScenarioConfig:
+    from copy import deepcopy
+    if variant not in {"standard", "challenge"} or (variant == "challenge" and story_id not in CHALLENGES):
+        raise ValueError("unknown rehearsal variant")
+    config = deepcopy(STORIES[story_id]["config"])
+    if variant == "challenge":
+        changes = dict(CHALLENGES[story_id])
+        for key in ("fault_strength", "affected_members"):
+            if key in changes:
+                config["scripted_faults"][0]["severity" if key == "fault_strength" else key] = changes.pop(key)
+        config.update(changes)
+        config["scenario_id"] += "-challenge"
+    return ScenarioConfig(**config, story_id=story_id)
 
 
-def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | None = None, policy: str | None = None, presentation: bool = False) -> dict:
+def run_story(story_id: str, mode: str = "automated", approvals: list[dict] | None = None, policy: str | None = None, presentation: bool = False, variant: str = "standard") -> dict:
     spec = STORIES[story_id]
-    cfg = story_config(story_id)
+    cfg = story_config(story_id, variant)
     name = policy or spec["primary_policy"]
     result = run_scenario(cfg, name, mode=mode, approvals=approvals or [])
     view = public_view(result, presentation=presentation)
     view["story"] = {
         "id": story_id,
+        "variant": variant,
         "title": spec["title"],
         "summary": spec["summary"],
         "owner_playbook": spec.get("owner_playbook"),

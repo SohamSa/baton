@@ -61,7 +61,7 @@
       "paragraphs": [
         "A technician asks whether the trouble began today. Perhaps the power system, circuit board, cooling installation, or an earlier assembly step left a clue. The investigation expands beyond the chip’s temperature.",
         "The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.",
-        "The Thermal Shadow now has a spatial cooling rehearsal. Other advanced investigations remain conceptual: their rehearsals simplify the underlying mechanisms and do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it."
+        "Each origin character now has a distinct synthetic mechanism: package-link retries, lot-associated errors, board instability, spatial cooling, installation strain, voltage margin, and power capacity. Their assumptions explain what changes and why. These are teaching constructions, not validated microscopic diagnoses, manufacturer specifications, batch-failure forecasts, or facility controls. Learn which records to request and explore the challenge cases where a plausible intervention costs work or recovery is blocked."
       ],
       "question": "What can we observe today, and what records or specialist evidence are missing?",
       "route": "/passport",
@@ -110,7 +110,65 @@
         "freshness_steps"
       ],
       "route": "/anomalies",
-      "coverage": "Engine rehearsal: thermal degradation and an extra checkpoint."
+      "coverage": "Engine rehearsal: thermal degradation and an extra checkpoint.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 80,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 40,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "Thermal resistance rises; temperature responds to heat generation and removal. A residual compares the reported temperature with a nominal envelope.",
+        "chosen_values": "The extra-save gate uses a residual above 6 °C and a save age of at least 12 useful steps. These separate a sustained teaching signal from observation noise.",
+        "limits": "No fitted thermal envelope, forecast calibration, fluid dynamics, or guaranteed failure time.",
+        "sensitivity": "Change warning strength, save age, and write duration: a save can arrive too late or cost more than it preserves.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "abrupt_failure",
@@ -127,7 +185,65 @@
         "spare compatibility"
       ],
       "route": "/recovery",
-      "coverage": "Engine rehearsal: abrupt failure and spare-assisted restart."
+      "coverage": "Engine rehearsal: abrupt failure and spare-assisted restart.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 70,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 20,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A scripted required rank stops without a predictive warning. A compatible spare and a verified checkpoint permit coordinated recovery.",
+        "chosen_values": "One compatible spare demonstrates capacity that can actually be used; warmup consumes time.",
+        "limits": "A scripted interruption is not a measured failure probability or hardware reset.",
+        "sensitivity": "Remove the spare or usable save: recovery remains blocked.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "healthy_workload_shift",
@@ -144,7 +260,65 @@
         "residual_ewma"
       ],
       "route": "/devices",
-      "coverage": "Engine rehearsal: a healthy workload shift."
+      "coverage": "Engine rehearsal: a healthy workload shift.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 40,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 50,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A higher workload raises power and temperature together inside the nominal envelope.",
+        "chosen_values": "The static quarantine limit of 60 °C deliberately demonstrates an overly simple alarm.",
+        "limits": "This does not remove independent hardware safety limits or establish a safe operating temperature.",
+        "sensitivity": "A higher workload can make the static rule interrupt healthy progress.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "harmful_preventive",
@@ -161,7 +335,65 @@
         "interruption duration"
       ],
       "route": "/experiments",
-      "coverage": "Engine rehearsal: threshold quarantine can reduce useful progress."
+      "coverage": "Engine rehearsal: threshold quarantine can reduce useful progress.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 40,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 50,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A threshold policy quarantines a healthy busy rank and stalls the dependent job.",
+        "chosen_values": "A 60 °C threshold is intentionally unsuitable for this fictional healthy burst.",
+        "limits": "This negative result is specific to the scripted workload; it does not condemn all protective shutdowns.",
+        "sensitivity": "Compare action overhead and new work, rather than treating intervention count as success.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "shared_infrastructure",
@@ -177,7 +409,65 @@
         "cooling_domain_id"
       ],
       "route": "/boards",
-      "coverage": "Engine rehearsal: shared power symptoms and grouped incidents."
+      "coverage": "Engine rehearsal: shared power symptoms and grouped incidents.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 30,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 20,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A domain-level power reduction produces correlated reported limits across its members.",
+        "chosen_values": "Reported limits below 80% of nominal help group a shared dependency.",
+        "limits": "The reduction is an abstract supply symptom, not circuit protection or a utility model.",
+        "sensitivity": "Change affected-domain membership: unrelated machines must not be grouped just because their temperatures match.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "incomplete_checkpoint",
@@ -194,7 +484,65 @@
         "verified_at"
       ],
       "route": "/checkpoints",
-      "coverage": "Engine rehearsal: abstract completeness gates and checkpoint fallback; no real tensor files."
+      "coverage": "Engine rehearsal: abstract completeness gates and checkpoint fallback; no real tensor files.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 40,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 10,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A save must have complete shards, matching consistency metadata, and a usable verification state before restore.",
+        "chosen_values": "The newest save is deliberately incomplete or corrupted so recovery must inspect older eligible saves.",
+        "limits": "No tensors, real checksums, storage bandwidth benchmark, or actual distributed file writes.",
+        "sensitivity": "Remove the older usable save: fallback cannot manufacture one.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "unsupported_local_recovery",
@@ -211,7 +559,65 @@
         "topology_signature"
       ],
       "route": "/dependencies",
-      "coverage": "Engine rehearsal: unsupported reconfiguration is rejected."
+      "coverage": "Engine rehearsal: unsupported reconfiguration is rejected.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 20,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A strict synchronous runtime rejects a membership change even when an operator requests it.",
+        "chosen_values": "Capability and tensor-parallel group size gate the proposed reconfiguration.",
+        "limits": "Capabilities are explicit simulated contracts, not framework support detected on real equipment.",
+        "sensitivity": "A spare-assisted restart and an elastic membership change have different prerequisites.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "stale_telemetry",
@@ -228,7 +634,65 @@
         "heartbeat"
       ],
       "route": "/monitoring",
-      "coverage": "Engine rehearsal: delayed observations and abstention."
+      "coverage": "Engine rehearsal: delayed observations and abstention.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 24,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 20,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A collector delays observations while decisions can use only evidence already available.",
+        "chosen_values": "A ten-tick lag exceeds the five-tick freshness gate.",
+        "limits": "No real collector integration or calibrated sensor-outage distribution.",
+        "sensitivity": "Reduce lag or add trustworthy independent evidence; abstention should change only when evidence improves.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      }
     },
     {
       "id": "silent_straggler",
@@ -246,7 +710,73 @@
         "spare compatibility"
       ],
       "route": "/silicon",
-      "coverage": "Engine rehearsal: a live rank slows the dependent job; a coordinated checkpoint restart replaces it with a compatible spare."
+      "coverage": "Engine rehearsal: a live rank slows the dependent job; a coordinated checkpoint restart replaces it with a compatible spare.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 60,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 12,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 1,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "One alive rank reaches 1.8 times nominal latency. Synchronous credit is divided by the slowest active rank’s latency multiplier.",
+        "chosen_values": "Nominal latency is 100 ms; a peer ratio above 1.2 motivates investigation and a saved-boundary replacement.",
+        "limits": "Latency is an illustrative proxy, not a trace of kernels, network collectives, or die health.",
+        "sensitivity": "A compatible spare and a current verified save are required; replacement costs warmup.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "No compatible spare",
+        "lesson": "The slow rank is observed, but no replacement capacity exists.",
+        "outcome": "blocked",
+        "parameters": {
+          "spare_count": 0
+        }
+      }
     },
     {
       "id": "revolving_door",
@@ -264,7 +794,73 @@
         "spare compatibility"
       ],
       "route": "/dispatch",
-      "coverage": "Engine rehearsal: repaired equipment can fail isolated qualification; premature re-entry causes repeat failures, while the gated path uses a compatible spare."
+      "coverage": "Engine rehearsal: repaired equipment can fail isolated qualification; premature re-entry causes repeat failures, while the gated path uses a compatible spare.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 60,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 1,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "An unstable repaired candidate relapses three ticks after premature return. An isolated engine test can report pass or fail before recovery.",
+        "chosen_values": "The synthetic test takes three ticks and emits three stress errors for an unstable candidate.",
+        "limits": "The pass/fail rule is invented; it is not an equipment qualification standard, burn-in procedure, or certification.",
+        "sensitivity": "A failing candidate stays excluded. With no compatible spare the job cannot recover through this path.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Failed qualification, no spare",
+        "lesson": "Qualification reports failure; the candidate remains excluded and recovery is blocked.",
+        "outcome": "blocked",
+        "parameters": {
+          "spare_count": 0
+        }
+      }
     },
     {
       "id": "power_cliff",
@@ -275,12 +871,79 @@
       "lesson": "Electrical transients and billing demand windows are different questions.",
       "question": "Have electrical specialists reviewed ramps, capacity, and our actual demand terms?",
       "fields": [
-        "power_draw_w",
+        "power_headroom_w",
         "power_domain_id",
-        "facility demand (proposed)"
+        "clock_scale",
+        "useful_new"
       ],
       "route": "/grid",
-      "coverage": "Simplified shared-power rehearsal; no electrical transient or tariff-window model."
+      "coverage": "Distinct synthetic engine mechanism: Shared domain demand is compared with a declared capacity. Two consecutive over-capacity ticks cause a synthetic trip. Pacing reduces domain workload and throughput. No waveform, protection coordination, UPS model, tariff window, or electricity bill.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "Shared domain demand is compared with a declared capacity. Two consecutive over-capacity ticks cause a synthetic trip. Pacing reduces domain workload and throughput.",
+        "chosen_values": "Capacity is 80% of member nominal power; a headroom below 80 W triggers a 30% workload reduction.",
+        "limits": "No waveform, protection coordination, UPS model, tariff window, or electricity bill.",
+        "sensitivity": "With 105% capacity the same conservative pacing is unnecessary and loses useful progress.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Capacity was sufficient",
+        "lesson": "A conservative pacing rule reduces progress although demand does not exceed the declared capacity.",
+        "outcome": "costly",
+        "parameters": {
+          "fault_strength": 1.05
+        }
+      }
     },
     {
       "id": "fractured_microbump",
@@ -291,12 +954,79 @@
       "lesson": "Keep component-level causes as hypotheses until evidence distinguishes them.",
       "question": "What diagnostic evidence would distinguish memory, packaging, board, and software faults?",
       "fields": [
-        "ecc_sbe_total",
-        "ecc_dbe_total",
-        "nvlink_replay_total"
+        "nvlink_replay_total",
+        "step_latency_ms",
+        "step_latency_ratio",
+        "checkpoint state"
       ],
       "route": "/mcm",
-      "coverage": "Conceptual packaging story; existing rehearsal uses thermal degradation."
+      "coverage": "Distinct synthetic engine mechanism: A package-link condition raises retry counts under load and increases rank latency. Replacement requires a usable current save and compatible spare. Observed retries do not prove a microscopic crack. No eye diagram, microbump geometry, memory BIST, or built-in self-repair.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 1,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A package-link condition raises retry counts under load and increases rank latency. Replacement requires a usable current save and compatible spare.",
+        "chosen_values": "Above 0.6 workload, strength 0.8 adds eight link retries per tick and a 2.6 latency multiplier.",
+        "limits": "Observed retries do not prove a microscopic crack. No eye diagram, microbump geometry, memory BIST, or built-in self-repair.",
+        "sensitivity": "Without a spare, the rank remains slow despite clear evidence.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Retries without replacement capacity",
+        "lesson": "Link symptoms persist, but the required spare is absent.",
+        "outcome": "blocked",
+        "parameters": {
+          "spare_count": 0
+        }
+      }
     },
     {
       "id": "wafer_lot_contagion",
@@ -307,11 +1037,81 @@
       "lesson": "Shared history suggests an investigation, not proof of a defective batch.",
       "question": "Can suppliers provide traceable lot records, and how would we test a cohort hypothesis?",
       "fields": [
-        "wafer lot (optional supplier record)",
-        "cohort outcomes (proposed)"
+        "lot_id",
+        "ecc_sbe_total",
+        "checkpoint state",
+        "spare compatibility"
       ],
       "route": "/lineage",
-      "coverage": "Conceptual lineage story; no implemented batch diagnosis or cohort cordoning."
+      "coverage": "Distinct synthetic engine mechanism: Reported lot membership links two candidates. The scripted shared condition raises corrected errors and causes staggered failures. A cohort response can replace both at a save boundary. Association is not causation. A real lot does not imply that every member is defective; records may be unavailable.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 2,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "Reported lot membership links two candidates. The scripted shared condition raises corrected errors and causes staggered failures. A cohort response can replace both at a save boundary.",
+        "chosen_values": "Strength above 0.5 enables staggered failures; the teaching policy reacts to at least two reported corrected errors in a labeled lot.",
+        "limits": "Association is not causation. A real lot does not imply that every member is defective; records may be unavailable.",
+        "sensitivity": "A mild error in just one member can prompt overly broad replacement; long warmup makes that response worse.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Association leads to overreaction",
+        "lesson": "Only one lot member has a mild error; replacing the whole group with long warmup loses useful work.",
+        "outcome": "costly",
+        "parameters": {
+          "fault_strength": 0.2,
+          "affected_members": 1,
+          "warmup_steps": 16
+        }
+      }
     },
     {
       "id": "innocent_chip_dying_board",
@@ -322,12 +1122,79 @@
       "lesson": "Investigate the surrounding system before replacing the accused component.",
       "question": "What board-level evidence do we require before approving accelerator replacement?",
       "fields": [
-        "power_domain_id",
-        "power_limit_w",
-        "board rail telemetry (optional)"
+        "board_ripple_mv",
+        "host_id",
+        "heartbeat",
+        "actions"
       ],
       "route": "/boards",
-      "coverage": "Conceptual board diagnosis; existing rehearsal uses thermal degradation."
+      "coverage": "Distinct synthetic engine mechanism: A host-level board condition generates shared ripple and repeated resets. Replacing chips on the same unrepaired board preserves the problem. Synthetic board service restores from a verified save. No voltage waveform, regulator design, definitive chip-health diagnosis, hot repair, or real board control.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 2,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "Ripple means variation in an electrical supply. A host-level board condition generates shared ripple and repeated resets. Replacing chips on the same unrepaired board preserves the problem. Synthetic board service restores from a verified save.",
+        "chosen_values": "40 × strength gives ripple in mV. Above 20 mV the teaching policy requests a board investigation; strong faults cause periodic resets.",
+        "limits": "No voltage waveform, regulator design, definitive chip-health diagnosis, hot repair, or real board control.",
+        "sensitivity": "Delayed observations block the evidence-guided service. The wrong-remedy branch shows why component substitution can fail.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "The board evidence is stale",
+        "lesson": "Delayed observations prevent the evidence-guided service; neither stale evidence nor a replacement chip establishes recovery.",
+        "outcome": "blocked",
+        "parameters": {
+          "collector_lag_steps": 10
+        }
+      }
     },
     {
       "id": "rack_thermal_shadow",
@@ -345,7 +1212,73 @@
         "rack_gradient_c"
       ],
       "route": "/racks",
-      "coverage": "Engine rehearsal: reduced upper-rack flow creates a spatial temperature gradient; a saved job pauses for simulated cooling maintenance."
+      "coverage": "Engine rehearsal: reduced upper-rack flow creates a spatial temperature gradient; a saved job pauses for simulated cooling maintenance.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 60,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 16,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "A flow restriction raises effective thermal resistance for upper positions of one rack. Another rack is the healthy comparison.",
+        "chosen_values": "Flow is 0.35 of nominal. A reported flow below 0.6 and a within-rack temperature gradient above 8 °C motivate a saved intervention.",
+        "limits": "Invented geometry and lumped heat dynamics; no hydraulic network, CFD, or equipment-control integration.",
+        "sensitivity": "Stale flow data, no usable save, or intervention overhead can undermine the response.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Cooling evidence arrives too late",
+        "lesson": "Ten-tick collector lag prevents a fresh-evidence intervention.",
+        "outcome": "blocked",
+        "parameters": {
+          "collector_lag_steps": 10
+        }
+      }
     },
     {
       "id": "cold_plate_torque_fracture",
@@ -356,12 +1289,81 @@
       "lesson": "Lifecycle records can support investigation but do not prove a physical defect.",
       "question": "Which installation and assembly records are available, and who can interpret them?",
       "fields": [
-        "assembly records (optional)",
-        "torque history (optional)",
-        "qualification results (proposed)"
+        "assembly_batch_id",
+        "mounting_torque_nm",
+        "pcb_strain_microstrain",
+        "gpu_temp_c"
       ],
       "route": "/passport",
-      "coverage": "Conceptual assembly story; no torque diagnosis or warranty automation."
+      "coverage": "Distinct synthetic engine mechanism: An installation condition increases strain with temperature rise. A labeled assembly group can be reviewed and replaced at a saved boundary. Not a finite-element model, torque specification, crack-growth law, or proof that all batch members are damaged.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 2,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "An installation condition increases strain with temperature rise. A labeled assembly group can be reviewed and replaced at a saved boundary.",
+        "chosen_values": "Strain is relative stretching or bending; a microstrain is one part per million. In this invented model, strain = 100 + 300 × strength × max(temperature − 40, 0) ÷ 20, in microstrain. The illustrative review and failure levels are 250 and 380.",
+        "limits": "Not a finite-element model, torque specification, crack-growth law, or proof that all batch members are damaged.",
+        "sensitivity": "If only one member has moderate strain and none fails in the horizon, broad replacement with long warmup loses work.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "A healthy batch mate is displaced",
+        "lesson": "One member has moderate strain; no member fails within the horizon. Broad replacement has a larger cost than benefit.",
+        "outcome": "costly",
+        "parameters": {
+          "fault_strength": 0.72,
+          "affected_members": 1,
+          "warmup_steps": 16
+        }
+      }
     },
     {
       "id": "silent_subthreshold_cliff",
@@ -372,12 +1374,79 @@
       "lesson": "Protecting file integrity does not prove that the computations inside a file were correct.",
       "question": "What checks could reveal silent computation errors before they enter our trusted saves?",
       "fields": [
-        "computation validation (proposed)",
-        "voltage margin (specialist)",
-        "checkpoint integrity"
+        "voltage_margin_mv",
+        "validation_mismatch_total",
+        "clock_scale",
+        "useful_new"
       ],
       "route": "/anomalies",
-      "coverage": "Conceptual correctness story; no voltage-margin predictor, weight-corruption model, or pacing control."
+      "coverage": "Distinct synthetic engine mechanism: Timing margin depends on workload, a scripted droop, and synthetic clock scale. Negative margin emits validation mismatches; invalid work is blocked before useful progress or a new save is credited. No transistor timing model, weight corruption, silent-error forecast, or hardware voltage control. The synthetic checker catches invalid work; it does not claim all real corruption is observable.",
+      "assumptions": [
+        {
+          "key": "steps",
+          "label": "Observation horizon",
+          "value": 64,
+          "unit": "ticks",
+          "reason": "A short complete scene makes comparisons readable; it does not represent annual reliability."
+        },
+        {
+          "key": "step_seconds",
+          "label": "Tick duration",
+          "value": 5,
+          "unit": "seconds",
+          "reason": "Compresses simulated time so state transitions can be followed; not a forecast of repair time."
+        },
+        {
+          "key": "detailed_ranks",
+          "label": "Detailed placement",
+          "value": 4,
+          "unit": "ranks",
+          "reason": "Only these ranks receive individual traces; the larger inventory is counted separately."
+        },
+        {
+          "key": "checkpoint_interval",
+          "label": "Scheduled save interval",
+          "value": 8,
+          "unit": "useful progress steps",
+          "reason": "Makes the tradeoff between save overhead and repeated work visible."
+        },
+        {
+          "key": "checkpoint_write_steps",
+          "label": "Save write time",
+          "value": 1,
+          "unit": "ticks",
+          "reason": "Every write consumes time, so saving more often is not free."
+        },
+        {
+          "key": "warmup_steps",
+          "label": "Recovery warmup",
+          "value": 2,
+          "unit": "ticks",
+          "reason": "Models recovery overhead without claiming actual hardware or framework timing."
+        },
+        {
+          "key": "spare_count",
+          "label": "Compatible spare pool",
+          "value": 0,
+          "unit": "accelerators",
+          "reason": "Explicit capacity constraint; a replacement requires actual eligible capacity in the engine."
+        }
+      ],
+      "model": {
+        "relationship": "Timing margin is the modeled breathing room for a calculation to finish correctly. It depends on workload, a scripted droop, and synthetic clock scale. Negative margin emits validation mismatches; invalid work is blocked before useful progress or a new save is credited.",
+        "chosen_values": "Margin = 70 − 140 × strength × workload + 80 × (1 − clock scale), in mV. A 15 mV gate reduces clock scale to 0.8.",
+        "limits": "No transistor timing model, weight corruption, silent-error forecast, or hardware voltage control. The synthetic checker catches invalid work; it does not claim all real corruption is observable.",
+        "sensitivity": "With positive but small margin, pacing costs throughput without preventing any error in the scripted horizon.",
+        "rationale": "The values were chosen to separate the teaching signal, response prerequisites, and intervention cost within a short reproducible scene. They are authored assumptions, not fitted measurements."
+      },
+      "challenge": {
+        "title": "Pacing without an observed error",
+        "lesson": "Margin stays positive; preventive pacing lowers useful progress in this finite example.",
+        "outcome": "costly",
+        "parameters": {
+          "fault_strength": 0.55
+        }
+      }
     }
   ],
   "finale": [
@@ -429,5 +1498,179 @@
         }
       ]
     }
-  ]
+  ],
+  "worksheet": {
+    "title": "Bring your facility into the story",
+    "intro": "Record what your team reports, what is unknown, and which evidence you need. Your answers choose relevant learning scenes; they do not certify readiness, predict risk, or change the engine parameters.",
+    "topics": [
+      {
+        "id": "membership",
+        "title": "Who must work together?",
+        "question": "Can your team identify the machines in each dependent job and its permitted recovery changes?",
+        "request": "Ask the runtime owner for rank membership, tensor-parallel groups, and demonstrated restart or reconfiguration support.",
+        "owner": "Training or platform lead",
+        "records": [
+          "job membership map",
+          "runtime capability record"
+        ],
+        "characters": [
+          "unsupported_local_recovery",
+          "silent_straggler"
+        ]
+      },
+      {
+        "id": "saves",
+        "title": "What work can we reopen?",
+        "question": "Has the team demonstrated restoration from a complete, verified, reachable save?",
+        "request": "Ask the storage and training teams for a dated restore drill, shard verification, and rejected-save examples.",
+        "owner": "Training and storage leads",
+        "records": [
+          "restore drill record",
+          "checkpoint manifest and verification"
+        ],
+        "characters": [
+          "incomplete_checkpoint",
+          "abrupt_failure"
+        ]
+      },
+      {
+        "id": "dependencies",
+        "title": "What do the machines share?",
+        "question": "Are power, cooling, host-board, and network dependencies mapped?",
+        "request": "Request maps that identify which workloads are affected by one dependency and which are separate.",
+        "owner": "Facilities and infrastructure leads",
+        "records": [
+          "power and cooling domain maps",
+          "host and network topology"
+        ],
+        "characters": [
+          "shared_infrastructure",
+          "rack_thermal_shadow",
+          "innocent_chip_dying_board",
+          "power_cliff"
+        ]
+      },
+      {
+        "id": "observations",
+        "title": "Can we trust tonight’s clues?",
+        "question": "Do readings have event time, arrival time, missingness, and independent liveness evidence?",
+        "request": "Ask monitoring owners for a delayed or missing-data drill and sensor coverage gaps.",
+        "owner": "Observability lead",
+        "records": [
+          "telemetry timestamps",
+          "collector outage drill",
+          "sensor support list"
+        ],
+        "characters": [
+          "stale_telemetry",
+          "healthy_workload_shift",
+          "gradual_warning"
+        ]
+      },
+      {
+        "id": "capacity",
+        "title": "Can the proposed recovery use the spare?",
+        "question": "Is compatible spare capacity available to this job, and has it been used in a drill?",
+        "request": "Verify hardware profile, memory, placement, storage access, and supported restart path—not just an inventory count.",
+        "owner": "Cluster scheduling lead",
+        "records": [
+          "compatible capacity inventory",
+          "spare-assisted recovery drill"
+        ],
+        "characters": [
+          "abrupt_failure",
+          "silent_straggler",
+          "revolving_door",
+          "fractured_microbump"
+        ]
+      },
+      {
+        "id": "qualification",
+        "title": "Who is ready to return?",
+        "question": "Are repaired candidates isolated and checked before production re-entry?",
+        "request": "Request pass/fail criteria, load-test records, approval ownership, and the plan for a failed candidate.",
+        "owner": "Operations and hardware leads",
+        "records": [
+          "qualification record",
+          "return-to-service approval"
+        ],
+        "characters": [
+          "revolving_door"
+        ]
+      },
+      {
+        "id": "history",
+        "title": "What happened before the machine arrived?",
+        "question": "Which lot, board, assembly, and installation records are actually available?",
+        "request": "Ask suppliers what identifiers and records can be joined to individual equipment. Treat unavailable records as unknown, and verify each suspected member independently.",
+        "owner": "Procurement and hardware leads",
+        "records": [
+          "supplier lot identifiers",
+          "assembly record",
+          "installation record",
+          "specialist diagnostics"
+        ],
+        "characters": [
+          "wafer_lot_contagion",
+          "cold_plate_torque_fracture",
+          "fractured_microbump",
+          "innocent_chip_dying_board"
+        ]
+      },
+      {
+        "id": "validation",
+        "title": "Is busy work valid new work?",
+        "question": "Can the team distinguish useful progress, repeated work, and invalid results—and measure intervention cost?",
+        "request": "Ask for computation validation, useful-work accounting, and an incident comparison that includes unsuccessful interventions.",
+        "owner": "Training and reliability leads",
+        "records": [
+          "computation validation record",
+          "progress ledger",
+          "intervention review"
+        ],
+        "characters": [
+          "silent_subthreshold_cliff",
+          "harmful_preventive",
+          "power_cliff"
+        ]
+      }
+    ]
+  },
+  "worldAssumptions": {
+    "title": "The fictional world under every scene",
+    "explanation": "Useful progress is a normalized work unit, not a measured training iteration. The 100 ms latency signal is a relative slowdown proxy; each simulation tick aggregates work over its separately declared duration. Neither clock represents production throughput.",
+    "inputs": [
+      {
+        "label": "Main fictional profile",
+        "value": "northspan-n8",
+        "why": "A consistent invented profile keeps paired comparisons interpretable; it is not a vendor product."
+      },
+      {
+        "label": "Idle / nominal full-load power",
+        "value": "70 / 350 W",
+        "why": "Defines a simple linear power-versus-workload relationship, not a power trace."
+      },
+      {
+        "label": "Coolant baseline",
+        "value": "25 °C",
+        "why": "A fixed boundary makes extra thermal resistance visible; real coolant loops vary."
+      },
+      {
+        "label": "Nominal thermal resistance",
+        "value": "0.12 °C/W",
+        "why": "A lumped heat-removal relationship lets cooling changes influence temperature without a CFD model."
+      },
+      {
+        "label": "Thermal capacity",
+        "value": "100 J/°C",
+        "why": "An invented response speed brings thermal changes into the short rehearsal horizon; it is not a measured package heat capacity."
+      },
+      {
+        "label": "Collector freshness gate",
+        "value": "5 ticks",
+        "why": "Creates a clear stale-evidence example; site-specific sampling and decision deadlines would differ."
+      }
+    ],
+    "boundary": "These inputs were chosen for teachable relationships, reproducibility, and visible tradeoffs. They are not recommended equipment specifications, design limits, calibrated probabilities, or predictions."
+  }
 }

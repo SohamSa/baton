@@ -48,6 +48,14 @@ def _field(**kwargs) -> FieldSpec:
 
 # (name, unit, cumulative, meaning, dcgm_analog or "")
 GPU_SIGNALS = [
+    ("lot_id", "category", False, "Reported fictional lot identifier; association is not proof of a defect.", "synthetic lifecycle record"),
+    ("assembly_batch_id", "category", False, "Reported fictional assembly group, where records are available.", "synthetic lifecycle record"),
+    ("mounting_torque_nm", "N m", False, "Declared installation torque in the synthetic assembly record; not a recommended specification.", "synthetic lifecycle record"),
+    ("board_ripple_mv", "mV", False, "Observed invented ripple proxy for the board instability rehearsal; not a waveform.", "synthetic board condition"),
+    ("pcb_strain_microstrain", "microstrain", False, "Observed lumped strain proxy coupled to an invented installation condition and temperature rise.", "synthetic installation model"),
+    ("validation_mismatch_total", "count", True, "Reported synthetic computation-check mismatches. Invalid work is blocked before useful credit.", "synthetic validation checker"),
+    ("power_headroom_w", "W", False, "Declared domain capacity minus synthetic current demand; no transient or tariff model.", "synthetic capacity model"),
+    ("clock_scale", "ratio", False, "Reported synthetic clock or workload scale after pacing; no hardware adapter.", "synthetic pacing model"),
     ("step_latency_ms", "ms", False, "Observed synthetic per-rank execution latency; missing when the rank is dark.", "simulation signal"),
     ("cooling_flow_ratio", "ratio", False, "Reported fraction of nominal local coolant flow in the spatial cooling rehearsal.", "simulation signal"),
     ("gpu_temp_c", "C", False, "Reported accelerator temperature.", "DCGM_FI_DEV_GPU_TEMP analog"),

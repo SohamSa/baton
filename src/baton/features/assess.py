@@ -6,6 +6,10 @@ from baton.features.compute import ewma, thermal_residual
 from baton.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
 
 FORBIDDEN_INPUTS = {
+    "condition",
+    "advanced",
+    "record_map",
+    "invalid",
     "latency_multiplier",
     "repair_unstable",
     "relapse_left",

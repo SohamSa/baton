@@ -176,7 +176,7 @@ def test_power_cliff_substation_surge_story():
     result = run_story("power_cliff")
     assert result["status"] == "completed"
     assert result["story"]["failure_level"]["tier"] == "Facility Power & Substation Level"
-    assert result["hypotheses"]["leading_mechanism"] == "power_interruption"
+    assert result["hypotheses"]["leading_mechanism"] == "power_capacity"
 
 
 def test_fractured_microbump_mcm_story():

@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from baton.simulation import advanced
 from baton.accounting.ledger import EXCLUSIVE_STATES, Ledger
 from baton.checkpoints import select_restore_checkpoint
 from baton.domain.enums import CheckpointState
@@ -91,7 +92,7 @@ CLUSTER_ACCELERATORS = 32768
 CLUSTER_GPUS_PER_HOST = 8
 CLUSTER_HOSTS_PER_RACK = 16
 
-OBS_KEYS = {
+OBS_KEYS = set(advanced.OBSERVED_FIELDS) | {
     "step_latency_ms",
     "cooling_flow_ratio",
     "rack_id",
@@ -137,6 +138,7 @@ class FaultConfig(BaseModel):
     abrupt: bool = False
     hard_fail: int | None = None
     fail_mode: str = "none"
+    affected_members: int | None = None
 
 
 class ScenarioConfig(BaseModel):
@@ -171,6 +173,7 @@ class ScenarioConfig(BaseModel):
     clock_skew_s: float = 0
     story_id: str | None = None
     qualification_steps: int = 3
+    record_map: dict[str, dict] = Field(default_factory=dict)
 
 
 def config_hash(cfg: ScenarioConfig) -> str:
@@ -208,6 +211,8 @@ class GPU:
     relapse_left: int = 0
     qualification_state: str = "not_tested"
     qualification_left: int = 0
+    record: dict = field(default_factory=dict)
+    condition: dict = field(default_factory=dict)
 
 
 @dataclass
@@ -255,6 +260,7 @@ class World:
     admin: list[dict]
     cluster: dict
     diagnostics: list[dict] = field(default_factory=list)
+    advanced: dict = field(default_factory=dict)
     repaired_cooling: set[str] = field(default_factory=set)
 
 
@@ -282,6 +288,7 @@ def build_world(cfg: ScenarioConfig) -> World:
                     rack_id=f"rack-{rack}",
                     rack_elevation_u=float(host * 8 + device),
                 )
+                gpu.record = dict(cfg.record_map.get(gpu_id, {}))
                 gpu.temp_c = _equilibrium(profile, 0.55, 25.0, 1.0)
                 gpus[gpu_id] = gpu
     trainable = [gpu for gpu in gpus.values() if not gpu.spare]
@@ -410,6 +417,8 @@ def _apply_faults(world: World, faults: list[dict], step: int) -> None:
     for fault in faults:
         if step < fault["onset"]:
             continue
+        if advanced.apply_fault(world, fault, step):
+            continue
         if fault["mechanism"] == "cooling_restriction" and fault["target_type"] == "rack":
             if fault["target_id"] not in world.repaired_cooling:
                 members = [g for g in world.gpus.values() if g.rack_id == fault["target_id"]]
@@ -473,6 +482,7 @@ def _physics(world: World, cfg: ScenarioConfig, step: int) -> None:
             noise = 0.01 * normal(cfg.seed, "workload", job.job_id, step)
             gpu.util = min(0.99, max(0.05, base + noise))
             gpu.phase = phase
+    advanced.advance_conditions(world, cfg, step)
     for gpu in world.gpus.values():
         if gpu.spare and not gpu.occupied:
             gpu.util = 0.02
@@ -557,6 +567,7 @@ def _emit(world: World, cfg: ScenarioConfig, step: int) -> None:
             "rack_id": gpu.rack_id,
             "rack_elevation_u": gpu.rack_elevation_u,
             "qualification_state": gpu.qualification_state,
+            **advanced.observations(world, gpu, hidden),
             "gpu_temp_c": temp,
             "memory_temp_c": None if (hidden or not profile["supports_memory_temp"]) else (temp + 4 if temp is not None else None),
             "power_draw_w": None if hidden else draw + normal(cfg.seed, "observation", gpu.gpu_id, step, "power"),
@@ -698,7 +709,12 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
             residual_ewma=residual,
             ecc_rate=0,
             power_drop_correlated=low_limits >= 2,
-            link_error_rate=0,
+            link_error_rate=max(0, rows[-1]["nvlink_replay_total"] - rows[-2]["nvlink_replay_total"]) if len(rows)>1 and all(r.get("nvlink_replay_total") is not None for r in rows[-2:]) else None,
+            board_ripple_mv=rows[-1].get("board_ripple_mv") if rows else None,
+            pcb_strain_microstrain=rows[-1].get("pcb_strain_microstrain") if rows else None,
+            voltage_margin_mv=rows[-1].get("voltage_margin_mv") if rows else None,
+            power_headroom_w=rows[-1].get("power_headroom_w") if rows else None,
+            lot_ecc=bool(rows and rows[-1].get("lot_id") and (rows[-1].get("ecc_sbe_total") or 0)>=2),
             util_jump=util_jump,
             temp_tracks_power=tracks,
             freshness_steps=freshness,
@@ -722,6 +738,10 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
             "rack_id": gpu.rack_id,
             "rack_elevation_u": gpu.rack_elevation_u,
             "qualification_state": rows[-1].get("qualification_state") if rows else "not_tested",
+            **{key: rows[-1].get(key) if rows else None for key in advanced.OBSERVED_FIELDS},
+            "host_id": gpu.host_id,
+            "ecc_sbe_total": rows[-1].get("ecc_sbe_total") if rows else None,
+            "link_replay_delta": max(0, rows[-1].get("nvlink_replay_total", 0) - rows[-2].get("nvlink_replay_total", 0)) if len(rows)>1 and all(r.get("nvlink_replay_total") is not None for r in rows[-2:]) else None,
             "gpu_temp_c": temps[-1] if temps else None,
             "power_draw_w": powers[-1] if powers else None,
             "power_limit_w": limits[-1] if limits else None,
@@ -792,7 +812,7 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
         "topology_signature": job.topology_signature,
         "placement_version": job.placement_version,
         "storage_reachable": True,
-        "spare_available": any(gpu.spare and not gpu.occupied for gpu in world.gpus.values()),
+        "spare_available": any(gpu.spare and not gpu.occupied and gpu.functional and not gpu.quarantined for gpu in world.gpus.values()),
         "tp_size": job.tp_size,
         "reconfigure_supported": reconfigure_ok,
         "reconfigure_reason": support_reason,
@@ -922,6 +942,9 @@ def _advance_job(world: World, cfg: ScenarioConfig, job: Job, step: int) -> str:
         job.recovery_left -= 1
         job.state = "recovery"
         return "recovery"
+    if advanced.invalid_job(world, job):
+        job.state = "validation_blocked"
+        return "stalled"
     if _job_blocked(job, world):
         job.state = "stalled"
         return "stalled"
@@ -1082,7 +1105,12 @@ def _action_row(decision, step, job, state, actor, mode) -> dict:
 
 def _apply_effect(world, cfg, job, decision, step) -> tuple[bool, str]:
     action = decision["action"]
+    advanced_effect = advanced.apply_action(world, cfg, job, decision, step)
+    if advanced_effect is not None:
+        return advanced_effect
     if action == "request_checkpoint":
+        if advanced.invalid_job(world, job):
+            return False, "validation_blocks_new_save"
         if job.active_checkpoint is not None or job.checkpoint_left > 0:
             return False, "checkpoint_already_in_flight"
         _start_checkpoint(world, cfg, job, step, "policy_request")
@@ -1102,7 +1130,7 @@ def _apply_effect(world, cfg, job, decision, step) -> tuple[bool, str]:
         if target is None or target.gpu_id not in job.rank_gpu or job.checkpoint_left > 0:
             return False, "replacement_preconditions_changed"
         chosen, _ = select_restore_checkpoint([cp for cp in world.checkpoints if cp["job_id"] == job.job_id], topology_signature=job.topology_signature, allow_reshard=False, storage_reachable=True, decision_step=step)
-        spare = next((g for g in world.gpus.values() if g.spare and not g.occupied and g.profile_id == target.profile_id), None)
+        spare = next((g for g in world.gpus.values() if g.spare and not g.occupied and g.functional and not g.quarantined and g.profile_id == target.profile_id), None)
         if chosen is None or chosen["progress"] != job.progress or spare is None:
             return False, "replacement_requires_current_verified_checkpoint_and_spare"
         rank = job.rank_gpu.index(target.gpu_id)
@@ -1160,6 +1188,9 @@ def _restart(world, cfg, job, step, use_spare: bool, require_qualification: bool
     )
     if chosen is None:
         return False, "no_eligible_checkpoint"
+    # Validate the whole recovery before consuming capacity or changing membership.
+    recoverable, replacements = [], []
+    spares = [g for g in world.gpus.values() if g.spare and not g.occupied and g.functional and not g.quarantined]
     for rank, gpu_id in enumerate(job.rank_gpu):
         if rank in job.dropped:
             continue
@@ -1169,20 +1200,26 @@ def _restart(world, cfg, job, step, use_spare: bool, require_qualification: bool
         if require_qualification and gpu.qualification_state not in {"passed", "failed"}:
             return False, "qualification_not_complete"
         if gpu.fail_mode == "recoverable_process" and not (require_qualification and gpu.qualification_state == "failed"):
-            gpu.quarantined = False
-            gpu.relapse_left = 3 if gpu.repair_unstable else 0
-            gpu.functional = True
-            gpu.fail_mode = None
+            recoverable.append(gpu)
         elif use_spare:
-            spare = next((item for item in world.gpus.values() if item.spare and not item.occupied and item.profile_id == gpu.profile_id), None)
+            spare = next((g for g in spares if g.profile_id == gpu.profile_id), None)
             if spare is None:
                 return False, "no_compatible_spare"
-            spare.occupied = True
-            job.rank_gpu[rank] = spare.gpu_id
-            job.placement_version += 1
-            job.topology_signature = signature(job.rank_gpu, job.dropped)
+            spares.remove(spare)
+            replacements.append((rank, gpu, spare))
         else:
             return False, "failed_accelerator_has_no_spare"
+    for gpu in recoverable:
+        gpu.quarantined = False
+        gpu.relapse_left = 3 if gpu.repair_unstable else 0
+        gpu.functional, gpu.fail_mode = True, None
+    for rank, old, spare in replacements:
+        old.quarantined = True
+        spare.occupied = True
+        job.rank_gpu[rank] = spare.gpu_id
+        job.placement_version += 1
+    if replacements:
+        job.topology_signature = signature(job.rank_gpu, job.dropped)
     job.progress = chosen["progress"]
     job.attempt += 1
     job.recovery_left = cfg.warmup_steps
@@ -1290,6 +1327,7 @@ class ScenarioRun:
                     "cooling_flow_ratio": ((self.snap or {}).get("gpus", {}).get(gpu.gpu_id) or {}).get("cooling_flow_ratio"),
                     "rack_elevation_u": gpu.rack_elevation_u,
                     "qualification_state": gpu.qualification_state,
+                    **{key: ((self.snap or {}).get("gpus", {}).get(gpu.gpu_id) or {}).get(key) for key in advanced.OBSERVED_FIELDS},
                 }
                 for gpu in world.gpus.values()
             ],

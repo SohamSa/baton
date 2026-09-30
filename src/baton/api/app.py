@@ -32,7 +32,7 @@ from baton.persistence.orm import (
 )
 from baton.security import hash_password, issue_token, read_token, verify_password
 from baton.accounting.economics import assumption_estimate
-from baton.simulation.stories import list_stories, run_story
+from baton.simulation.stories import list_stories, run_story, story_config
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -43,6 +43,7 @@ class LoginBody(BaseModel):
 
 
 class StoryRunBody(BaseModel):
+    variant: str = "standard"
     mode: str = "automated"
     presentation: bool = False
     approvals: list[dict] = []
@@ -206,6 +207,10 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
             raise HTTPException(400, "mode must be manual or automated")
         if story_id not in {item["id"] for item in list_stories()}:
             raise HTTPException(404, "unknown story")
+        try:
+            story_config(story_id, body.variant)
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
         run_id = str(uuid.uuid4())
         if not request.app.state.sync_worker:
             queued = {
@@ -226,6 +231,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
                             "run_id": run_id,
                             "story_id": story_id,
                             "mode": body.mode,
+                            "variant": body.variant,
                             "approvals": body.approvals,
                             "presentation": body.presentation,
                             "actor": user.username,
@@ -236,7 +242,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
             )
             db.commit()
             return {"run_id": run_id, "status": "queued", "synthetic": True}
-        produced = run_story(story_id, mode=body.mode, approvals=body.approvals, presentation=body.presentation)
+        produced = run_story(story_id, mode=body.mode, approvals=body.approvals, presentation=body.presentation, variant=body.variant)
         evaluator = produced.pop("_evaluator", {})
         _persist_run(db, run_id, story_id, produced, evaluator, user, request)
         return {"run_id": run_id, "status": produced["status"], "synthetic": True}
@@ -281,7 +287,7 @@ def create_app(database_url: str = "sqlite+pysqlite:///:memory:", auth_secret: s
                 "actor": user.username,
             }
         )
-        view = run_story(current["story"]["id"], mode="manual", approvals=approvals, presentation=False)
+        view = run_story(current["story"]["id"], mode="manual", approvals=approvals, presentation=False, variant=current["story"].get("variant", "standard"))
         evaluator = view.pop("_evaluator", {})
         _persist_run(db, run_id, current["story"]["id"], view, evaluator, user, request, replace=True)
         db.add(
@@ -351,6 +357,7 @@ def _execute_outbox(session_factory, event_id: str) -> None:
             mode=payload["mode"],
             approvals=payload.get("approvals") or [],
             presentation=bool(payload.get("presentation")),
+            variant=payload.get("variant", "standard"),
         )
         evaluator = produced.pop("_evaluator", {})
         actor = type("Actor", (), {"username": payload.get("actor", "worker")})()
