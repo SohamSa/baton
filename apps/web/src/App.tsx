@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
   Adapter,
@@ -18,7 +18,7 @@ import {
   startStory,
   truth,
 } from "./api";
-import { startEngine, subscribeEngine } from "./browserEngine";
+import { subscribeEngine } from "./browserEngine";
 import { AnomalyView } from "./AnomalyView";
 import { BoardView } from "./BoardView";
 import { Desk } from "./Desk";
@@ -34,6 +34,7 @@ import { GridScorecardView } from "./GridScorecardView";
 import { ExecutiveQAView } from "./ExecutiveQAView";
 import { GlobalFleetView } from "./GlobalFleetView";
 import { GreenfieldPlannerView } from "./GreenfieldPlannerView";
+import { OwnerJourney, OwnerJourneyContext } from "./OwnerJourney";
 import { ExecutiveDeepDiveHeader } from "./ExecutiveDeepDiveHeader";
 
 type Session = { token: string; role: string; username: string };
@@ -93,7 +94,9 @@ export function App() {
   const [playing, setPlaying] = useState(false);
   const [error, setError] = useState("");
   const [engineMessage, setEngineMessage] = useState("");
-  const opened = useRef(false);
+  const [showTour, setShowTour] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   async function play(id: string, mode: "manual" | "automated") {
     setPlaying(true);
@@ -139,30 +142,10 @@ export function App() {
 
   useEffect(() => {
     if (!PUBLIC_DEMO) return;
-    let cancel = false;
-    const stop = subscribeEngine(setEngineMessage);
-    startEngine()
-      .then(() => {
-        if (cancel || opened.current) return;
-        opened.current = true;
-        void play("gradual_warning", "manual");
-      })
-      .catch((reason: Error) => {
-        if (!cancel) setError(reason.message);
-      });
-    return () => {
-      cancel = true;
-      stop();
-    };
+    return subscribeEngine(setEngineMessage);
   }, []);
 
-  if (!session) {
-    return <Login onSuccess={setSession} />;
-  }
-
-  const [showTour, setShowTour] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
+  if (!session) return <Login onSuccess={setSession} />;
 
   const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
@@ -177,7 +160,8 @@ export function App() {
         </button>
 
         <div className="nav-section-title">Executive Suite</div>
-        <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
+        <NavLink to="/" end>🎬 The Owner’s Story</NavLink>
+        <NavLink to="/portfolio">🌟 Executive Portfolio</NavLink>
         <NavLink to="/fleet">🌐 Global Fleet (4 Sites)</NavLink>
         <NavLink to="/planner">🏗️ Greenfield DC Planner</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
@@ -211,6 +195,9 @@ export function App() {
       <main id="content">
         <div className="view-mode-bar">
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            🎬 Owner’s Story
+          </NavLink>
+          <NavLink to="/portfolio" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🌟 Executive Portfolio
           </NavLink>
           <NavLink to="/fleet" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
@@ -233,11 +220,11 @@ export function App() {
           </NavLink>
         </div>
 
-        {!isDeepDive && location.pathname !== "/" ? (
+        {!isDeepDive && location.pathname !== "/" && !location.pathname.startsWith("/journey") ? (
           <div className="tour-banner">
             <div>
               <strong>New to Datacenter Operations?</strong>
-              <p>See how 1 failing chip stalls a $150M cluster, and how Baton saves millions.</p>
+              <p>Follow a synthetic training job, explore interruptions, and learn which questions to ask.</p>
             </div>
             <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
               ✦ Take the 2-Minute Executive Tour
@@ -245,15 +232,19 @@ export function App() {
           </div>
         ) : null}
 
+        <OwnerJourneyContext />
         <ExecutiveDeepDiveHeader />
 
-        {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
+        {PUBLIC_DEMO && playing && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
 
         <Routes>
+          <Route path="/" element={<OwnerJourney />} />
+          <Route path="/journey" element={<OwnerJourney />} />
+          <Route path="/journey/:chapter" element={<OwnerJourney />} />
           <Route
-            path="/"
+            path="/portfolio"
             element={
               <ExecutivePortfolioView
                 run={run}
@@ -691,3 +682,4 @@ function ExecutiveTourModal({ onClose, onRunDemo }: { onClose: () => void; onRun
     </div>
   );
 }
+

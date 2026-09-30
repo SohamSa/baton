@@ -7,7 +7,7 @@ let ready: Promise<void> | null = null;
 let nextId = 1;
 const pending = new Map<number, Pending>();
 const listeners = new Set<(message: string) => void>();
-let engineMessage = "Loading the decision engine into this browser.";
+let engineMessage = "Choose a rehearsal when you are ready to load the decision engine.";
 
 function emit(message: string) {
   engineMessage = message;
@@ -67,3 +67,4 @@ function invoke<T>(op: string, payload: unknown, onFrame?: (frame: unknown) => v
     worker!.postMessage({ id, op, payload });
   }));
 }
+

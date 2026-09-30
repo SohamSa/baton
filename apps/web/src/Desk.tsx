@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   EconomicsEstimate,
   FailureLevel,
@@ -87,11 +87,17 @@ export function Desk({
   onPlay: (id: string, mode: "manual" | "automated") => void;
   onDecide: (decision: "approve" | "reject") => void;
 }) {
+  const location = useLocation();
+  const requestedScenario = new URLSearchParams(location.search).get("scenario");
   const [items, setItems] = useState<StoryItem[]>([]);
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const [selected, setSelected] = useState("gradual_warning");
   const [activeRate, setActiveRate] = useState<number>(3.5);
   const [activeTab, setActiveTab] = useState<"arena" | "battle" | "roi" | "cascade">("arena");
+
+  useEffect(() => {
+    if (requestedScenario && items.some((item) => item.id === requestedScenario)) setSelected(requestedScenario);
+  }, [requestedScenario, items]);
 
   const live = frames[frames.length - 1];
   const cluster = live?.cluster ?? run?.cluster;
@@ -1244,3 +1250,4 @@ function cellTitle(gpu: { id: string; temp: number | null; functional: boolean; 
   const tempStr = gpu.temp === null ? "no temperature reading" : `${gpu.temp.toFixed(1)}°C`;
   return `Chip #${devNum} (Physical Slot d${devNum} in Rack 0, Host Server 0) · Temp: ${tempStr} · State: ${state}`;
 }
+

@@ -83,7 +83,7 @@ export function ExecutiveQAView({
         <h1>17 Hardware Questions Every Datacenter Owner Asks</h1>
         <p className="lede">
           Running an AI datacenter shouldn't require an advanced degree in semiconductor physics.
-          Every question below was asked by real-world datacenter founders, investors, and facility owners.
+          These fictional questions introduce situations a datacenter owner may want to discuss with their team.
           Click any card to explore the plain-English explanation, the real-world analogy, and the bottom-line financial impact.
         </p>
       </header>
@@ -219,14 +219,14 @@ export function ExecutiveQAView({
 
                     {/* How Continuity Solves It */}
                     <div className="qa-reading-section">
-                      <div className="section-pill-tag tag-solution">🛡️ How Baton Solves It</div>
+                      <div className="section-pill-tag tag-solution">🛡️ The Response to Explore</div>
                       <p className="qa-plain-text">{qa.solution}</p>
                     </div>
 
                     {/* Financial Takeaway & Simulator Action */}
                     <div className="qa-bottom-summary-box">
                       <div className="qa-dollars-impact">
-                        <span className="impact-label">💰 Bottom-Line Impact:</span>
+                        <span className="impact-label">💰 Illustrative Business Stakes:</span>
                         <strong className="impact-text">{qa.financialImpact}</strong>
                       </div>
 
@@ -254,14 +254,14 @@ export function ExecutiveQAView({
         <div>
           <h3>Want to test these scenarios in real time?</h3>
           <p className="muted">
-            The Live Practice Floor lets you play out these situations step-by-step across all 32,768 chips.
+            The Live Practice Floor follows a small detailed job inside a larger synthetic inventory. Some advanced character stories use simplified mechanisms.
           </p>
         </div>
         <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <NavLink to="/desk" className="hero-primary-btn" style={{ textDecoration: "none" }}>
             ⚡ Open Live Practice Floor
           </NavLink>
-          <NavLink to="/" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
+          <NavLink to="/portfolio" className="hero-secondary-btn" style={{ textDecoration: "none" }}>
             🌟 Return to Executive Portfolio
           </NavLink>
         </div>
@@ -269,3 +269,4 @@ export function ExecutiveQAView({
     </section>
   );
 }
+

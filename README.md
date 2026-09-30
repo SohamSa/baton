@@ -1,273 +1,508 @@
-# Baton: The $150 Million Relay Race
+# Baton: The Night the Datacenter Held Its Breath
 
-> **Live Executive Command Suite:**  
-> 👉 **[https://sohamsa.github.io/baton/](https://sohamsa.github.io/baton/)**  
-> *(Runs 100% in your browser. Zero installation. Zero backend setup required.)*
+> An owner’s story of ambition, interruption, evidence, and recovery.
 
----
+**You are the owner. The datacenter is your world. Every problem is a character.**
 
-## 🎬 Prologue: The $150 Million Glass Relay Race
+Read the story here, or step into its scenes in the [interactive dashboard](https://sohamsa.github.io/baton/). No chip expertise is required.
 
-Imagine you just invested in or built a brand-new, world-class artificial intelligence datacenter.
+> This is a fictional learning story with synthetic data and simplified rehearsals. Costs and outcomes elsewhere in the dashboard are illustrations, not tested savings or production promises. Some advanced characters introduce proposed diagnostics rather than implemented capabilities.
 
-You spent **$150 Million** on cutting-edge computing processors, and another **$40 Million** on high-voltage electrical substations, liquid cooling pumps, and backup generators. Outside your building, the utility power meter is spinning at **40 Megawatts**, enough electricity to power a city of 30,000 homes. 
+## Choose your seat
 
-Your monthly electric bill is **$2.1 Million**. Every single hour your facility is turned on, debt service, electricity, cooling water, and engineering staff burn **$114,688 in cash**.
+| Your situation | Enter the dashboard | What you take away |
+| --- | --- | --- |
+| Planning a first datacenter | [The builder’s entrance](https://sohamsa.github.io/baton/#/journey/arrival?path=build) | Questions for design reviews, procurement, and launch readiness |
+| Operating existing datacenters | [The operator’s entrance](https://sohamsa.github.io/baton/#/journey/arrival?path=operate) | Questions for incident reviews, restore drills, and maintenance |
+| Learning the world | [The explorer’s entrance](https://sohamsa.github.io/baton/#/journey/arrival?path=explore) | A connected understanding of the systems and their tradeoffs |
 
-Now, here is the secret that traditional datacenter operators learn the hard way:
+Both owner paths follow the same movie. The dashboard changes the prompts you carry into your own meetings. You can read straight through, visit a supporting room, and return to the chapter you left.
 
-> **In modern AI, processors do not work like independent workers in an office cubicle.**  
-> If an office worker gets the flu, the rest of the company keeps working.  
-> **AI does not work that way.**
+## The programme
 
-Modern AI pretraining is a **32,768-runner baton relay race**, or a **32,768-singer choir singing in four-part harmony**.
-
-All 32,768 processors must calculate their piece of the mathematical puzzle and hand off a fragile glass baton at the **exact same millisecond**. 
-
-If just **ONE single processor** out of 32,768 overheats, drops its baton, stumbles, or pauses to tie its shoelace:
-
-**THE ENTIRE BUILDING FREEZES.**
-
-The other 32,767 runners stand completely frozen on the track. But the lights, the water chillers, the fans, and the utility electric meters **do not pause**. You burn **$114,688 every hour** for a building that is completely idle, waiting for technicians to find the broken runner.
-
-**Baton** is the story of how resilience engineering prevents that freeze, protects your capital, and keeps the choir singing.
+- **Opening scene:** [The lights come on](https://sohamsa.github.io/baton/#/journey/arrival)
+- **Act I:** [Learn the rhythm before the silence](https://sohamsa.github.io/baton/#/journey/rhythm)
+- **Act II:** [The first alarm](https://sohamsa.github.io/baton/#/journey/alarm)
+- **Act III:** [The wrong suspect](https://sohamsa.github.io/baton/#/journey/suspects)
+- **Act IV:** [The past enters the room](https://sohamsa.github.io/baton/#/journey/origins)
+- **Climax:** [The night the clues collide](https://sohamsa.github.io/baton/#/journey/finale)
+- **Epilogue:** [At dawn, you know what to ask](https://sohamsa.github.io/baton/#/journey/dawn)
 
 ---
 
-## 🎭 The 17 Characters: A Datacenter Hardware Drama
+## Opening scene · The lights come on
 
-Every datacenter failure is a character in an unfolding drama. Traditional monitoring tools panic, blame the wrong culprits, and throw millions of dollars away. Here are the **17 characters** who threaten your $150 Million investment, and how Baton tames them.
+Before sunrise, you stand outside a building that once existed only in drawings. Inside are machines, cables, pumps, storage, and a team waiting to begin. You do not need to know how a chip is made to ask the question that matters: will this place turn resources into useful work?
 
----
+You are the owner in this story. Perhaps this is your first facility. Perhaps you already manage a fleet. Either way, your role is to understand dependencies, ask for evidence, and make decisions with specialists. Baton is your rehearsal room.
 
-### Character 1: "The Feverish Athlete" (Gradual Thermal Warning)
-* **Who he is:** A marathon runner whose body temperature is steadily climbing like a car engine temperature gauge creeping toward the red zone on the highway.
-* **The Drama:** Traditional datacenters ignore him until his engine blows up and he collapses on the track. The sudden crash shatters the glass baton, wiping out an entire hour of unsaved progress.
-* **The Baton Fix:** Dynamic thermal slope detection watches the rate of heat rise. It spots the fever 90 seconds early, orders a lightweight emergency save, and swaps the runner for a fresh athlete in under 2 minutes.
-* **The Dollar Shield:** Saves **$114,688** per incident by eliminating cluster stall burn.
+The cast is fictional and the evidence is synthetic. The dilemmas are engineering questions worth exploring. Financial figures elsewhere in the dashboard are illustrative assumptions, not measured savings or promises.
 
----
+> **The question you carry forward:** What must my team demonstrate before I trust the facility?
 
-### Character 2: "The Sudden Ghost" (Abrupt Unannounced Failure)
-* **Who he is:** The lightbulb that pops with zero warning. No temperature climb, no vibration, no forecast.
-* **The Drama:** Traditional operators waste 45 minutes having engineers reboot the machine, read log files, and reconstruct the cluster while the entire building sits idle.
-* **The Baton Fix:** Automated fast-path gang restart. Never waste time diagnosing dead silicon during active production. The system immediately evicts the dead machine, recruits a warm standby already pre-loaded with software, and resumes in 120 seconds.
-* **The Dollar Shield:** Saves **$57,000** per crash by slashing downtime from 45 minutes to 2 minutes.
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/arrival) · [Visit the planning room](https://sohamsa.github.io/baton/#/planner?chapter=arrival)
+
 
 ---
 
-### Character 3: "The Kitchen Circuit Breaker" (Shared Infrastructure / Power Sag)
-* **Who he is:** The master electrical circuit breaker behind the counter in a busy restaurant kitchen.
-* **The Drama:** The breaker sags, and 16 fryers dim at the exact same moment. Blind monitoring tools panic and file 16 separate emergency tickets, prompting technicians to mistakenly throw away 16 perfectly healthy $35,000 processors ($560,000 in false scrap).
-* **The Baton Fix:** Power-domain topology correlation. The system groups all 16 alarms into a single electrical breaker ticket, telling technicians to inspect the $40 breaker instead of touching healthy chips.
-* **The Dollar Shield:** Prevents **$560,000** in false hardware replacements.
+## Act I · Learn the rhythm before the silence
+
+On the floor, accelerators perform calculations. The network lets cooperating machines exchange results. Power keeps them alive; cooling carries heat away. Storage holds the work that must survive an interruption. People connect all of these systems through procedures.
+
+Follow one training job, a team of assigned workers. Some workers must wait for their partners before the job advances. A server houses machines; a rack groups servers; a facility holds many racks and can run many jobs. Trouble in one dependent job does not automatically stop the whole building.
+
+A checkpoint is a saved position in the journey. Returning to it may mean repeating work. Saving too often also takes time. Your first lesson is to distinguish activity from progress: busy machines can be repeating yesterday’s calculations.
+
+| The part of the world | What it does | The owner’s question |
+| --- | --- | --- |
+| Accelerators | Perform calculations | Are they producing new useful work? |
+| Network | Connects cooperating workers | Which work waits on which partners? |
+| Power and cooling | Supply energy and remove heat | Which machines share a vulnerable dependency? |
+| Storage | Holds saved training state | Can we actually restore it? |
+| People and procedures | Investigate and authorize responses | What evidence and capability checks govern action? |
+
+The detailed rehearsal job is small. The larger cluster is an inventory with a counted quiescent population; it is not a fully instrumented fleet experiment. No real GPU is connected.
+
+> **The question you carry forward:** Which machines must cooperate, and what progress can we actually restore?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/rhythm) · [Meet the training team](https://sohamsa.github.io/baton/#/dependencies?chapter=rhythm)
+
 
 ---
 
-### Character 4: "The Hard-Working Chef" (Healthy Workload Burst vs. Fire)
-* **Who he is:** The head chef cooking at full speed during the Friday night dinner rush.
-* **The Drama:** His pans get hot because he is cooking hard. A dumb fire alarm sees the heat, panics, and turns on the ceiling water sprinklers, ruining dinner.
-* **The Baton Fix:** Workload-aware AI baselines. The system recognizes that the chip is simply working through a heavy mathematical burst, allowing it to complete safely without interruption.
-* **The Dollar Shield:** Saves **$40,000+** in preserved compute progress per avoided false alarm.
+## Act II · The first alarm
+
+A temperature climbs. Someone reaches for the stop button. Across the room, another machine disappears without a warning. Two incidents, two different decisions. The owner discovers that resilience needs both early recognition and preparation for surprises.
+
+Enter the Feverish Athlete, the Sudden Ghost, the Hard-Working Chef, and the Overzealous Referee. Their appearances can look similar on an alarm screen. Their consequences are very different.
+
+Watch the evidence before choosing the response. A save may protect progress. A restart may restore a stopped job. A mistaken quarantine can interrupt healthy work. Ask what supports the action and what it could cost.
+
+### The Feverish Athlete
+
+A runner keeps moving, but their temperature rises beyond what the work alone explains. The team must decide whether to save before the interruption.
+
+**The clue:** Look at temperature alongside power, workload, freshness, and a baseline.
+
+**The revelation:** Early evidence can justify a save; it does not guarantee an exact failure time.
+
+**Ask your team:** Can you show how warning quality and checkpoint age influence an extra save?
+
+**Open the evidence drawer:** `gpu_temp_c`, `power_draw_w`, `residual_ewma`, `freshness_steps`.
+
+*Rehearsal scope: Engine rehearsal: thermal degradation and an extra checkpoint.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/alarm) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=gradual_warning&chapter=alarm) · [Visit the supporting room](https://sohamsa.github.io/baton/#/anomalies?chapter=alarm)
+
+### The Sudden Ghost
+
+A worker vanishes without a farewell. There is no useful warning to discover; the test is whether the team prepared a recovery.
+
+**The clue:** A missing heartbeat and a verified save matter more than a forecast.
+
+**The revelation:** Some failures offer no observable warning. Prepare compatible recovery resources.
+
+**Ask your team:** Have we demonstrated a restart from a usable save with compatible capacity?
+
+**Open the evidence drawer:** `heartbeat`, `checkpoint state`, `runtime capability`, `spare compatibility`.
+
+*Rehearsal scope: Engine rehearsal: abrupt failure and spare-assisted restart.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/alarm) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=abrupt_failure&chapter=alarm) · [Visit the supporting room](https://sohamsa.github.io/baton/#/recovery?chapter=alarm)
+
+### The Hard-Working Chef
+
+The kitchen grows hot during a busy service. Pulling the chef out would stop a healthy dinner.
+
+**The clue:** Temperature rises with workload and power, rather than an unexplained residual.
+
+**The revelation:** Interpret heat in context while retaining independent safety protections.
+
+**Ask your team:** How do we distinguish healthy load from abnormal behavior?
+
+**Open the evidence drawer:** `sm_util_ratio`, `power_draw_w`, `gpu_temp_c`, `residual_ewma`.
+
+*Rehearsal scope: Engine rehearsal: a healthy workload shift.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/alarm) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=healthy_workload_shift&chapter=alarm) · [Visit the supporting room](https://sohamsa.github.io/baton/#/devices?chapter=alarm)
+
+### The Overzealous Referee
+
+A referee sees exertion and stops the game. A protective action becomes the interruption.
+
+**The clue:** Compare completed useful work after intervention with a reasonable alternative.
+
+**The revelation:** Evaluate the cost of false interventions, not just missed alarms.
+
+**Ask your team:** Do our reviews measure disruption caused by our own protective actions?
+
+**Open the evidence drawer:** `useful_new`, `recomputation`, `actions`, `interruption duration`.
+
+*Rehearsal scope: Engine rehearsal: threshold quarantine can reduce useful progress.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/alarm) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=harmful_preventive&chapter=alarm) · [Visit the supporting room](https://sohamsa.github.io/baton/#/experiments?chapter=alarm)
+
+> **The question you carry forward:** Is this a warning, a healthy surge, or a failure we must recover from?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/alarm) · [Inspect the sensor readings](https://sohamsa.github.io/baton/#/devices?chapter=alarm)
+
 
 ---
 
-### Character 5: "The Contract with Missing Pages" (Incomplete Checkpoint Corruption)
-* **Who he is:** The legal courier who dropped the last 3 pages of a 100-page contract out the taxi window on the way to the courthouse.
-* **The Drama:** Resuming a multi-million-dollar AI training run from an incomplete or corrupted save file causes the AI model to learn corrupted mathematics, invalidating weeks of training.
-* **The Baton Fix:** Atomic two-phase verification gates. Cryptographic checksums inspect every piece of the save file across all 32k machines before advancing the resume pointer.
-* **The Dollar Shield:** Prevents **$1.5 Million** in catastrophic training rollbacks.
+## Act III · The wrong suspect
+
+The owner receives several alarms at once. Are several chips failing, or do they share one troubled dependency? Meanwhile, a sensor report arrives late and a checkpoint that looked complete is missing pieces.
+
+The Kitchen Circuit Breaker, Missing-Pages Contract, Missing Choir Singer, Yesterday Weatherman, Tired Runner, and Revolving Door Patient complicate the investigation. The cheapest-looking response may be the most expensive mistake.
+
+This act teaches restraint and preparedness together. Separate symptoms from causes. Check the age of evidence. Verify that a save is usable. Confirm what the runtime permits. Returning equipment needs a qualification process; a quick green light is not proof of health.
+
+### The Kitchen Circuit Breaker
+
+Several appliances dim together. Replacing each appliance would miss their shared electrical supply.
+
+**The clue:** Match correlated symptoms to power-domain membership.
+
+**The revelation:** Investigate common dependencies before blaming individual devices.
+
+**Ask your team:** Can we map each affected machine to its shared power and cooling domains?
+
+**Open the evidence drawer:** `power_domain_id`, `power_limit_w`, `cooling_domain_id`.
+
+*Rehearsal scope: Engine rehearsal: shared power symptoms and grouped incidents.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=shared_infrastructure&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/boards?chapter=suspects)
+
+### The Contract with Missing Pages
+
+The courier returns a contract, but some pages never arrived. It cannot safely become the record everyone relies on.
+
+**The clue:** Inspect shard completeness, verification state, reachability, and compatibility.
+
+**The revelation:** A requested or partially written checkpoint is not a usable restore point.
+
+**Ask your team:** When did we last demonstrate a restore, including rejection of a bad save?
+
+**Open the evidence drawer:** `shards_present`, `shards_expected`, `checksum_ok`, `verified_at`.
+
+*Rehearsal scope: Engine rehearsal: abstract completeness gates and checkpoint fallback; no real tensor files.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=incomplete_checkpoint&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/checkpoints?chapter=suspects)
+
+### The Missing Choir Singer
+
+One singer leaves, but the arrangement still requires their part. Continuing needs a supported new arrangement.
+
+**The clue:** The runtime capability and dependent rank groups constrain recovery.
+
+**The revelation:** A desired smaller restart is not automatically a supported restart.
+
+**Ask your team:** What membership changes does our training framework actually support?
+
+**Open the evidence drawer:** `runtime capability`, `rank assignments`, `tp_size`, `topology_signature`.
+
+*Rehearsal scope: Engine rehearsal: unsupported reconfiguration is rejected.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=unsupported_local_recovery&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/dependencies?chapter=suspects)
+
+### The Yesterday Weatherman
+
+The forecast sounds confident until someone checks when it was recorded. Yesterday’s evidence cannot settle tonight’s diagnosis.
+
+**The clue:** Compare event time with availability time and identify missing independent confirmation.
+
+**The revelation:** Abstain from uncertain diagnosis while pursuing fresh evidence and reliable liveness.
+
+**Ask your team:** How do we identify stale readings and separate sensor loss from machine failure?
+
+**Open the evidence drawer:** `event_step`, `availability_step`, `freshness_steps`, `heartbeat`.
+
+*Rehearsal scope: Engine rehearsal: delayed observations and abstention.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=stale_telemetry&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/monitoring?chapter=suspects)
+
+### The Tired Runner
+
+Everyone remains on the track, but one runner quietly loses pace. The finish line moves further away.
+
+**The clue:** Per-rank execution latency and collective waiting would reveal the slowdown.
+
+**The revelation:** Performance degradation deserves investigation even without a crash.
+
+**Ask your team:** Can we identify the slowest dependent ranks without confusing workload variation with damage?
+
+**Open the evidence drawer:** `step latency (proposed)`, `collective wait`, `workload phase`.
+
+*Rehearsal scope: Conceptual story; existing rehearsal uses thermal degradation, not a latency-driven straggler model.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=silent_straggler&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/silicon?chapter=suspects)
+
+### The Revolving Door Patient
+
+A patient passes an idle check, returns to the race, and falters under load. Recovery is not the same as qualification.
+
+**The clue:** Seek load-test outcomes and repeat-failure history.
+
+**The revelation:** Define evidence-based return-to-service criteria.
+
+**Ask your team:** What tests and approvals are required before repaired equipment rejoins production?
+
+**Open the evidence drawer:** `repair history (proposed)`, `qualification results (proposed)`, `actions`.
+
+*Rehearsal scope: Conceptual qualification lesson; the current frontend canary is a demonstration timer.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=revolving_door&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/dispatch?chapter=suspects)
+
+> **The question you carry forward:** What shared dependency or missing evidence could change our response?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/suspects) · [Inspect the saved progress](https://sohamsa.github.io/baton/#/checkpoints?chapter=suspects)
+
 
 ---
 
-### Character 6: "The Missing Choir Singer" (Unsupported Local Recovery)
-* **Who he is:** The baritone singer who walked off the stage mid-concert.
-* **The Drama:** An operator thinks, *"We have 32,767 other singers, let's keep singing without him!"* But AI models split equations across rigid mathematical dimensions. Dropping one singer causes an instant silent deadlock freeze.
-* **The Baton Fix:** Enforces coordinated group restarts that preserve the mathematical harmony rather than attempting dangerous, uncoordinated individual chip dropouts.
-* **The Dollar Shield:** Averts **$114,688/hr** silent cluster deadlock freezes.
+## Act IV · The past enters the room
+
+A technician asks whether the trouble began today. Perhaps the power system, circuit board, cooling installation, or an earlier assembly step left a clue. The investigation expands beyond the chip’s temperature.
+
+The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.
+
+These are conceptual investigations. Their existing rehearsals simplify the underlying mechanisms; they do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it.
+
+### The Midnight Power Cliff
+
+The whole kitchen starts its ovens together. The owner discovers that workload changes also reach the electrical system.
+
+**The clue:** Power over time, shared supply limits, and the actual contract determine the investigation.
+
+**The revelation:** Electrical transients and billing demand windows are different questions.
+
+**Ask your team:** Have electrical specialists reviewed ramps, capacity, and our actual demand terms?
+
+**Open the evidence drawer:** `power_draw_w`, `power_domain_id`, `facility demand (proposed)`.
+
+*Rehearsal scope: Simplified shared-power rehearsal; no electrical transient or tariff-window model.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=power_cliff&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/grid?chapter=origins)
+
+### The Cracked Solder Bead
+
+A tiny connection becomes the suspected weak link. The visible error does not identify the microscopic cause on its own.
+
+**The clue:** Memory and link symptoms need corroborating specialist diagnostics.
+
+**The revelation:** Keep component-level causes as hypotheses until evidence distinguishes them.
+
+**Ask your team:** What diagnostic evidence would distinguish memory, packaging, board, and software faults?
+
+**Open the evidence drawer:** `ecc_sbe_total`, `ecc_dbe_total`, `nvlink_replay_total`.
+
+*Rehearsal scope: Conceptual packaging story; existing rehearsal uses thermal degradation.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=fractured_microbump&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/mcm?chapter=origins)
+
+### The Edge-of-the-Oven Cookie
+
+One batch member fails. The owner asks whether the rest share a risk, rather than declaring every sibling guilty.
+
+**The clue:** Trusted manufacturing identifiers and cohort comparisons would be needed.
+
+**The revelation:** Shared history suggests an investigation, not proof of a defective batch.
+
+**Ask your team:** Can suppliers provide traceable lot records, and how would we test a cohort hypothesis?
+
+**Open the evidence drawer:** `wafer lot (optional supplier record)`, `cohort outcomes (proposed)`.
+
+*Rehearsal scope: Conceptual lineage story; no implemented batch diagnosis or cohort cordoning.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=wafer_lot_contagion&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/lineage?chapter=origins)
+
+### The Framed Innocent
+
+The chip receives the blame while its supporting board supplies unstable power. An expensive replacement might leave the cause untouched.
+
+**The clue:** Compare symptoms with board and shared-domain evidence.
+
+**The revelation:** Investigate the surrounding system before replacing the accused component.
+
+**Ask your team:** What board-level evidence do we require before approving accelerator replacement?
+
+**Open the evidence drawer:** `power_domain_id`, `power_limit_w`, `board rail telemetry (optional)`.
+
+*Rehearsal scope: Conceptual board diagnosis; existing rehearsal uses thermal degradation.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=innocent_chip_dying_board&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/boards?chapter=origins)
+
+### The Thermal Shadow
+
+One part of the building receives less cooling. The owner needs a map, not just a list of hot machines.
+
+**The clue:** Rack position, temperature patterns, and coolant measurements would establish the spatial story.
+
+**The revelation:** Shared cooling geometry can matter more than an individual chip reading.
+
+**Ask your team:** Do our cooling maps and measurements reveal which machines share a vulnerable loop?
+
+**Open the evidence drawer:** `cooling_domain_id`, `gpu_temp_c`, `rack elevation (proposed)`, `flow or pressure (optional)`.
+
+*Rehearsal scope: Conceptual spatial lesson; no modeled rack gradient or valve-flush action.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=rack_thermal_shadow&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/racks?chapter=origins)
+
+### The Over-Torqued Wrench
+
+An assembly mistake leaves a clue in an earlier chapter of the machine’s life. The owner asks for records before drawing conclusions.
+
+**The clue:** Installation history and specialist mechanical evidence would be needed.
+
+**The revelation:** Lifecycle records can support investigation but do not prove a physical defect.
+
+**Ask your team:** Which installation and assembly records are available, and who can interpret them?
+
+**Open the evidence drawer:** `assembly records (optional)`, `torque history (optional)`, `qualification results (proposed)`.
+
+*Rehearsal scope: Conceptual assembly story; no torque diagnosis or warranty automation.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=cold_plate_torque_fracture&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/passport?chapter=origins)
+
+### The Whispering Voltage Cliff
+
+The room looks calm, but correct-looking operation may conceal incorrect computation. A normal thermometer cannot answer every question.
+
+**The clue:** Computation validation and electrical evidence would matter, not temperature alone.
+
+**The revelation:** Protecting file integrity does not prove that the computations inside a file were correct.
+
+**Ask your team:** What checks could reveal silent computation errors before they enter our trusted saves?
+
+**Open the evidence drawer:** `computation validation (proposed)`, `voltage margin (specialist)`, `checkpoint integrity`.
+
+*Rehearsal scope: Conceptual correctness story; no voltage-margin predictor, weight-corruption model, or pacing control.*
+
+[Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=silent_subthreshold_cliff&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/anomalies?chapter=origins)
+
+> **The question you carry forward:** What can we observe today, and what records or specialist evidence are missing?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/origins) · [Open the evidence archive](https://sohamsa.github.io/baton/#/passport?chapter=origins)
+
 
 ---
 
-### Character 7: "The Yesterday Weatherman" (Stale Telemetry & Epistemic Abstention)
-* **Who he is:** The meteorologist who looks at yesterday's weather radar to decide if you need an evacuation order today.
-* **The Drama:** When network traffic delays sensor readings by 10 minutes, naive automation quarantines machines that have already cooled down and are running normally.
-* **The Baton Fix:** Epistemic abstention. When sensor readings are expired or incomplete, the system refuses to guess or take destructive actions until fresh vitals arrive.
-* **The Dollar Shield:** Eliminates spurious late-night automated quarantines and false technician callouts.
+## Climax · The night the clues collide
+
+The evening workload is rising. A warm machine attracts attention, but the most recent facility readings are delayed. A rank then stops responding. Someone proposes dropping it from the job. Someone else points to the newest checkpoint, still being written.
+
+You have met these characters before. Now they share a scene. Choose what evidence to trust, which save to use, and which recovery to permit. This is an interactive tabletop exercise connecting earlier lessons, not a new compound engine simulation.
+
+The resolution is earned through disciplined questions. Your job is to protect useful progress while refusing unsupported assumptions. No decision can recover a save that does not exist, or grant a runtime a capability it does not have.
+
+### You have the floor
+
+Pause before reading the resolution. What would you ask the team to do?
+
+**The temperature alarm is fresh, but the facility report is old. What do you tell the team?**
+
+- Treat the old report as proof of the cause.
+- Request fresh corroboration and check independent liveness.
+
+**A rank has stopped responding. The newest checkpoint is still being written. Which restore point do you consider?**
+
+- Use the newest file because it has the latest timestamp.
+- Use the newest verified, complete, reachable, compatible save.
+
+**The job requires its current membership. Someone proposes removing the failed rank and continuing.**
+
+- Drop the rank immediately; plenty of machines remain.
+- Confirm capabilities and plan a coordinated supported restart.
+
+[Make your decisions in the interactive climax](https://sohamsa.github.io/baton/#/journey/finale)
+
+<details>
+<summary>Reveal the resolution</summary>
+
+You separate a symptom from its cause and pursue timely evidence. Keep independent hardware safety protections active.
+
+You use the checkpoint gates. If none qualifies, recovery is blocked; report that explicitly rather than inventing saved progress.
+
+You match the response to the runtime, restore point, and compatible replacement capacity. Specialists must validate the actual procedure.
+
+The ending depends on evidence and preparation. If no checkpoint qualifies, or compatible recovery capacity is absent, the team must say recovery is blocked. No story can manufacture saved progress after the fact.
+
+This climax is a tabletop decision exercise. The existing engine rehearsals demonstrate its individual lessons; they do not execute this compound event as a single simulation.
+
+</details>
+
+> **The question you carry forward:** Can we assemble a supported recovery from trustworthy evidence?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/finale) · [Open the rehearsal floor](https://sohamsa.github.io/baton/#/desk?chapter=finale)
+
 
 ---
 
-### Character 8: "The Overzealous Referee" (Harmful Preventive Shutdown)
-* **Who he is:** The whistle-happy referee who stops the game and benches a star player for breathing heavily right as he is about to score the winning goal.
-* **The Drama:** A rigid safety rule ("stop if heat touches 70°C") halts the entire facility during a brief 5-second burst, causing far more financial damage than letting the chip finish the play.
-* **The Baton Fix:** Dynamic residual tracking evaluates heat relative to workload duration, keeping healthy machines running safely.
-* **The Dollar Shield:** Preserves **$40,000+** in computing progress per event.
+## Epilogue · At dawn, you know what to ask
+
+The facility is still a complex place. You now recognize the cast. A busy machine is not necessarily productive. A warning is not a diagnosis. A completed-looking save is not necessarily usable. A spare is useful only when the recovery can use it.
+
+If you are building, take these questions into procurement, design reviews, and launch readiness. If you are operating, take them into incident reviews, restore drills, maintenance, and monitoring improvements.
+
+The ending belongs to your next conversation. Leave with the evidence you need, the questions you will ask, and the practices your team should demonstrate. Return to any character when a new situation deserves a rehearsal.
+
+### Carry the ending into your next meeting
+
+| If you are building | If you are operating |
+| --- | --- |
+| Request a dependency map before signing off on design. | Review how dependency maps helped or failed in a recent incident. |
+| Ask suppliers which telemetry and lifecycle records are available. | Identify missing, stale, and unsupported observations. |
+| Require a demonstrated checkpoint restore before launch. | Run a restore drill that rejects an incomplete save. |
+| Validate recovery capability and spare compatibility. | Review repeat failures and return-to-service qualification. |
+
+[Create and print your owner’s action pack](https://sohamsa.github.io/baton/#/journey/dawn) with your questions and notes. Progress and notes stay in your browser; no account is needed for the public story.
+
+> **The question you carry forward:** What will I ask my team to demonstrate next?
+
+[Step into this chapter](https://sohamsa.github.io/baton/#/journey/dawn) · [Explore the full data catalog](https://sohamsa.github.io/baton/#/data?chapter=dawn)
 
 ---
 
-### Character 9: "The Tired Runner" (Silent Straggler Drag)
-* **Who he is:** The athlete who doesn't collapse or trigger any alarms, but slowed down by just 8% due to minor silicon fatigue.
-* **The Drama:** Because all 32,768 runners must synchronize every mathematical step, every single runner is forced to match the pace of the slowest runner in total silence.
-* **The Baton Fix:** Cross-chip latency tracking detects the slow runner outlier in real time, cordoning and draining him at the next scheduled save break without interrupting live training.
-* **The Dollar Shield:** Eliminates **$220,000/day ($1M to $3M/month)** in silent stall waste across the facility.
+## Behind the story: how evidence becomes a decision
 
----
+A large dictionary is a map of possibilities. A particular decision needs a smaller evidence set. The character drawers show that narrowing:
 
-### Character 10: "The Revolving Door Patient" (Premature Return / Revolving Door)
-* **Who he is:** The hospital patient who feels better after 5 minutes and is discharged without a treadmill stress test, only to collapse in the parking lot.
-* **The Drama:** Technicians plug a repaired machine back into live training; it fails 3 minutes later under heavy load, crashing the entire $150M building all over again.
-* **The Baton Fix:** Quarantine health gates. Repaired machines must pass a synthetic computational stress test before being certified safe for production training.
-* **The Dollar Shield:** Prevents secondary multi-hour cluster crashes.
+| Owner question | Evidence to examine | Decision it informs |
+| --- | --- | --- |
+| Is the warning unexplained by workload? | Temperature, observed power, workload, residual, freshness | Investigate or request a save |
+| Do the alarms share a dependency? | Power and cooling domain membership, correlated observations | Investigate the shared system |
+| Can we restore this save? | State, shard completeness, integrity, reachability, topology | Select or reject a checkpoint |
+| Can we change membership? | Runtime capability and dependent rank groups | Permit or reject reconfiguration |
+| Did the response help? | Useful progress, repeated work, interruption, checkpoint overhead | Compare strategies |
 
----
+Open the [full data catalog](https://sohamsa.github.io/baton/#/data). Catalog definitions are broader than generated observations and model inputs. Optional manufacturer records and proposed instrumentation are explicitly identified in the owner story; missing evidence remains missing.
 
-### Character 11: "The Midnight Power Cliff" (PPA Demand Ratchet Surge)
-* **Who he is:** The electric utility meter outside your building that violently spikes 16 Megawatts in a single second.
-* **The Drama:** Electric utilities enforce strict "demand ratchets": if you spike the grid for just 15 minutes, they bill you at that astronomical peak rate for the next 12 consecutive months.
-* **The Baton Fix:** Automated paved ramp pacing gently steps up cluster wattage over 120 seconds, keeping power draw smooth and ratchet-safe.
-* **The Dollar Shield:** Saves **$385,000 per year** in avoided electric utility demand penalties.
+## For the technical team
 
----
+The Python engine in `src/baton` owns simulation and policies. The public React dashboard can execute it through Pyodide in a browser worker. Reading the story needs no engine startup; rehearsals load the engine on demand. Initial rehearsal loading requires network access for Pyodide and the engine bundle.
 
-### Character 12: "The Cracked Solder Bead" (Fractured Microbump in MCM Packaging)
-* **Who he is:** A microscopic bead of solder, 1/10th the width of a human hair, connecting the processor brain to high-speed memory.
-* **The Drama:** Repeated heating and cooling causes the chip to expand and contract, fracturing the solder bead and permanently bricking a $35,000 processor module.
-* **The Baton Fix:** Monitors memory transfer retries to catch microbump fatigue early, safely swapping the module before total electrical separation.
-* **The Dollar Shield:** Protects **$35,000** processor modules from catastrophic failure.
+The engine separates evaluator truth from operational evidence, rejects unsupported recovery, checks abstract checkpoint eligibility, and compares policies on shared synthetic fault schedules. The learned model did not beat its baseline on the checked artifact, so rules remain the operational default. No physical telemetry or control adapter is connected.
 
----
-
-### Character 13: "The Edge-of-the-Oven Cookie" (Wafer Lot Contagion)
-* **Who he is:** The batch of cookies baked on the outer edge of the baking tray that got slightly over-crisped.
-* **The Drama:** Chips sliced from the outer rim of a silicon disc run hotter. When one dies, its 500 sister chips across the datacenter are ticking time bombs.
-* **The Baton Fix:** Digital wafer tracing identifies all sibling chips from the same marginal factory lot and applies protective voltage cushions before they crash.
-* **The Dollar Shield:** Prevents **$2.0 Million** in cascading multi-rack outages.
-
----
-
-### Character 14: "The Framed Innocent" (Innocent Chip on a Dying Board)
-* **Who he is:** A healthy $35,000 processor blamed for a crime committed by a $40 voltage regulator behind the wall.
-* **The Drama:** A leaking voltage rail triggers error messages on the chip. Technicians yank out the healthy chip and throw it away.
-* **The Baton Fix:** Telemetry correlation inspects the underlying circuit board first, replacing the cheap board component and saving the expensive processor.
-* **The Dollar Shield:** Prevents **$480,000** in false processor scrap.
-
----
-
-### Character 15: "The Thermal Shadow" (Rack Cold-Plate Heat Shadow)
-* **Who he is:** An air bubble trapped inside the liquid cooling manifold that starves the top server shelf of water.
-* **The Drama:** Bottom servers run cool at 55°C, while top servers reach 85°C in silence.
-* **The Baton Fix:** Liquid manifold pressure monitoring detects trapped air pockets before chips heat up.
-* **The Dollar Shield:** Averts **$4.5 Million** in rack-level thermal burnouts.
-
----
-
-### Character 16: "The Over-Torqued Wrench" (Cold Plate Mechanical Fracture)
-* **Who he is:** The well-meaning technician who tightened the water block bolts too hard with a manual wrench.
-* **The Drama:** Excessive mounting pressure micro-cracks the delicate silicon die under thermal expansion.
-* **The Baton Fix:** Torque sensor calibration and strain-gauge telemetry alert operators to uneven mounting pressure.
-* **The Dollar Shield:** Prevents un-warrantied physical silicon fractures.
-
----
-
-### Character 17: "The Whispering Voltage Cliff" (Silent Subthreshold Cliff)
-* **Who he is:** The invisible electrical dip that occurs when temperatures look completely normal (71°C).
-* **The Drama:** High-leakage chips fall off a timing cliff during compute bursts, quietly spitting out incorrect mathematical sums that corrupt the AI model without triggering any alarm.
-* **The Baton Fix:** Silicon-context early warning pairs factory birth certificate minimum voltages (Vmin) with live sensor readings to pace computing bursts safely.
-* **The Dollar Shield:** Shields against **$500k to $1.5M** in silent weight corruption rollbacks.
-
----
-
-## 🏛️ The Five Rooms of the Executive Suite
-
-When you open the [live application](https://sohamsa.github.io/baton/), you step into a 5-room executive command center:
-
-```
-🌟 Executive Portfolio (#/)
-   * 🌐 Global Fleet Console (#/fleet): 131k Chips across VA, TX, OR, Norway
-   * 🏗️ Greenfield DC Planner (#/planner): Build-Your-Own Datacenter Wizard
-   * ⚡ Live Practice Floor (#/desk): 32,768-Chip Live Crisis Simulator
-   * ⚡ Utility Grid & PPA Scorecard (#/grid): Power Contracts, Ratchets & Curtailment
-   * 🔧 Boots-on-Ground Dispatch (#/dispatch): Field Operations & Floor Logistics
-   * 💡 Executive Q&A Lounge (#/stories): 17 Business Analogies & Owner Answers
-```
-
-### 1. 🌟 The Executive Portfolio & Financial Pillars (`#/`)
-* **What you see:** The high-level capital health of your datacenter.
-* **Key Numbers:** Total hardware value ($150M), cluster stall burn rate ($114,688/hr), work preserved (up to 90%), recovery time (2 minutes).
-* **Interactive Feature:** The **Portfolio Scope Selector**. Click between Virginia, Texas, Oregon, Norway, or the aggregated 131k Global Fleet to see all financial metrics adapt in real time.
-
-### 2. 🌐 Global Fleet Command Console (`#/fleet`)
-* **What you see:** A unified command deck aggregating **131,072 accelerators** across four hyperscale campuses and four electric grids:
-  * 🇺🇸 **Campus Alpha (Virginia / Dominion):** 32k chips · 40 MW · $0.092/kWh · PPA ratchet-safe.
-  * 🇺🇸 **Campus Lone Star (Texas / ERCOT):** 65k chips · 80 MW · $0.052/kWh · Earns **$75,000/day** in automated demand response.
-  * 🇺🇸 **Campus Cascade (Oregon / BPA Hydro):** 16k chips · 22 MW · $0.041/kWh · 100% clean hydro, zero carbon.
-  * 🇳🇴 **Campus Fjord (Norway / Statnett):** 16k chips · 20 MW · €0.048/kWh · Arctic free-cooling with municipal district heat export.
-* **Interactive Feature:** Cross-Campus Disaster Recovery & Load-Shift Simulator + Printable 1-Page Global Fleet Board Memo.
-
-### 3. 🏗️ Greenfield Datacenter Planning Wizard (`#/planner`)
-* **What you see:** A full capital and hardware planning engine for building a new AI datacenter from scratch.
-* **Interactive Sizing:** Choose your scale (4k, 16k, 32k, 65k, 131k chips), electric utility grid, cooling technology (Direct Liquid, Immersion, RDHx, Air), and warm standby ratio.
-* **Instant Financial Pro-Forma:** Calculates upfront CapEx itemized by silicon, cooling, switchgear, and shell ($/MW), monthly power bill, and Baton ROI.
-* **Printable Feature:** 1-click **Printable Pro-Forma Term Sheet (PDF)** ready for bank debt syndication and investment committees.
-
-### 4. ⚡ Live Practice Floor Simulator (`#/desk`)
-* **What you see:** A live 32,768-chip simulator where you can trigger all 17 hardware crises and watch how automated Baton micro-saves protect millions of dollars in compute capital.
-* **Interactive Feature:** Side-by-side battle arena comparing traditional datacenter runbooks vs. automated Baton engineering.
-
-### 5. ⚡ Utility Grid & PPA Scorecard (`#/grid`)
-* **What you see:** Electric utility contract audit, demand ratchet penalty prevention, and carbon emissions accounting.
-
-### 6. 🔧 Boots-on-the-Ground Dispatch (`#/dispatch`)
-* **What you see:** Physical rack floor maps, technician badge workflows, and spare parts bin logistics.
-
-### 7. 💡 Executive Q&A Lounge (`#/stories`)
-* **What you see:** All 17 hardware questions answered in plain everyday English with zero semiconductor formulas.
-
----
-
-## 💼 The Datacenter Owner's Playbook: What You Can Apply Tomorrow
-
-Even if you never write a single line of code, reading this project gives you five high-leverage rules to protect your balance sheet:
-
-| # | Boardroom Takeaway | Why It Matters to Your Balance Sheet | What to Demand from Your Team |
-| :--- | :--- | :--- | :--- |
-| **1** | **The 2% Warm Standby Rule** | When a chip crashes, waiting 45 minutes for a human technician burns $86,000 in idle cluster time. | Maintain **1% to 2% warm unassigned standby nodes** per network spine with pre-staged software containers. Recovers cluster in 2 minutes. |
-| **2** | **PPA Demand Ratchet Safeguards** | Spiking power from 0 to 40 MW in 1 second triggers utility ratchet penalties that inflate your power bill for the next 12 months. | Enforce **automated 120-second paved ramp pacing** on all cluster restarts. Saves ~$385,000/year. |
-| **3** | **Power-Domain Topology Mapping** | When a circuit breaker sags, naive tools report 16 dead chips. Technicians throw away $560,000 in healthy silicon. | Demand that cluster monitoring correlates alerts by **underlying electrical circuit and PDU**. Replace the $40 breaker, not the chips. |
-| **4** | **Atomic Two-Phase Checkpoint Verification** | Resuming an AI job from a half-written save file silently corrupts model weights, burning weeks of training. | Enforce **cryptographic checksum verification** before advancing the resume pointer. Refuse damaged saves and roll back safely. |
-| **5** | **Direct Liquid Cooling with 45°C Water** | Legacy air cooling carries a PUE of 1.40 ($2M+/yr extra power) and risks thermal throttling on 800W+ processors. | Design facilities for **Direct-to-Chip Liquid Cooling (CDU)**. Warm water eliminates mechanical chillers and cuts PUE to 1.14. |
-
----
-
-## 🛠️ Technical Architecture & Open Source Integrity
-
-For technical directors, systems architects, and infrastructure auditors:
-
-* **Decision Engine (`src/baton`):** Pure Python decision engine implementing topology correlation, epistemic abstention, and fast-path gang restart.
-* **Frontend Web Application (`apps/web`):** Built with TypeScript, React, and Vite. Contains zero third-party tracking or bloated dependencies.
-* **Offline Standalone Browser Engine (`public/browser-engine.json`):** The entire Python decision engine and all 17 rehearsal traces are pre-compiled into a client-side bundle. The web application runs **100% offline in your browser** with zero network latency.
-* **Test Suite:** Comprehensive unit and integration test suite (`pytest`) covering 41 mission-critical scenarios.
-
-### Quick Verification & Local Execution
+### Run locally
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/SohamSa/baton.git
 cd baton
-
-# 2. Run backend test suite (Python 3.11+)
 python -m venv .venv
-source .venv/bin/activate  # Or .venv\Scripts\activate on Windows
-pip install -e .
-pytest
-
-# 3. Launch the web application
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -e ".[dev]"
+python -m pytest
+python scripts/stage_browser_engine.py
 cd apps/web
-npm install
-npm run dev
+npm ci
 ```
 
----
+Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$env:VITE_PUBLIC_DEMO="true"; npm run dev`). For the authenticated API workflow, see [the quickstart](docs/quickstart.md).
 
-## 📄 License & Attribution
+### Keep the story aligned
 
-Distributed under the Apache 2.0 License. Designed for hyperscale infrastructure investors, datacenter asset owners, and AI foundation model engineering teams worldwide.
+`content/owner-journey.json` supplies both the dashboard chapters and this README. After editing it, run `python scripts/build_owner_readme.py` and commit the regenerated README. The journey tests check character coverage, route targets, and narrative parity.
+
+Read [the runtime boundaries](docs/runtime.md), [limitations](docs/limitations.md), [model card](docs/model-card.md), and [validation notes](docs/validation.md) for technical detail.
+
+**The final scene belongs to you:** take one question from this story into a real conversation, and ask your team to bring the evidence.
