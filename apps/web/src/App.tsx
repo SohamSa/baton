@@ -7,7 +7,6 @@ import {
   ModelReport,
   Monitoring,
   RunView,
-  StoryItem,
   adapters,
   approve,
   audit,
@@ -17,7 +16,6 @@ import {
   models,
   monitoring,
   startStory,
-  stories,
   truth,
 } from "./api";
 import { startEngine, subscribeEngine } from "./browserEngine";
@@ -33,6 +31,7 @@ import { SiliconView } from "./SiliconView";
 import { YieldView } from "./YieldView";
 import { FieldDispatchView } from "./FieldDispatchView";
 import { GridScorecardView } from "./GridScorecardView";
+import { ExecutiveQAView } from "./ExecutiveQAView";
 
 type Session = { token: string; role: string; username: string };
 
@@ -258,7 +257,8 @@ export function App() {
           />
           <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
           <Route path="/dispatch" element={<FieldDispatchView run={run} frames={frames} onRehearse={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} />} />
-          <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
+          <Route path="/stories" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />
+          <Route path="/qa" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />
           <Route path="/silicon" element={<SiliconView run={run} />} />
           <Route path="/lineage" element={<LineageView run={run} />} />
           <Route path="/yield" element={<YieldView run={run} />} />
@@ -325,67 +325,6 @@ function Login({ onSuccess }: { onSuccess: (session: Session) => void }) {
 
 function Empty({ text }: { text: string }) {
   return <p className="panel">{text}</p>;
-}
-
-function Stories({ session, play, setError }: { session: Session; play: (id: string, mode: "manual" | "automated") => Promise<void>; setError: (value: string) => void }) {
-  const [items, setItems] = useState<StoryItem[]>([]);
-  const [mode, setMode] = useState<"manual" | "automated">("manual");
-  const navigate = useNavigate();
-  useEffect(() => {
-    stories(session.token).then((payload) => setItems(payload.stories)).catch((reason: Error) => setError(reason.message));
-  }, [session.token, setError]);
-  async function run(id: string) {
-    setError("");
-    try {
-      await play(id, mode);
-      navigate("/desk");
-    } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Run failed");
-    }
-  }
-  return (
-    <section>
-      <h1>The seventeen rehearsals</h1>
-      <p>Each card is one realistic situation a datacenter business owner encounters:
-        a slow heat buildup, a sudden stop, a shared power feed, a healthy busy spell, a corrupted save, a job that must restart as a choir, late sensor readings, a shutdown rule that does more harm than the breakdown, a tired runner chip dragging down the entire hall, the hospital discharge trap where a repaired machine crashes again immediately, the substation power grid shockwave where thousands of chips booting together trip facility breakers, the microscopic cracked solder wire where automated testing switches to a built-in backup spare wire in 45 seconds, the bad factory baking batch recall where silicon birth certificates trace sister chips and safely rotate them out during normal save breaks, the healthy car engine on a faulty circuit board where power diagnostics prevent mistakenly scrapping a good $30,000 processor, the pinched high-rise cooling pipe where rack elevation monitoring detects valve blockages before 32 chips overheat together, the over-tightened cooling clamp screws where digital passport history finds sister machines assembled on the same faulty factory bench, or the subtle electrical pressure drop where smart AI catches voltage sags before silent math calculation errors corrupt training.
-        Pick one rehearsal and the overview plays it step by step. “You approve” pauses for your yes or no. “Compare two ways” runs two reactions on the same breakdown and shows which one kept more work.
-      </p>
-      <label>How to play it <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}><option value="manual">You approve the serious action</option><option value="automated">Compare two ways on the same breakdown</option></select></label>
-      <div className="grid">
-        {items.map((item) => (
-          <article className="card story-rehearsal-card" key={item.id}>
-            <div className="story-card-top">
-              <h2>{item.title}</h2>
-              {item.failure_level ? (
-                <span className="story-failure-badge">
-                  {item.failure_level.tier}
-                </span>
-              ) : null}
-            </div>
-            <p>{item.summary}</p>
-            {item.failure_level ? (
-              <div className="story-failure-details">
-                <div className="story-detail-row">
-                  <span className="detail-tag">Fault Component:</span>
-                  <span>{item.failure_level.component}</span>
-                </div>
-                <div className="story-detail-row">
-                  <span className="detail-tag">Blast Radius:</span>
-                  <span>{item.failure_level.blast_radius}</span>
-                </div>
-                <div className="story-detail-row">
-                  <span className="detail-tag">Redundancy Defense:</span>
-                  <span>{item.failure_level.redundancy_strategy}</span>
-                </div>
-              </div>
-            ) : null}
-            <button type="button" onClick={() => run(item.id)}>Play this rehearsal</button>
-          </article>
-        ))}
-      </div>
-      {items.length === 0 ? <Empty text="The decision engine is preparing the story list." /> : null}
-    </section>
-  );
 }
 
 function Dependencies({ run }: { run: RunView | null }) {

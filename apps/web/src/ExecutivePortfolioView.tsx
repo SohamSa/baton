@@ -271,26 +271,16 @@ export function ExecutivePortfolioView({
   onOpenPracticeFloor: () => void;
   onOpenTour: () => void;
 }) {
-  const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [expandedId, setExpandedId] = useState<string>("gradual_warning");
 
   const live = frames[frames.length - 1];
   const cluster = live?.cluster ?? run?.cluster;
 
-  const filteredQuestions = useMemo(() => {
-    return EXECUTIVE_QUESTIONS.filter((item) => {
-      const matchesCat = activeCategory === "all" || item.category === activeCategory;
-      const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        !q ||
-        item.question.toLowerCase().includes(q) ||
-        item.analogyTitle.toLowerCase().includes(q) ||
-        item.plainEnglish.toLowerCase().includes(q) ||
-        item.categoryLabel.toLowerCase().includes(q);
-      return matchesCat && matchesSearch;
-    });
-  }, [activeCategory, searchQuery]);
+  const featuredQuestions = useMemo(() => {
+    return EXECUTIVE_QUESTIONS.filter((q) =>
+      ["gradual_warning", "innocent_chip_dying_board", "power_cliff"].includes(q.id)
+    );
+  }, []);
 
   return (
     <div className="portfolio-container">
@@ -407,119 +397,107 @@ export function ExecutivePortfolioView({
         </div>
       </section>
 
-      {/* 4. THE 17 EXECUTIVE QUESTIONS & ANSWERS (WITH ANALOGIES) */}
+      {/* 4. EXECUTIVE QUESTIONS & ANSWERS SHOWCASE */}
       <section className="qa-section">
         <div className="section-head">
           <div className="qa-head-row">
             <div>
-              <h2>17 Business Questions Every Datacenter Owner Must Know</h2>
+              <span className="eyebrow">Executive Knowledge Lounge</span>
+              <h2>Questions Every Datacenter Owner Must Know</h2>
               <p className="muted">
-                Explore every hardware challenge through simple real-world analogies, financial stakes, and 1-click interactive rehearsals.
+                Explore real hardware challenges through simple everyday analogies and bottom-line dollar impacts. No semiconductor physics required.
               </p>
             </div>
-            <div className="qa-search-box">
-              <input
-                type="search"
-                placeholder="Search by question or analogy (e.g. cooling, car engine, bakery, screws, grid)..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                aria-label="Search questions"
-              />
-            </div>
-          </div>
-
-          <div className="category-pills">
-            {[
-              { id: "all", label: "All Questions (17)" },
-              { id: "cooling", label: "❄️ High-Rise Cooling (3)" },
-              { id: "power", label: "⚡ Facility Power & Grid (2)" },
-              { id: "board", label: "🔌 Circuit Boards & Wires (3)" },
-              { id: "silicon", label: "🏭 Silicon Batches & Health (2)" },
-              { id: "ai", label: "🤖 AI Guardrails & Glitches (2)" },
-              { id: "sync", label: "🏃 Cluster Sync & Recovery (5)" },
-            ].map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`category-pill ${activeCategory === cat.id ? "pill-active" : ""}`}
-                onClick={() => setActiveCategory(cat.id)}
-              >
-                {cat.label}
-              </button>
-            ))}
+            <NavLink
+              to="/stories"
+              className="hero-secondary-btn"
+              style={{ textDecoration: "none", whiteSpace: "nowrap" }}
+            >
+              💡 View All 17 Questions →
+            </NavLink>
           </div>
         </div>
 
         <div className="qa-accordion-list">
-          {filteredQuestions.length === 0 ? (
-            <p className="panel muted">No questions match your search filter.</p>
-          ) : (
-            filteredQuestions.map((qa, index) => {
-              const isExpanded = expandedId === qa.id;
-              return (
-                <article key={qa.id} className={`qa-card ${isExpanded ? "qa-expanded" : ""}`}>
-                  <header
-                    className="qa-card-header"
-                    onClick={() => setExpandedId(isExpanded ? "" : qa.id)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setExpandedId(isExpanded ? "" : qa.id);
-                      }
-                    }}
-                  >
-                    <div className="qa-title-left">
-                      <span className="qa-counter">Q{index + 1}</span>
-                      <div className="qa-text-wrap">
-                        <span className="qa-category-tag">{qa.categoryLabel}</span>
-                        <h3 className="qa-question">{qa.question}</h3>
-                        <div className="qa-analogy-badge">
-                          <span>{qa.analogyIcon}</span>
-                          <strong>Analogy:</strong> {qa.analogyTitle}
-                        </div>
+          {featuredQuestions.map((qa, index) => {
+            const isExpanded = expandedId === qa.id;
+            return (
+              <article key={qa.id} className={`qa-card ${isExpanded ? "qa-expanded" : ""}`}>
+                <header
+                  className="qa-card-header"
+                  onClick={() => setExpandedId(isExpanded ? "" : qa.id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setExpandedId(isExpanded ? "" : qa.id);
+                    }
+                  }}
+                >
+                  <div className="qa-title-left">
+                    <span className="qa-counter">Q{index + 1}</span>
+                    <div className="qa-text-wrap">
+                      <span className="qa-category-tag">{qa.categoryLabel}</span>
+                      <h3 className="qa-question">{qa.question}</h3>
+                      <div className="qa-analogy-badge">
+                        <span>{qa.analogyIcon}</span>
+                        <strong>Analogy:</strong> {qa.analogyTitle}
                       </div>
                     </div>
-                    <div className="qa-toggle-icon">{isExpanded ? "▲" : "▼"}</div>
-                  </header>
+                  </div>
+                  <div className="qa-toggle-icon">{isExpanded ? "▲" : "▼"}</div>
+                </header>
 
-                  {isExpanded ? (
-                    <div className="qa-content-body">
-                      <div className="qa-grid-details">
-                        <div className="qa-col">
-                          <h4>💡 In Simple Words</h4>
-                          <p>{qa.plainEnglish}</p>
-                        </div>
-                        <div className="qa-col">
-                          <h4>🛡️ How Continuity Engineering Solves It</h4>
-                          <p>{qa.solution}</p>
-                          <div className="qa-hardware-box">
-                            <strong>Hardware Takeaway:</strong> {qa.hardwareTakeaway}
-                          </div>
-                        </div>
+                {isExpanded ? (
+                  <div className="qa-content-body">
+                    <div className="qa-grid-details">
+                      <div className="qa-col">
+                        <h4>💡 In Simple Words</h4>
+                        <p>{qa.plainEnglish}</p>
                       </div>
-
-                      <div className="qa-action-footer">
-                        <div className="qa-roi-tag">
-                          <span>Bottom-Line Impact:</span>
-                          <strong>{qa.financialImpact}</strong>
-                        </div>
-                        <button
-                          type="button"
-                          className="qa-run-btn"
-                          onClick={() => onPlayRehearsal(qa.id)}
-                          disabled={playing}
-                        >
-                          {playing ? "Simulation In Progress…" : "▶️ Test This in Live Simulator"}
-                        </button>
+                      <div className="qa-col">
+                        <h4>🛡️ How Continuity Engineering Solves It</h4>
+                        <p>{qa.solution}</p>
                       </div>
                     </div>
-                  ) : null}
-                </article>
-              );
-            })
-          )}
+
+                    <div className="qa-action-footer">
+                      <div className="qa-roi-tag">
+                        <span>Bottom-Line Impact:</span>
+                        <strong>{qa.financialImpact}</strong>
+                      </div>
+                      <button
+                        type="button"
+                        className="qa-run-btn"
+                        onClick={() => onPlayRehearsal(qa.id)}
+                        disabled={playing}
+                      >
+                        {playing ? "Simulation In Progress…" : "⚡ Test This in Live Simulator"}
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
+
+        <div style={{ textAlign: "center", marginTop: "1.25rem" }}>
+          <NavLink
+            to="/stories"
+            className="hero-primary-btn"
+            style={{
+              textDecoration: "none",
+              fontSize: "0.95rem",
+              padding: "0.75rem 1.6rem",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+            }}
+          >
+            💡 Browse All 17 Questions & Analogies in the Executive Knowledge Lounge →
+          </NavLink>
         </div>
       </section>
 
