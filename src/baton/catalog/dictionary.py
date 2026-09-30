@@ -48,6 +48,8 @@ def _field(**kwargs) -> FieldSpec:
 
 # (name, unit, cumulative, meaning, dcgm_analog or "")
 GPU_SIGNALS = [
+    ("step_latency_ms", "ms", False, "Observed synthetic per-rank execution latency; missing when the rank is dark.", "simulation signal"),
+    ("cooling_flow_ratio", "ratio", False, "Reported fraction of nominal local coolant flow in the spatial cooling rehearsal.", "simulation signal"),
     ("gpu_temp_c", "C", False, "Reported accelerator temperature.", "DCGM_FI_DEV_GPU_TEMP analog"),
     ("memory_temp_c", "C", False, "Reported memory temperature where the profile supports it.", "DCGM_FI_DEV_MEMORY_TEMP analog"),
     ("power_draw_w", "W", False, "Reported board power.", "DCGM_FI_DEV_POWER_USAGE analog"),
@@ -699,6 +701,8 @@ def _windows() -> list[FieldSpec]:
 
 
 DERIVED_NON_WINDOW = [
+    ("step_latency_ratio", "ratio", "Recent rank latency divided by the available peer median."),
+    ("rack_gradient_c", "C", "Available maximum minus minimum temperature in a rack."),
     ("residual_temp_c", "C", "Observed temperature minus nominal envelope from observed power and coolant."),
     ("residual_ewma", "C", "EWMA of the thermal residual. This is not a failure probability."),
     ("peer_residual_median", "C", "Median residual among same-family, same-phase peers. Null with fewer than two peers."),
@@ -761,3 +765,4 @@ def catalog_counts(fields: list[FieldSpec] | None = None) -> dict:
         "total_catalog_rows": len(fields),
         "unique_by_role": by_role,
     }
+

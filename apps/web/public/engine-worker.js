@@ -60,7 +60,7 @@ def op_tick():
     if frame["done"]:
         result = _live["run"].result()
         view = public_view(result, presentation=False)
-        view["story"] = {"id": _live["story_id"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"], "owner_playbook": _live["spec"].get("owner_playbook"), "failure_level": _live["spec"].get("failure_level")}
+        view["story"] = {"id": _live["story_id"], "title": _live["spec"]["title"], "summary": _live["spec"]["summary"], "owner_playbook": _live["spec"].get("owner_playbook"), "failure_level": _live["spec"].get("failure_level"), "coverage": _live["spec"].get("coverage")}
         view["approvals"] = _live["approvals"]
         view["operator_view"] = True
         _live["view"] = publish(view)
@@ -163,3 +163,4 @@ self.onmessage = async (event) => {
     self.postMessage({ type: "error", id, message: String(error && error.message ? error.message : error) });
   }
 };
+

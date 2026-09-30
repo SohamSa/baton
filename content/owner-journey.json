@@ -61,7 +61,7 @@
       "paragraphs": [
         "A technician asks whether the trouble began today. Perhaps the power system, circuit board, cooling installation, or an earlier assembly step left a clue. The investigation expands beyond the chip’s temperature.",
         "The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.",
-        "These are conceptual investigations. Their existing rehearsals simplify the underlying mechanisms; they do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it."
+        "The Thermal Shadow now has a spatial cooling rehearsal. Other advanced investigations remain conceptual: their rehearsals simplify the underlying mechanisms and do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it."
       ],
       "question": "What can we observe today, and what records or specialist evidence are missing?",
       "route": "/passport",
@@ -235,32 +235,36 @@
       "name": "The Tired Runner",
       "chapter": "suspects",
       "scene": "Everyone remains on the track, but one runner quietly loses pace. The finish line moves further away.",
-      "clue": "Per-rank execution latency and collective waiting would reveal the slowdown.",
-      "lesson": "Performance degradation deserves investigation even without a crash.",
+      "clue": "Compare recent observed per-rank latency with its peers while heartbeats remain present.",
+      "lesson": "A slow but functioning rank reduces synchronized useful progress. A compatible replacement at a verified checkpoint boundary has recovery overhead.",
       "question": "Can we identify the slowest dependent ranks without confusing workload variation with damage?",
       "fields": [
-        "step latency (proposed)",
-        "collective wait",
-        "workload phase"
+        "step_latency_ms",
+        "step_latency_ratio",
+        "heartbeat",
+        "checkpoint state",
+        "spare compatibility"
       ],
       "route": "/silicon",
-      "coverage": "Conceptual story; existing rehearsal uses thermal degradation, not a latency-driven straggler model."
+      "coverage": "Engine rehearsal: a live rank slows the dependent job; a coordinated checkpoint restart replaces it with a compatible spare."
     },
     {
       "id": "revolving_door",
       "name": "The Revolving Door Patient",
       "chapter": "suspects",
       "scene": "A patient passes an idle check, returns to the race, and falters under load. Recovery is not the same as qualification.",
-      "clue": "Seek load-test outcomes and repeat-failure history.",
-      "lesson": "Define evidence-based return-to-service criteria.",
+      "clue": "An isolated load test emits a pass or fail with observed stress errors before the candidate can return.",
+      "lesson": "An idle reboot can hide instability. A failed candidate stays quarantined; supported recovery uses a compatible spare if available.",
       "question": "What tests and approvals are required before repaired equipment rejoins production?",
       "fields": [
-        "repair history (proposed)",
-        "qualification results (proposed)",
-        "actions"
+        "qualification_state",
+        "stress_error_count",
+        "diagnostics",
+        "checkpoint state",
+        "spare compatibility"
       ],
       "route": "/dispatch",
-      "coverage": "Conceptual qualification lesson; the current frontend canary is a demonstration timer."
+      "coverage": "Engine rehearsal: repaired equipment can fail isolated qualification; premature re-entry causes repeat failures, while the gated path uses a compatible spare."
     },
     {
       "id": "power_cliff",
@@ -330,17 +334,18 @@
       "name": "The Thermal Shadow",
       "chapter": "origins",
       "scene": "One part of the building receives less cooling. The owner needs a map, not just a list of hot machines.",
-      "clue": "Rack position, temperature patterns, and coolant measurements would establish the spatial story.",
-      "lesson": "Shared cooling geometry can matter more than an individual chip reading.",
+      "clue": "Compare upper and lower rack positions, reported coolant-flow ratios, and the temperature gradient across related machines.",
+      "lesson": "A shared restriction heats upper positions while another rack remains unaffected. Saving and pausing for simulated cooling maintenance can prevent later stalls.",
       "question": "Do our cooling maps and measurements reveal which machines share a vulnerable loop?",
       "fields": [
-        "cooling_domain_id",
+        "rack_id",
+        "rack_elevation_u",
+        "cooling_flow_ratio",
         "gpu_temp_c",
-        "rack elevation (proposed)",
-        "flow or pressure (optional)"
+        "rack_gradient_c"
       ],
       "route": "/racks",
-      "coverage": "Conceptual spatial lesson; no modeled rack gradient or valve-flush action."
+      "coverage": "Engine rehearsal: reduced upper-rack flow creates a spatial temperature gradient; a saved job pauses for simulated cooling maintenance."
     },
     {
       "id": "cold_plate_torque_fracture",

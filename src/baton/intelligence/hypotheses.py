@@ -9,6 +9,10 @@ from baton.domain.enums import CAUSE_OF_MECHANISM, Mechanism
 
 @dataclass
 class EvidenceSummary:
+    step_latency_ratio: float | None = None
+    cooling_flow_ratio: float | None = None
+    rack_gradient_c: float | None = None
+    qualification_failed: bool = False
     residual_ewma: float | None = None
     ecc_rate: float | None = None
     power_drop_correlated: bool = False
@@ -45,6 +49,12 @@ def rank_hypotheses(summary: EvidenceSummary) -> dict:
         contradictions[Mechanism.cooling_degradation.value].append("progress continued during the telemetry gap")
         missing.append("independent thermal confirmation")
 
+    if summary.step_latency_ratio is not None and summary.step_latency_ratio > 1.2:
+        scores[Mechanism.straggler.value] += 3.0
+    if summary.cooling_flow_ratio is not None and summary.cooling_flow_ratio < 0.6 and (summary.rack_gradient_c or 0) > 8:
+        scores[Mechanism.cooling_restriction.value] += 3.2
+    if summary.qualification_failed:
+        scores[Mechanism.repair_instability.value] += 3.4
     residual = summary.residual_ewma or 0.0
     if summary.temp_tracks_power and summary.util_jump and residual < 4:
         scores[Mechanism.workload_shift.value] += 2.4
@@ -112,3 +122,4 @@ def _finish(scores, summary, missing, contradictions, force_unknown: bool, reaso
         "alternatives": alternatives[:6],
         "summary": summary.to_dict(),
     }
+

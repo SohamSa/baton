@@ -6,6 +6,10 @@ from baton.features.compute import ewma, thermal_residual
 from baton.intelligence.hypotheses import EvidenceSummary, rank_hypotheses
 
 FORBIDDEN_INPUTS = {
+    "latency_multiplier",
+    "repair_unstable",
+    "relapse_left",
+    "cooling_restricted",
     "r_multiplier",
     "wear",
     "vulnerability",
@@ -43,3 +47,4 @@ def assess_series(rows: list[dict], step: int, nominal_r: float, coolant_c: floa
     ranked = rank_hypotheses(summary)
     ranked["feature_contract"] = ["residual_ewma", "freshness_steps", "support_count"]
     return ranked
+

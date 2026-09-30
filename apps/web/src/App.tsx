@@ -34,6 +34,7 @@ import { GridScorecardView } from "./GridScorecardView";
 import { ExecutiveQAView } from "./ExecutiveQAView";
 import { GlobalFleetView } from "./GlobalFleetView";
 import { GreenfieldPlannerView } from "./GreenfieldPlannerView";
+import { OwnerToolsProvider } from "./OwnerRooms";
 import { OwnerJourney, OwnerJourneyContext } from "./OwnerJourney";
 import { ExecutiveDeepDiveHeader } from "./ExecutiveDeepDiveHeader";
 
@@ -102,6 +103,7 @@ export function App() {
     setPlaying(true);
     setError("");
     setFrames([]);
+    setRun(null);
     try {
       const started = await startStory(session?.token ?? "public", id, mode, (frame) => {
         setFrames((current) => [...current, frame]);
@@ -150,7 +152,7 @@ export function App() {
   const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
   return (
-    <div className="shell">
+    <OwnerToolsProvider token={session.token}><div className="shell">
       <a className="skip" href="#content">Skip to content</a>
       <nav aria-label="Primary">
         <strong>Baton</strong>
@@ -162,7 +164,7 @@ export function App() {
         <div className="nav-section-title">Executive Suite</div>
         <NavLink to="/" end>🎬 The Owner’s Story</NavLink>
         <NavLink to="/portfolio">🌟 Executive Portfolio</NavLink>
-        <NavLink to="/fleet">🌐 Global Fleet (4 Sites)</NavLink>
+        <NavLink to="/fleet">🌐 Facility Map (4 Examples)</NavLink>
         <NavLink to="/planner">🏗️ Greenfield DC Planner</NavLink>
         <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
         <NavLink to="/grid">⚡ Utility Grid & PPA Scorecard</NavLink>
@@ -201,7 +203,7 @@ export function App() {
             🌟 Executive Portfolio
           </NavLink>
           <NavLink to="/fleet" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🌐 Global Fleet (131k)
+            🌐 Fictional Facility Map
           </NavLink>
           <NavLink to="/planner" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             🏗️ Greenfield Planner
@@ -266,12 +268,12 @@ export function App() {
           <Route path="/dispatch" element={<FieldDispatchView run={run} frames={frames} onRehearse={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} />} />
           <Route path="/stories" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />
           <Route path="/qa" element={<ExecutiveQAView onPlayRehearsal={(storyId) => { void play(storyId, "manual"); navigate("/desk"); }} playing={playing} />} />
-          <Route path="/silicon" element={<SiliconView run={run} />} />
+          <Route path="/silicon" element={<SiliconView run={run} frames={frames} />} />
           <Route path="/lineage" element={<LineageView run={run} />} />
           <Route path="/yield" element={<YieldView run={run} />} />
           <Route path="/mcm" element={<MCMView run={run} />} />
           <Route path="/boards" element={<BoardView run={run} />} />
-          <Route path="/racks" element={<RackView run={run} />} />
+          <Route path="/racks" element={<RackView run={run} frames={frames} />} />
           <Route path="/passport" element={<PassportView run={run} />} />
           <Route path="/anomalies" element={<AnomalyView run={run} />} />
           <Route path="/grid" element={<GridScorecardView run={run} />} />
@@ -299,7 +301,7 @@ export function App() {
           />
         ) : null}
       </main>
-    </div>
+    </div></OwnerToolsProvider>
   );
 }
 
@@ -620,30 +622,10 @@ function ExecutiveTourModal({ onClose, onRunDemo }: { onClose: () => void; onRun
   const [step, setStep] = useState(0);
 
   const SLIDES = [
-    {
-      badge: "THE $150M RELAY RACE",
-      title: "When 1 Chip Stops, 32,768 Accelerators Wait",
-      body: "Imagine Google pre-training Gemini across 32,768 accelerators. Because modern AI training is synchronous, all chips advance in lockstep like runners in a relay race. If just one runner stops or overheats, the baton cannot move. The entire building freezes while power, cooling, and staff costs continue to burn.",
-      metric: "At $3.50/GPU-hr, a 1-hour cluster stall burns $114,688 with zero progress.",
-    },
-    {
-      badge: "THE THREE SILENT LEAKS",
-      title: "Why Traditional Runbooks Lose Millions",
-      body: "Datacenter owners bleed money through 3 distinct operational leaks: 1. The Stall (idle time spent diagnosing a crashed node). 2. Unsaved Work (recomputing hours of progress lost between checkpoints). 3. The False Alarm (killing healthy machines during normal high-utilization compute rushes).",
-      metric: "Using the wrong remedy on the wrong leak is how careful operators lose the race anyway.",
-    },
-    {
-      badge: "PROACTIVE BATON PASS",
-      title: "Catching the Wave Before the Crash",
-      body: "Standard data centers wait for a chip to die, crashing the job. Baton tracks the thermal slope (dT/dt) early. It detects the climb, triggers a lightweight micro-checkpoint right before failure, and performs a fast-path coordinated restart.",
-      metric: "Preserves up to 90% of in-flight work and slashes downtime from 40 mins to 2 mins.",
-    },
-    {
-      badge: "MEASURABLE BOTTOM-LINE ROI",
-      title: "Cold Hard Dollars, Not Academic Jargon",
-      body: "We don't manufacture fake savings claims. Use our 1-Click Industry Benchmark Profiles (Hyperscale Frontier, Enterprise, or AI Startup) to see the exact return on investment for your cluster based on useful progress preserved.",
-      metric: "See live cost accrual, stall waste, and net preserved savings on the practice floor.",
-    },
+    { badge:"THE OWNER’S STORY", title:"Meet the runners and their shared dependencies", body:"Follow a synthetic training job through the owner’s story. Its assigned ranks must coordinate; other jobs and inventory have separate scopes.", metric:"Start with the question, then inspect the evidence." },
+    { badge:"THREE DIFFERENT CHARACTERS", title:"Slow, overheated, or not ready to return?", body:"The Tired Runner remains alive but slows progress. The Thermal Shadow restricts flow to related rack positions. The Revolving Door Patient can fail an isolated qualification test after repair.", metric:"Different evidence calls for different recovery decisions." },
+    { badge:"PRESERVE AND VERIFY", title:"A save is useful only when it can be reopened", body:"Compare strategies on the same synthetic script. A coordinated restart needs a usable checkpoint and supported capacity. A failed qualification candidate remains outside the job.", metric:"Watch the observed signals, actions, and useful progress." },
+    { badge:"YOUR REVIEW", title:"Carry the lesson to your team", body:"Supporting rooms share the story’s questions, a fictional facility plan, and blank financial assumptions. Advanced hardware investigations remain conceptual where no mechanism is implemented.", metric:"Enter your own costs and times; the result is an illustration." },
   ];
 
   const current = SLIDES[step];

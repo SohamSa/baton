@@ -195,7 +195,65 @@ class OraclePolicy:
         return _decision("none", snap["job_id"], "Oracle idle.", hypotheses)
 
 
+class StragglerPolicy:
+    name = "straggler_aware"
+    heartbeat_timeout = 2
+
+    def choose(self, snap: dict) -> dict:
+        h = snap["hypotheses"]
+        slow = [(gpu_id, row) for gpu_id, row in snap["gpus"].items() if (row.get("step_latency_ratio") or 0) > 1.2 and row.get("freshness_steps", 999) <= 5]
+        if not snap["quality_ok"]:
+            return _decision("investigate", snap["job_id"], "Fresh latency evidence is required.", h)
+        if slow and snap["spare_available"]:
+            target = max(slow, key=lambda pair: pair[1]["step_latency_ratio"])[0]
+            if snap["eligible_checkpoint_id"] and snap["checkpoint_age"] == 0:
+                return _decision("replace_rank", target, "A sustained observed latency outlier can be replaced through a coordinated restart at the verified save boundary.", h)
+            return _decision("request_checkpoint", snap["job_id"], "Preserve progress before replacing the observed slow rank.", h)
+        return ReactivePolicy().choose(snap)
+
+
+class CoolingPolicy:
+    name = "cooling_aware"
+    heartbeat_timeout = 2
+
+    def choose(self, snap: dict) -> dict:
+        h = snap["hypotheses"]
+        affected = [(gpu_id, row) for gpu_id, row in snap["gpus"].items() if row.get("cooling_flow_ratio") is not None and row["cooling_flow_ratio"] < 0.6 and (row.get("rack_gradient_c") or 0) > 8]
+        if not snap["quality_ok"]:
+            return _decision("investigate", snap["job_id"], "Fresh spatial and flow evidence is required.", h)
+        if affected:
+            if snap["eligible_checkpoint_id"] and snap["checkpoint_age"] is not None and snap["checkpoint_age"] <= 6:
+                return _decision("restore_cooling", affected[0][1]["rack_id"], "Related upper positions are hot and report reduced flow. Pause for simulated cooling maintenance after a complete save.", h)
+            return _decision("request_checkpoint", snap["job_id"], "Preserve progress before a shared cooling intervention.", h)
+        return ReactivePolicy().choose(snap)
+
+
+class QualificationPolicy:
+    name = "qualification_aware"
+    heartbeat_timeout = 2
+
+    def choose(self, snap: dict) -> dict:
+        h = snap["hypotheses"]
+        if not snap["quality_ok"]:
+            return _decision("investigate", snap["job_id"], "Qualification status is stale or incomplete.", h)
+        if not snap["heartbeat_missing_ranks"]:
+            return _decision("none", snap["job_id"], "No failed rank needs qualification.", h)
+        if not snap["eligible_checkpoint_id"]:
+            return _decision("investigate", snap["job_id"], "No usable save is available for recovery.", h)
+        for rank in snap["heartbeat_missing_ranks"]:
+            gpu_id = snap["rank_gpu"][rank]
+            state = snap["gpus"][gpu_id].get("qualification_state", "not_tested")
+            if state == "not_tested":
+                return _decision("diagnose", gpu_id, "Run an isolated synthetic load test before allowing the repaired rank back into the job.", h)
+            if state == "testing":
+                return _decision("none", snap["job_id"], "Qualification is still running; return to service remains blocked.", h)
+        return _decision("qualified_restart", snap["job_id"], "Use observed qualification results: a failed candidate stays quarantined and requires compatible spare capacity.", h)
+
+
 POLICIES = {
+    StragglerPolicy.name: StragglerPolicy(),
+    CoolingPolicy.name: CoolingPolicy(),
+    QualificationPolicy.name: QualificationPolicy(),
     ReactivePolicy.name: ReactivePolicy(),
     StaticThresholdPolicy.name: StaticThresholdPolicy(),
     AnomalyPolicy.name: AnomalyPolicy(),
@@ -206,3 +264,4 @@ POLICIES = {
 }
 
 SERVING_POLICIES = {name: policy for name, policy in POLICIES.items() if not getattr(policy, "evaluator_only", False)}
+

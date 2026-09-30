@@ -31,3 +31,15 @@ def test_readme_is_the_same_story_and_finale_has_explained_choices():
         assert len(turn['options']) >= 2
         assert sum(option['supported'] for option in turn['options']) == 1
         assert all(option['feedback'] for option in turn['options'])
+
+
+def test_public_story_explanations_and_generated_metadata_stay_in_sync():
+    from baton.simulation.stories import list_stories
+    from baton.catalog.owner_metadata import OWNER_CHARACTERS
+    source = json.loads((ROOT / 'content/owner-journey.json').read_text())
+    assert OWNER_CHARACTERS == {c['id']: c for c in source['characters']}
+    for item in list_stories():
+        c = OWNER_CHARACTERS[item['id']]
+        assert item['coverage'] == c['coverage']
+        assert item['owner_playbook']['solution'] == c['lesson']
+        assert item['owner_playbook']['problem'] == c['scene']

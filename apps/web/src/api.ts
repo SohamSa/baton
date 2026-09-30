@@ -99,10 +99,11 @@ export type LiveFrame = {
   recomputation: number;
   hypothesis: string;
   abstain: boolean;
+  diagnostics?: Diagnostic[];
   incident_scopes: string[];
   checkpoint: { state: string; progress: number; shards_present: number; shards_expected: number } | null;
   pending: boolean;
-  accelerators: { id: string; temp: number | null; functional: boolean; quarantined: boolean; spare: boolean }[];
+  accelerators: { id: string; temp: number | null; functional: boolean; quarantined: boolean; spare: boolean; step_latency_ms?: number | null; cooling_flow_ratio?: number | null; rack_elevation_u?: number; qualification_state?: string }[];
   cluster?: RunView["cluster"];
 };
 
@@ -251,13 +252,16 @@ export type Action = {
   high_impact?: boolean;
 };
 
+export type Diagnostic = { gpu_id: string; state: string; stress_error_count: number; event_step: number; availability_step: number; synthetic: boolean };
+
 export type RunView = {
+  diagnostics?: Diagnostic[];
   run_id?: string;
   synthetic: boolean;
   status: string;
   narrative: string;
   presentation?: boolean;
-  story?: { id: string; title: string; summary: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
+  story?: { id: string; title: string; summary: string; coverage?: string; owner_playbook?: OwnerPlaybook; failure_level?: FailureLevel };
   hypotheses?: { leading_mechanism: string; abstain: boolean; abstain_reason?: string; alternatives?: { mechanism: string; cause_family: string }[] };
   jobs?: Record<string, { state: string; capability: string; rank_gpu: string[]; useful_new?: number; progress?: number; dropped?: number[] }>;
   actions?: Action[];
@@ -267,7 +271,7 @@ export type RunView = {
   metrics?: { useful_new: number; recomputation: number; job_interruption_seconds: number; goodput_per_wall_second: number | null };
   comparison?: { counterfactual: boolean; branches: { policy: string; useful_new: number; interruption_seconds: number; recomputation: number }[]; delta_second_minus_first?: { useful_new: number } | null };
   timeline?: { entity_id: string; step: number; gpu_temp_c: number | null; power_draw_w: number | null }[];
-  gpus?: Record<string, { gpu_temp_c: number | null; power_draw_w: number | null; residual_ewma: number | null; family: string; phase: string; fan_speed_ratio: number | null }>;
+  gpus?: Record<string, { gpu_temp_c: number | null; power_draw_w: number | null; residual_ewma: number | null; family: string; phase: string; fan_speed_ratio: number | null; step_latency_ms?: number | null; cooling_flow_ratio?: number | null; rack_elevation_u?: number; qualification_state?: string }>;
   provenance?: { seed: number; config_hash: string };
   step_seconds?: number;
   cluster?: {
@@ -303,3 +307,4 @@ export type Monitoring = {
 };
 
 export type Adapter = { name: string; connected: boolean; implementation: string; reason?: string };
+

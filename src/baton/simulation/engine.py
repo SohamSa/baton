@@ -92,6 +92,11 @@ CLUSTER_GPUS_PER_HOST = 8
 CLUSTER_HOSTS_PER_RACK = 16
 
 OBS_KEYS = {
+    "step_latency_ms",
+    "cooling_flow_ratio",
+    "rack_id",
+    "rack_elevation_u",
+    "qualification_state",
     "observation_id",
     "entity_id",
     "entity_kind",
@@ -165,6 +170,7 @@ class ScenarioConfig(BaseModel):
     blackout: list[int] | None = None
     clock_skew_s: float = 0
     story_id: str | None = None
+    qualification_steps: int = 3
 
 
 def config_hash(cfg: ScenarioConfig) -> str:
@@ -193,6 +199,15 @@ class GPU:
     phase: str = "steady"
     vulnerability: float = 0.1
     occupied: bool = False
+    rack_id: str = "spare"
+    rack_elevation_u: float = 0
+    latency_multiplier: float = 1.0
+    cooling_flow_ratio: float = 1.0
+    cooling_restricted: bool = False
+    repair_unstable: bool = False
+    relapse_left: int = 0
+    qualification_state: str = "not_tested"
+    qualification_left: int = 0
 
 
 @dataclass
@@ -239,6 +254,8 @@ class World:
     faults: list[dict]
     admin: list[dict]
     cluster: dict
+    diagnostics: list[dict] = field(default_factory=list)
+    repaired_cooling: set[str] = field(default_factory=set)
 
 
 def build_world(cfg: ScenarioConfig) -> World:
@@ -262,6 +279,8 @@ def build_world(cfg: ScenarioConfig) -> World:
                     profile_id=profile_id,
                     profile=profile,
                     vulnerability=vulnerability,
+                    rack_id=f"rack-{rack}",
+                    rack_elevation_u=float(host * 8 + device),
                 )
                 gpu.temp_c = _equilibrium(profile, 0.55, 25.0, 1.0)
                 gpus[gpu_id] = gpu
@@ -391,6 +410,15 @@ def _apply_faults(world: World, faults: list[dict], step: int) -> None:
     for fault in faults:
         if step < fault["onset"]:
             continue
+        if fault["mechanism"] == "cooling_restriction" and fault["target_type"] == "rack":
+            if fault["target_id"] not in world.repaired_cooling:
+                members = [g for g in world.gpus.values() if g.rack_id == fault["target_id"]]
+                midpoint = max((g.rack_elevation_u for g in members), default=0) / 2
+                for gpu in members:
+                    if gpu.rack_elevation_u > midpoint:
+                        gpu.cooling_flow_ratio = max(0.2, 1 - fault["severity"])
+                        gpu.cooling_restricted = True
+            continue
         if fault["target_type"] == "power_domain" and fault["mechanism"] == "power_interruption":
             world.power_scale[fault["target_id"]] = max(0.2, 1 - fault["severity"])
             continue
@@ -402,6 +430,10 @@ def _apply_faults(world: World, faults: list[dict], step: int) -> None:
         gpu = world.gpus.get(fault["target_id"])
         if gpu is None:
             continue
+        if fault["mechanism"] == "straggler":
+            gpu.latency_multiplier = 1 + fault["severity"] * min(1.0, (step - fault["onset"] + 1) / max(1, fault["ramp"]))
+        if fault["mechanism"] == "repair_instability":
+            gpu.repair_unstable = fault["severity"] > 0.5
         if fault["mechanism"] == "cooling_degradation":
             ramp = max(fault["ramp"], 1)
             progress = min(1.0, (step - fault["onset"] + 1) / ramp)
@@ -447,9 +479,35 @@ def _physics(world: World, cfg: ScenarioConfig, step: int) -> None:
         scale = world.power_scale.get(gpu.power_domain_id, 1.0)
         power = (gpu.profile["idle_w"] + gpu.util * (gpu.profile["tdp_w"] - gpu.profile["idle_w"])) * scale
         coolant = _coolant(world, gpu)
-        resistance = gpu.profile["nominal_r"] * gpu.r_multiplier
+        resistance = gpu.profile["nominal_r"] * gpu.r_multiplier / gpu.cooling_flow_ratio
         flow = (gpu.temp_c - coolant) / resistance
         gpu.temp_c += cfg.step_seconds * (power - flow) / gpu.profile["capacity"]
+        if gpu.cooling_restricted and gpu.temp_c >= gpu.profile["shutdown_temp_c"]:
+            gpu.functional = False
+            gpu.fail_mode = "recoverable_process"
+        if gpu.relapse_left > 0 and gpu.functional and gpu_id_is_assigned(world, gpu.gpu_id):
+            gpu.relapse_left -= 1
+            if gpu.relapse_left == 0:
+                gpu.functional = False
+                gpu.fail_mode = "recoverable_process"
+                world.admin.append({"kind": "relapse", "step": step, "target": gpu.gpu_id})
+
+
+def gpu_id_is_assigned(world: World, gpu_id: str) -> bool:
+    return any(gpu_id in job.rank_gpu for job in world.jobs.values())
+
+
+def _advance_qualification(world: World, step: int) -> None:
+    for gpu in world.gpus.values():
+        if gpu.qualification_state != "testing":
+            continue
+        gpu.qualification_left -= 1
+        if gpu.qualification_left > 0:
+            continue
+        errors = 3 if gpu.repair_unstable else 0
+        gpu.qualification_state = "failed" if errors else "passed"
+        gpu.quarantined = bool(errors)
+        world.diagnostics.append({"gpu_id": gpu.gpu_id, "state": gpu.qualification_state, "stress_error_count": errors, "event_step": step, "availability_step": step, "synthetic": True})
 
 
 def _power(gpu: GPU, world: World) -> tuple[float, float]:
@@ -494,6 +552,11 @@ def _emit(world: World, cfg: ScenarioConfig, step: int) -> None:
             "event_step": step,
             "availability_step": step + cfg.collector_lag_steps,
             "schema_version": 1,
+            "step_latency_ms": None if hidden else 100.0 * gpu.latency_multiplier + 0.2 * normal(cfg.seed, "observation", gpu.gpu_id, step, "latency"),
+            "cooling_flow_ratio": None if hidden else gpu.cooling_flow_ratio,
+            "rack_id": gpu.rack_id,
+            "rack_elevation_u": gpu.rack_elevation_u,
+            "qualification_state": gpu.qualification_state,
             "gpu_temp_c": temp,
             "memory_temp_c": None if (hidden or not profile["supports_memory_temp"]) else (temp + 4 if temp is not None else None),
             "power_draw_w": None if hidden else draw + normal(cfg.seed, "observation", gpu.gpu_id, step, "power"),
@@ -620,7 +683,18 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
         maintenance = False
         if cfg.maintenance_window:
             maintenance = cfg.maintenance_window[0] <= step <= cfg.maintenance_window[1]
+        observed_latency = mean_skip_null([r.get("step_latency_ms") for r in rows[-3:]])
+        peer_latencies = [r.get("step_latency_ms") for r in _available(world, step) if r.get("entity_id") in job.rank_gpu and r.get("entity_id") != gpu_id and r.get("event_step") == step - cfg.collector_lag_steps and r.get("step_latency_ms") is not None]
+        peer_latency = sorted(peer_latencies)[len(peer_latencies) // 2] if peer_latencies else None
+        latency_ratio = observed_latency / peer_latency if observed_latency is not None and peer_latency else None
+        rack_latest = [r for r in _available(world, step) if r.get("rack_id") == gpu.rack_id and r.get("event_step") == step - cfg.collector_lag_steps and r.get("gpu_temp_c") is not None]
+        rack_temps = [r["gpu_temp_c"] for r in rack_latest]
+        rack_gradient = max(rack_temps) - min(rack_temps) if len(rack_temps) >= 2 else None
         summary = EvidenceSummary(
+            step_latency_ratio=latency_ratio,
+            cooling_flow_ratio=rows[-1].get("cooling_flow_ratio") if rows else None,
+            rack_gradient_c=rack_gradient,
+            qualification_failed=rows[-1].get("qualification_state") == "failed" if rows else False,
             residual_ewma=residual,
             ecc_rate=0,
             power_drop_correlated=low_limits >= 2,
@@ -641,6 +715,13 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
         ranked = rank_hypotheses(summary)
         summaries.append(ranked)
         gpu_rows[gpu_id] = {
+            "step_latency_ms": observed_latency,
+            "step_latency_ratio": latency_ratio,
+            "cooling_flow_ratio": rows[-1].get("cooling_flow_ratio") if rows else None,
+            "rack_gradient_c": rack_gradient,
+            "rack_id": gpu.rack_id,
+            "rack_elevation_u": gpu.rack_elevation_u,
+            "qualification_state": rows[-1].get("qualification_state") if rows else "not_tested",
             "gpu_temp_c": temps[-1] if temps else None,
             "power_draw_w": powers[-1] if powers else None,
             "power_limit_w": limits[-1] if limits else None,
@@ -692,8 +773,10 @@ def _snapshot(world: World, cfg: ScenarioConfig, step: int, job: Job, timeout: i
     reconfigure_ok = job.capability == "reconfigurable" and job.tp_size == 1
     hottest = max(residuals, key=lambda item: item[0])[1] if residuals else job.rank_gpu[0]
     return {
+        "diagnostics": [d for d in world.diagnostics if d["availability_step"] <= step],
         "t": step,
         "job_id": job.job_id,
+        "rank_gpu": list(job.rank_gpu),
         "capability": job.capability,
         "progress": job.progress,
         "high_water": job.high_water,
@@ -842,7 +925,8 @@ def _advance_job(world: World, cfg: ScenarioConfig, job: Job, step: int) -> str:
     if _job_blocked(job, world):
         job.state = "stalled"
         return "stalled"
-    credit = _credit(job)
+    active = [world.gpus[g] for i, g in enumerate(job.rank_gpu) if i not in job.dropped]
+    credit = _credit(job) / max((gpu.latency_multiplier for gpu in active), default=1.0)
     job.progress += credit
     if job.progress > job.high_water + 1e-9:
         job.useful_new += job.progress - job.high_water
@@ -888,8 +972,9 @@ def _account(world: World, cfg: ScenarioConfig, ledger: Ledger) -> None:
             mode = "unavailable" if not gpu.functional else "idle"
         if mode == "compute":
             fractions = {name: 0.0 for name in EXCLUSIVE_STATES}
-            fractions["compute"] = 0.8
-            fractions["collective_wait"] = 0.2
+            slowest = max(world.gpus[g].latency_multiplier for i, g in enumerate(job.rank_gpu) if i not in job.dropped)
+            fractions["compute"] = 0.8 * gpu.latency_multiplier / slowest
+            fractions["collective_wait"] = 1 - fractions["compute"]
         else:
             fractions = _fractions(mode)
         ledger.add_resource(gpu_id, fractions)
@@ -1002,6 +1087,45 @@ def _apply_effect(world, cfg, job, decision, step) -> tuple[bool, str]:
             return False, "checkpoint_already_in_flight"
         _start_checkpoint(world, cfg, job, step, "policy_request")
         return True, "checkpoint_started"
+    if action == "diagnose":
+        gpu = world.gpus.get(decision["scope"])
+        if gpu is None or gpu.functional or gpu.qualification_state != "not_tested":
+            return False, "qualification_preconditions_changed"
+        gpu.qualification_state = "testing"
+        gpu.qualification_left = cfg.qualification_steps
+        gpu.quarantined = True
+        return True, "isolated_load_test_started"
+    if action == "qualified_restart":
+        return _restart(world, cfg, job, step, use_spare=True, require_qualification=True)
+    if action == "replace_rank":
+        target = world.gpus.get(decision["scope"])
+        if target is None or target.gpu_id not in job.rank_gpu or job.checkpoint_left > 0:
+            return False, "replacement_preconditions_changed"
+        chosen, _ = select_restore_checkpoint([cp for cp in world.checkpoints if cp["job_id"] == job.job_id], topology_signature=job.topology_signature, allow_reshard=False, storage_reachable=True, decision_step=step)
+        spare = next((g for g in world.gpus.values() if g.spare and not g.occupied and g.profile_id == target.profile_id), None)
+        if chosen is None or chosen["progress"] != job.progress or spare is None:
+            return False, "replacement_requires_current_verified_checkpoint_and_spare"
+        rank = job.rank_gpu.index(target.gpu_id)
+        target.quarantined = True
+        spare.occupied = True
+        job.rank_gpu[rank] = spare.gpu_id
+        job.placement_version += 1
+        job.topology_signature = signature(job.rank_gpu, job.dropped)
+        job.attempt += 1
+        job.recovery_left = cfg.warmup_steps
+        return True, "slow_rank_replaced_by_coordinated_checkpoint_restart"
+    if action == "restore_cooling":
+        if job.checkpoint_left > 0 or not any(cp["job_id"] == job.job_id and cp["state"] == "verified_usable" for cp in world.checkpoints):
+            return False, "cooling_maintenance_requires_completed_save"
+        members = [g for g in world.gpus.values() if g.rack_id == decision["scope"]]
+        if not members:
+            return False, "unknown_cooling_scope"
+        world.repaired_cooling.add(decision["scope"])
+        for gpu in members:
+            gpu.cooling_flow_ratio = 1.0
+            gpu.cooling_restricted = False
+        job.recovery_left = cfg.warmup_steps
+        return True, "simulated_cooling_maintenance_with_job_pause"
     if action == "quarantine":
         gpu = world.gpus[decision["scope"]]
         gpu.quarantined = True
@@ -1025,7 +1149,7 @@ def _apply_effect(world, cfg, job, decision, step) -> tuple[bool, str]:
     return False, "unsupported_action"
 
 
-def _restart(world, cfg, job, step, use_spare: bool) -> tuple[bool, str]:
+def _restart(world, cfg, job, step, use_spare: bool, require_qualification: bool = False) -> tuple[bool, str]:
     allow = job.capability == "reconfigurable"
     chosen, rejected = select_restore_checkpoint(
         [cp for cp in world.checkpoints if cp["job_id"] == job.job_id],
@@ -1042,7 +1166,11 @@ def _restart(world, cfg, job, step, use_spare: bool) -> tuple[bool, str]:
         gpu = world.gpus[gpu_id]
         if gpu.functional:
             continue
-        if gpu.fail_mode == "recoverable_process":
+        if require_qualification and gpu.qualification_state not in {"passed", "failed"}:
+            return False, "qualification_not_complete"
+        if gpu.fail_mode == "recoverable_process" and not (require_qualification and gpu.qualification_state == "failed"):
+            gpu.quarantined = False
+            gpu.relapse_left = 3 if gpu.repair_unstable else 0
             gpu.functional = True
             gpu.fail_mode = None
         elif use_spare:
@@ -1094,6 +1222,7 @@ class ScenarioRun:
         cfg = self.cfg
         _apply_faults(world, self.faults, step)
         _physics(world, cfg, step)
+        _advance_qualification(world, step)
         _emit(world, cfg, step)
         for job in world.jobs.values():
             _advance_job(world, cfg, job, step)
@@ -1149,13 +1278,18 @@ class ScenarioRun:
             else {"state": latest["state"], "progress": latest["progress"], "shards_present": latest["shards_present"], "shards_expected": latest["shards_expected"]},
             "pending": self.pending is not None,
             "cluster": {key: value for key, value in world.cluster.items() if key != "placed_ids"},
+            "diagnostics": [d for d in world.diagnostics if d["availability_step"] <= max(self.index - 1, 0)],
             "accelerators": [
                 {
                     "id": gpu.gpu_id,
-                    "temp": None if gpu.spare else round(gpu.temp_c, 2),
+                    "temp": ((self.snap or {}).get("gpus", {}).get(gpu.gpu_id) or {}).get("gpu_temp_c"),
                     "functional": gpu.functional,
                     "quarantined": gpu.quarantined,
                     "spare": gpu.spare,
+                    "step_latency_ms": ((self.snap or {}).get("gpus", {}).get(gpu.gpu_id) or {}).get("step_latency_ms"),
+                    "cooling_flow_ratio": ((self.snap or {}).get("gpus", {}).get(gpu.gpu_id) or {}).get("cooling_flow_ratio"),
+                    "rack_elevation_u": gpu.rack_elevation_u,
+                    "qualification_state": gpu.qualification_state,
                 }
                 for gpu in world.gpus.values()
             ],
@@ -1177,6 +1311,7 @@ class ScenarioRun:
         "status": self.status,
         "step_seconds": cfg.step_seconds,
         "pending_action": self.pending,
+        "diagnostics": world.diagnostics,
         "actions": world.actions,
         "checkpoints": world.checkpoints,
         "incidents": world.incidents,
@@ -1244,6 +1379,11 @@ def _timeline(world: World) -> list[dict]:
                 "entity_id": row["entity_id"],
                 "step": row["event_step"],
                 "availability_step": row["availability_step"],
+                "step_latency_ms": row.get("step_latency_ms"),
+                "cooling_flow_ratio": row.get("cooling_flow_ratio"),
+                "rack_id": row.get("rack_id"),
+                "rack_elevation_u": row.get("rack_elevation_u"),
+                "qualification_state": row.get("qualification_state"),
                 "gpu_temp_c": row.get("gpu_temp_c"),
                 "power_draw_w": row.get("power_draw_w"),
                 "sm_util_ratio": row.get("sm_util_ratio"),
@@ -1349,3 +1489,4 @@ def compare_policies(cfg: ScenarioConfig, names: list[str]) -> dict:
         "delta_second_minus_first": deltas,
         "label": "paired synthetic worlds; not a real-fleet result",
     }
+
