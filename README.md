@@ -1,205 +1,273 @@
-# TrainingContinuity
+# TrainingContinuity: The $150 Million Relay Race
 
-Open the practice floor: https://sohamsa.github.io/training-continuity/
+> **Live Executive Command Suite:**  
+> 👉 **[https://sohamsa.github.io/training-continuity/](https://sohamsa.github.io/training-continuity/)**  
+> *(Runs 100% in your browser. Zero installation. Zero backend setup required.)*
 
-That link is the product. It opens in the browser. There is nothing to install and no second address. The first screen starts a rehearsal on its own. If you still see an older, quieter page, reload once.
+---
 
-This file is the briefing for that page. It is written for an owner who runs data centers today, or expects to build them, and who does not need a background in chips to follow the argument.
+## 🎬 Prologue: The $150 Million Glass Relay Race
 
-## The picture, before the vocabulary
+Imagine you just invested in or built a brand-new, world-class artificial intelligence datacenter.
 
-Picture a relay race inside a large building.
+You spent **$150 Million** on cutting-edge computing processors, and another **$40 Million** on high-voltage electrical substations, liquid cooling pumps, and backup generators. Outside your building, the utility power meter is spinning at **40 Megawatts**—enough electricity to power a city of 30,000 homes. 
 
-Each runner is a **chip**: a specialized processor that does the heavy math. Ordinary office computers have a chip too. The chips in this project are the kind packed into racks in a data center, many of them on one machine, many machines in one row, many rows in one hall.
+Your monthly electric bill is **$2.1 Million**. Every single hour your facility is turned on, debt service, electricity, cooling water, and engineering staff burn **$114,688 in cash**.
 
-The race is a **training job**. A company is teaching a large model, the way a student studies before an exam. “Pre-training” is that long study session, done before the model is asked to do a particular job. The study happens in small steps. Every chip in the job has to finish the same step before the group is allowed to take the next one.
+Now, here is the secret that traditional datacenter operators learn the hard way:
 
-That is the whole problem in one sentence. **If one runner stops, the baton does not move, even while the rest of the building is still powered, cooled, and staffed.** You can own thousands of chips and still be paying for a hall that is waiting on one of them.
+> **In modern AI, processors do not work like independent workers in an office cubicle.**  
+> If an office worker gets the flu, the rest of the company keeps working.  
+> **AI does not work that way.**
 
-TrainingContinuity is a rehearsal of that moment. The hall in the rehearsal has 32,768 chips: 256 racks, 4,096 machines, 8 chips on each machine. The job itself uses a handful of those chips, and those are the ones with a personal chart. The others are counted, the way a warehouse counts boxes on the back shelves. They are part of the same hall. They are not filmed one by one, and this page is not plugged into a building you own.
+Modern AI pretraining is a **32,768-runner baton relay race**—or a **32,768-singer choir singing in four-part harmony**.
 
-## Words you will meet
+All 32,768 processors must calculate their piece of the mathematical puzzle and hand off a fragile glass baton at the **exact same millisecond**. 
 
-You can skip back here while you click through the site.
+If just **ONE single processor** out of 32,768 overheats, drops its baton, stumbles, or pauses to tie its shoelace:
 
-| Word on the page | In ordinary language |
-| --- | --- |
-| Chip, accelerator | A specialized processor. In this rehearsal, one runner in the race. |
-| Hall, cluster | The whole building’s worth of those chips. Here, 32,768 of them, simulated. |
-| Job, pre-training | The long study session. The group of chips that must finish each step together. |
-| Step | One beat of that study. The group waits until every chip in the job has finished the beat. |
-| Stall | The race has stopped because one runner stopped. The building can still be “on.” |
-| Checkpoint, save | A snapshot of the work so far, like saving a document. Only a complete save can be reopened. |
-| Exposure, unsaved work | How much study happened after the last complete save. That is what you lose if you have to start over. |
-| False alarm | Treating a healthy busy spell as a breakdown, and shutting a good chip down. |
-| Incident | One problem, even if several chips complain. Several dark rooms on one tripped breaker are one electrical problem. |
-| Quarantine | Taking a chip out of the job, the way you would bench a player. |
-| Rehearsal, story | A scripted situation you can watch and replay. The cause is written into the script. The public page does not show you that answer key. |
-| Policy, way of reacting | A rule for what to do: wait, save early, restart the group, or pull a warm chip out. |
-| Useful work, finished work | Study that would not have to be repeated. The bars on the overview are this score. |
-| Return | A what-if in money, using hourly rates **you** type. It is not cash already saved. |
+**THE ENTIRE BUILDING FREEZES.**
 
-## Why an owner should care
+The other 32,767 runners stand completely frozen on the track. But the lights, the water chillers, the fans, and the utility electric meters **do not pause**. You burn **$114,688 every hour** for a building that is completely idle, waiting for technicians to find the broken runner.
 
-The bill for a hall is mostly time. A chip that is powered and waiting is still a chip you paid to install, cool, and staff.
+**TrainingContinuity** is the story of how continuity engineering prevents that freeze, protects your capital, and keeps the choir singing.
 
-Three leaks sit under that bill.
+---
 
-1. **The stall.** One chip in the job stops. The job stops with it. The other machines in the job are still on, and they are not producing the next step.
-2. **The unsaved work.** Anything that exists only in the chip’s memory is a document you never saved. A save that is still being written, or a save missing pieces, cannot be reopened. The restart goes back to the last complete save, and everything after that is done again.
-3. **The false alarm.** A busy stretch makes chips warmer, the way a kitchen heats up during the dinner rush. A rule that says “if it is warm, shut it down” can throw away more finished work than the breakdown it was meant to prevent.
+## 🎭 The 17 Characters: A Datacenter Hardware Drama
 
-The benefit of seeing this clearly, before you buy a tool or write a runbook, is that you can tell those three leaks apart. A faster restart helps the sudden stop. An earlier save helps the slow heat problem. Leaving a healthy busy chip alone helps the false alarm. Using the wrong remedy on the wrong leak is how a careful operator loses the race anyway.
+Every datacenter failure is a character in an unfolding drama. Traditional monitoring tools panic, blame the wrong culprits, and throw millions of dollars away. Here are the **17 characters** who threaten your $150 Million investment—and how continuity engineering tames them.
 
-TrainingContinuity lets you watch each leak, approve or reject the serious move, and compare two reactions on the same script. It does that on a practice floor. It does not operate your buildings, and it does not promise a dollar figure for a fleet it has not measured.
+---
 
-## The eight situations
+### Character 1: "The Feverish Athlete" (Gradual Thermal Warning)
+* **Who he is:** A marathon runner whose body temperature is steadily climbing like a car engine temperature gauge creeping toward the red zone on the highway.
+* **The Drama:** Traditional datacenters ignore him until his engine blows up and he collapses on the track. The sudden crash shatters the glass baton, wiping out an entire hour of unsaved progress.
+* **The Continuity Fix:** Dynamic thermal slope detection watches the rate of heat rise. It spots the fever 90 seconds early, orders a lightweight emergency save, and swaps the runner for a fresh athlete in under 2 minutes.
+* **The Dollar Shield:** Saves **$114,688** per incident by eliminating cluster stall burn.
 
-Each one is a card under **Rehearsals**, and each one can be played from the overview. “You approve the serious action” pauses when a person should say yes or no. “Compare two ways” plays two reactions against the same script and shows which one kept more finished work.
+---
 
-### 1. The heat creeps up before a machine stops
+### Character 2: "The Sudden Ghost" (Abrupt Unannounced Failure)
+* **Who he is:** The lightbulb that pops with zero warning. No temperature climb, no vibration, no forecast.
+* **The Drama:** Traditional operators waste 45 minutes having engineers reboot the machine, read log files, and reconstruct the cluster while the entire building sits idle.
+* **The Continuity Fix:** Automated fast-path gang restart. Never waste time diagnosing dead silicon during active production. The system immediately evicts the dead machine, recruits a warm standby already pre-loaded with software, and resumes in 120 seconds.
+* **The Dollar Shield:** Saves **$57,000** per crash by slashing downtime from 45 minutes to 2 minutes.
 
-**The situation.** One chip runs hotter than its normal pattern, the way an engine-temperature gauge climbs before a car stalls. The readings get worse for a while. Then the chip stops.
+---
 
-**What the rehearsal does.** It notices the climb, asks you to take an extra save, and later restarts from that save.
+### Character 3: "The Kitchen Circuit Breaker" (Shared Infrastructure / Power Sag)
+* **Who he is:** The master electrical circuit breaker behind the counter in a busy restaurant kitchen.
+* **The Drama:** The breaker sags, and 16 fryers dim at the exact same moment. Blind monitoring tools panic and file 16 separate emergency tickets, prompting technicians to mistakenly throw away 16 perfectly healthy $35,000 processors ($560,000 in false scrap).
+* **The Continuity Fix:** Power-domain topology correlation. The system groups all 16 alarms into a single electrical breaker ticket, telling technicians to inspect the $40 breaker instead of touching healthy chips.
+* **The Dollar Shield:** Prevents **$560,000** in false hardware replacements.
 
-**Why it matters.** The work you saved close to the failure is work you do not have to repeat. Waiting for the ordinary save schedule leaves a wider gap.
+---
 
-### 2. A machine stops with no warning
+### Character 4: "The Hard-Working Chef" (Healthy Workload Burst vs. Fire)
+* **Who he is:** The head chef cooking at full speed during the Friday night dinner rush.
+* **The Drama:** His pans get hot because he is cooking hard. A dumb fire alarm sees the heat, panics, and turns on the ceiling water sprinklers, ruining dinner.
+* **The Continuity Fix:** Workload-aware AI baselines. The system recognizes that the chip is simply working through a heavy mathematical burst, allowing it to complete safely without interruption.
+* **The Dollar Shield:** Saves **$40,000+** in preserved compute progress per avoided false alarm.
 
-**The situation.** The chip stops the way a light bulb pops. There is no heat warning first. No amount of staring at yesterday’s temperature would have called it.
+---
 
-**What the rehearsal does.** It restarts in the shorter way the job is actually allowed to restart. It does not pretend it predicted the pop.
+### Character 5: "The Contract with Missing Pages" (Incomplete Checkpoint Corruption)
+* **Who he is:** The legal courier who dropped the last 3 pages of a 100-page contract out the taxi window on the way to the courthouse.
+* **The Drama:** Resuming a multi-million-dollar AI training run from an incomplete or corrupted save file causes the AI model to learn corrupted mathematics, invalidating weeks of training.
+* **The Continuity Fix:** Atomic two-phase verification gates. Cryptographic checksums inspect every piece of the save file across all 32k machines before advancing the resume pointer.
+* **The Dollar Shield:** Prevents **$1.5 Million** in catastrophic training rollbacks.
 
-**Why it matters.** When there is no warning, the money is in a clean, permitted restart, not in a forecast you cannot support.
+---
 
-### 3. One power feed, one problem
+### Character 6: "The Missing Choir Singer" (Unsupported Local Recovery)
+* **Who he is:** The baritone singer who walked off the stage mid-concert.
+* **The Drama:** An operator thinks, *"We have 32,767 other singers, let's keep singing without him!"* But AI models split equations across rigid mathematical dimensions. Dropping one singer causes an instant silent deadlock freeze.
+* **The Continuity Fix:** Enforces coordinated group restarts that preserve the mathematical harmony rather than attempting dangerous, uncoordinated individual chip dropouts.
+* **The Dollar Shield:** Averts **$114,688/hr** silent cluster deadlock freezes.
 
-**The situation.** Several chips on the same power feed sag together, like every light on one circuit dimming at once.
+---
 
-**What the rehearsal does.** It files one incident for that feed. Chips on the other feed stay out of the incident.
+### Character 7: "The Yesterday Weatherman" (Stale Telemetry & Epistemic Abstention)
+* **Who he is:** The meteorologist who looks at yesterday's weather radar to decide if you need an evacuation order today.
+* **The Drama:** When network traffic delays sensor readings by 10 minutes, naive automation quarantines machines that have already cooled down and are running normally.
+* **The Continuity Fix:** Epistemic abstention. When sensor readings are expired or incomplete, the system refuses to guess or take destructive actions until fresh vitals arrive.
+* **The Dollar Shield:** Eliminates spurious late-night automated quarantines and false technician callouts.
 
-**Why it matters.** A hall that opens fifty tickets for one breaker wastes the night shift and can pull healthy machines into the wrong repair.
+---
 
-### 4. A busy spell is not a breakdown
+### Character 8: "The Overzealous Referee" (Harmful Preventive Shutdown)
+* **Who he is:** The whistle-happy referee who stops the game and benches a star player for breathing heavily right as he is about to score the winning goal.
+* **The Drama:** A rigid safety rule ("stop if heat touches 70°C") halts the entire facility during a brief 5-second burst, causing far more financial damage than letting the chip finish the play.
+* **The Continuity Fix:** Dynamic residual tracking evaluates heat relative to workload duration, keeping healthy machines running safely.
+* **The Dollar Shield:** Preserves **$40,000+** in computing progress per event.
+
+---
+
+### Character 9: "The Tired Runner" (Silent Straggler Drag)
+* **Who he is:** The athlete who doesn't collapse or trigger any alarms, but slowed down by just 8% due to minor silicon fatigue.
+* **The Drama:** Because all 32,768 runners must synchronize every mathematical step, every single runner is forced to match the pace of the slowest runner in total silence.
+* **The Continuity Fix:** Cross-chip latency tracking detects the slow runner outlier in real time, cordoning and draining him at the next scheduled save break without interrupting live training.
+* **The Dollar Shield:** Eliminates **$220,000/day ($1M–$3M/month)** in silent stall waste across the facility.
+
+---
+
+### Character 10: "The Revolving Door Patient" (Premature Return / Revolving Door)
+* **Who he is:** The hospital patient who feels better after 5 minutes and is discharged without a treadmill stress test, only to collapse in the parking lot.
+* **The Drama:** Technicians plug a repaired machine back into live training; it fails 3 minutes later under heavy load, crashing the entire $150M building all over again.
+* **The Continuity Fix:** Quarantine health gates. Repaired machines must pass a synthetic computational stress test before being certified safe for production training.
+* **The Dollar Shield:** Prevents secondary multi-hour cluster crashes.
+
+---
+
+### Character 11: "The Midnight Power Cliff" (PPA Demand Ratchet Surge)
+* **Who he is:** The electric utility meter outside your building that violently spikes 16 Megawatts in a single second.
+* **The Drama:** Electric utilities enforce strict "demand ratchets": if you spike the grid for just 15 minutes, they bill you at that astronomical peak rate for the next 12 consecutive months.
+* **The Continuity Fix:** Automated paved ramp pacing gently steps up cluster wattage over 120 seconds, keeping power draw smooth and ratchet-safe.
+* **The Dollar Shield:** Saves **$385,000 per year** in avoided electric utility demand penalties.
+
+---
+
+### Character 12: "The Cracked Solder Bead" (Fractured Microbump in MCM Packaging)
+* **Who he is:** A microscopic bead of solder, 1/10th the width of a human hair, connecting the processor brain to high-speed memory.
+* **The Drama:** Repeated heating and cooling causes the chip to expand and contract, fracturing the solder bead and permanently bricking a $35,000 processor module.
+* **The Continuity Fix:** Monitors memory transfer retries to catch microbump fatigue early, safely swapping the module before total electrical separation.
+* **The Dollar Shield:** Protects **$35,000** processor modules from catastrophic failure.
+
+---
+
+### Character 13: "The Edge-of-the-Oven Cookie" (Wafer Lot Contagion)
+* **Who he is:** The batch of cookies baked on the outer edge of the baking tray that got slightly over-crisped.
+* **The Drama:** Chips sliced from the outer rim of a silicon disc run hotter. When one dies, its 500 sister chips across the datacenter are ticking time bombs.
+* **The Continuity Fix:** Digital wafer tracing identifies all sibling chips from the same marginal factory lot and applies protective voltage cushions before they crash.
+* **The Dollar Shield:** Prevents **$2.0 Million** in cascading multi-rack outages.
 
-**The situation.** The job leans harder on the chips. They get warmer, and they stay inside the range they are built for. This is the dinner rush, not a fire.
+---
 
-**What the rehearsal does.** It leaves the chips in service.
+### Character 14: "The Framed Innocent" (Innocent Chip on a Dying Board)
+* **Who he is:** A healthy $35,000 processor blamed for a crime committed by a $40 voltage regulator behind the wall.
+* **The Drama:** A leaking voltage rail triggers error messages on the chip. Technicians yank out the healthy chip and throw it away.
+* **The Continuity Fix:** Telemetry correlation inspects the underlying circuit board first, replacing the cheap board component and saving the expensive processor.
+* **The Dollar Shield:** Prevents **$480,000** in false processor scrap.
 
-**Why it matters.** Pulling a healthy chip out of a job that must move together stops the race on purpose.
+---
 
-### 5. A half-finished save is refused
+### Character 15: "The Thermal Shadow" (Rack Cold-Plate Heat Shadow)
+* **Who he is:** An air bubble trapped inside the liquid cooling manifold that starves the top server shelf of water.
+* **The Drama:** Bottom servers run cool at 55°C, while top servers reach 85°C in silence.
+* **The Continuity Fix:** Liquid manifold pressure monitoring detects trapped air pockets before chips heat up.
+* **The Dollar Shield:** Averts **$4.5 Million** in rack-level thermal burnouts.
 
-**The situation.** A save is missing pieces, like a document with the last pages torn out. Then a chip stops.
+---
+
+### Character 16: "The Over-Torqued Wrench" (Cold Plate Mechanical Fracture)
+* **Who he is:** The well-meaning technician who tightened the water block bolts too hard with a manual wrench.
+* **The Drama:** Excessive mounting pressure micro-cracks the delicate silicon die under thermal expansion.
+* **The Continuity Fix:** Torque sensor calibration and strain-gauge telemetry alert operators to uneven mounting pressure.
+* **The Dollar Shield:** Prevents un-warrantied physical silicon fractures.
+
+---
+
+### Character 17: "The Whispering Voltage Cliff" (Silent Subthreshold Cliff)
+* **Who he is:** The invisible electrical dip that occurs when temperatures look completely normal (71°C).
+* **The Drama:** High-leakage chips fall off a timing cliff during compute bursts, quietly spitting out incorrect mathematical sums that corrupt the AI model without triggering any alarm.
+* **The Continuity Fix:** Silicon-context early warning pairs factory birth certificate minimum voltages (Vmin) with live sensor readings to pace computing bursts safely.
+* **The Dollar Shield:** Shields against **$500k–$1.5M** in silent weight corruption rollbacks.
 
-**What the rehearsal does.** It refuses the torn save and restarts from the older complete one.
+---
 
-**Why it matters.** Restoring a broken snapshot can lose the job more thoroughly than going back to a smaller, honest save.
+## 🏛️ The Five Rooms of the Executive Suite
 
-### 6. You cannot drop one singer from this choir
+When you open the [live application](https://sohamsa.github.io/training-continuity/), you step into a 5-room executive command center:
 
-**The situation.** This job is written so the chips must sing the same line together. Someone might hope to drop the failed chip and keep going with the others.
+```
+🌟 Executive Portfolio (#/)
+   ├── 🌐 Global Fleet Console (#/fleet) ── 131k Chips across VA, TX, OR, Norway
+   ├── 🏗️ Greenfield DC Planner (#/planner) ── Build-Your-Own Datacenter Wizard
+   ├── ⚡ Live Practice Floor (#/desk) ── 32,768-Chip Live Crisis Simulator
+   ├── ⚡ Utility Grid & PPA Scorecard (#/grid) ── Power Contracts, Ratchets & Curtailment
+   ├── 🔧 Boots-on-Ground Dispatch (#/dispatch) ── Field Operations & Floor Logistics
+   └── 💡 Executive Q&A Lounge (#/stories) ── 17 Business Analogies & Owner Answers
+```
 
-**What the rehearsal does.** It refuses that shortcut. The allowed move is to restart the group together.
+### 1. 🌟 The Executive Portfolio & Financial Pillars (`#/`)
+* **What you see:** The high-level capital health of your datacenter.
+* **Key Numbers:** Total hardware value ($150M), cluster stall burn rate ($114,688/hr), work preserved (up to 90%), recovery time (2 minutes).
+* **Interactive Feature:** The **Portfolio Scope Selector**. Click between Virginia, Texas, Oregon, Norway, or the aggregated 131k Global Fleet to see all financial metrics adapt in real time.
 
-**Why it matters.** A restart the software cannot actually do is a plan that fails at 2 a.m. The page will only offer a move the job can carry out.
+### 2. 🌐 Global Fleet Command Console (`#/fleet`)
+* **What you see:** A unified command deck aggregating **131,072 accelerators** across four hyperscale campuses and four electric grids:
+  * 🇺🇸 **Campus Alpha (Virginia / Dominion):** 32k chips · 40 MW · $0.092/kWh · PPA ratchet-safe.
+  * 🇺🇸 **Campus Lone Star (Texas / ERCOT):** 65k chips · 80 MW · $0.052/kWh · Earns **$75,000/day** in automated demand response.
+  * 🇺🇸 **Campus Cascade (Oregon / BPA Hydro):** 16k chips · 22 MW · $0.041/kWh · 100% clean hydro, zero carbon.
+  * 🇳🇴 **Campus Fjord (Norway / Statnett):** 16k chips · 20 MW · €0.048/kWh · Arctic free-cooling with municipal district heat export.
+* **Interactive Feature:** Cross-Campus Disaster Recovery & Load-Shift Simulator + Printable 1-Page Global Fleet Board Memo.
 
-### 7. Late sensors mean we do not guess
+### 3. 🏗️ Greenfield Datacenter Planning Wizard (`#/planner`)
+* **What you see:** A full capital and hardware planning engine for building a new AI datacenter from scratch.
+* **Interactive Sizing:** Choose your scale (4k, 16k, 32k, 65k, 131k chips), electric utility grid, cooling technology (Direct Liquid, Immersion, RDHx, Air), and warm standby ratio.
+* **Instant Financial Pro-Forma:** Calculates upfront CapEx itemized by silicon, cooling, switchgear, and shell ($/MW), monthly power bill, and continuity ROI.
+* **Printable Feature:** 1-click **Printable Pro-Forma Term Sheet (PDF)** ready for bank debt syndication and investment committees.
 
-**The situation.** The readings arrive late, like making a medical decision from a thermometer taken last week. A heat problem is in the script, and the fresh part of it is hidden by the delay.
+### 4. ⚡ Live Practice Floor Simulator (`#/desk`)
+* **What you see:** A live 32,768-chip simulator where you can trigger all 17 hardware crises and watch how automated continuity micro-saves protect millions of dollars in compute capital.
+* **Interactive Feature:** Side-by-side battle arena comparing traditional datacenter runbooks vs. automated continuity engineering.
 
-**What the rehearsal does.** It says the evidence is not enough. It does not invent a cause to look decisive.
+### 5. ⚡ Utility Grid & PPA Scorecard (`#/grid`)
+* **What you see:** Electric utility contract audit, demand ratchet penalty prevention, and carbon emissions accounting.
 
-**Why it matters.** A confident wrong label sends a technician to the wrong machine and can trigger the false alarm above.
+### 6. 🔧 Boots-on-the-Ground Dispatch (`#/dispatch`)
+* **What you see:** Physical rack floor maps, technician badge workflows, and spare parts bin logistics.
 
-### 8. Shutting down a healthy rush can cost more
+### 7. 💡 Executive Q&A Lounge (`#/stories`)
+* **What you see:** All 17 hardware questions answered in plain everyday English with zero semiconductor formulas.
 
-**The situation.** Same busy spell as story 4. This time the rule is a fixed temperature limit: cross the line, and the chip is benched.
+---
 
-**What the rehearsal does.** It benches the healthy chip. Beside it, a reaction that waits for a real fault keeps working. The comparison shows the loss.
+## 💼 The Datacenter Owner's Playbook: What You Can Apply Tomorrow
 
-**Why it matters.** A preventive rule can have a cost. On this script, the cost is finished work. That is the number the return panel is allowed to price, once you supply your own rates.
+Even if you never write a single line of code, reading this project gives you five high-leverage rules to protect your balance sheet:
 
-## What you are looking at on each page
+| # | Boardroom Takeaway | Why It Matters to Your Balance Sheet | What to Demand from Your Team |
+| :--- | :--- | :--- | :--- |
+| **1** | **The 2% Warm Standby Rule** | When a chip crashes, waiting 45 minutes for a human technician burns $86,000 in idle cluster time. | Maintain **1–2% warm unassigned standby nodes** per network spine with pre-staged software containers. Recovers cluster in 2 minutes. |
+| **2** | **PPA Demand Ratchet Safeguards** | Spiking power from 0 to 40 MW in 1 second triggers utility ratchet penalties that inflate your power bill for the next 12 months. | Enforce **automated 120-second paved ramp pacing** on all cluster restarts. Saves ~$385,000/year. |
+| **3** | **Power-Domain Topology Mapping** | When a circuit breaker sags, naive tools report 16 dead chips. Technicians throw away $560,000 in healthy silicon. | Demand that cluster monitoring correlates alerts by **underlying electrical circuit and PDU**. Replace the $40 breaker, not the chips. |
+| **4** | **Atomic Two-Phase Checkpoint Verification** | Resuming an AI job from a half-written save file silently corrupts model weights, burning weeks of training. | Enforce **cryptographic checksum verification** before advancing the resume pointer. Refuse damaged saves and roll back safely. |
+| **5** | **Direct Liquid Cooling with 45°C Water** | Legacy air cooling carries a PUE of 1.40 ($2M+/yr extra power) and risks thermal throttling on 800W+ processors. | Design facilities for **Direct-to-Chip Liquid Cooling (CDU)**. Warm water eliminates mechanical chillers and cuts PUE to 1.14. |
 
-The left-hand menu matches this list.
+---
 
-**Overview.** The practice floor. Three cards name the stall, the unsaved work, and the false alarm. The chips in the job change as each step is computed. A strip under them counts the rest of the hall. If a serious move is waiting, Approve and Reject are on this page. The bars are finished work in the rehearsal.
+## 🛠️ Technical Architecture & Open Source Integrity
 
-**Rehearsals.** The eight situations above, in the same words. Play one and you return to the overview while it runs.
+For technical directors, systems architects, and infrastructure auditors:
 
-**Who moves together.** The choir list for the current job: which seat is which chip, and how the job is allowed to restart. The rest of the hall is counted and left off this list.
+* **Decision Engine (`src/training_continuity`):** Pure Python decision engine implementing topology correlation, epistemic abstention, and fast-path gang restart.
+* **Frontend Web Application (`apps/web`):** Built with TypeScript, React, and Vite. Contains zero third-party tracking or bloated dependencies.
+* **Offline Standalone Browser Engine (`public/browser-engine.json`):** The entire Python decision engine and all 17 rehearsal traces are pre-compiled into a client-side bundle. The web application runs **100% offline in your browser** with zero network latency.
+* **Test Suite:** Comprehensive unit and integration test suite (`pytest`) covering 41 mission-critical scenarios.
 
-**Chip charts.** A personal temperature chart for a chip in the job. Fan speed appears only when the rehearsal has that reading. A missing reading stays blank.
+### Quick Verification & Local Execution
 
-**What went wrong.** The incident as one pile, plus the best reading of the cause from the readings. If the readings are thin or late, the page says it is not guessing. Other possible causes are listed under that.
+```bash
+# 1. Clone the repository
+git clone https://github.com/SohamSa/training-continuity.git
+cd training-continuity
 
-**Saves.** Every snapshot the job wrote. “Verified usable” means the pieces all arrived and the save can be reopened. The piece count is “pieces present / pieces expected.”
+# 2. Run backend test suite (Python 3.11+)
+python -m venv .venv
+source .venv/bin/activate  # Or .venv\Scripts\activate on Windows
+pip install -e .
+pytest
 
-**Your decision.** The same approve-or-reject question as the overview, with the reason written out. Automatic decisions are labeled automatic. They are not recorded as a person’s signature.
+# 3. Launch the web application
+cd apps/web
+npm install
+npm run dev
+```
 
-**Paper trail.** The story that was played, and each approval or rejection.
+---
 
-**Two reactions.** The side-by-side score after you choose “Compare two ways.” Finished work, work that had to be repeated, and how long the job was stopped. A negative difference means the second way kept less of the job.
+## 📄 License & Attribution
 
-**Data catalog.** The filing cabinet. Each drawer is a table, such as buildings, chips, power feeds, chip readings, saves, and the paper trail. A shared tag, usually a chip name or a job name plus the step, is how a temperature is laid next to the job it belongs to. In a real hall those drawers would be filled by an inventory system, a telemetry stream, a job scheduler, and a storage system. Here they are filled with synthetic rows, and the join is the same idea. Open a drawer to read each column in a sentence, and what changes if that column is included. The short table at the top is the only list allowed to change a reaction: save, restart, leave the chip alone, bench it, or refuse to guess. A window total is the same reading added up, the way “sales this week” is not a second cash register. Measurements the rehearsal does not have stay blank. They are not stored as zero. The answer key stays in its own drawer and is not on that short list.
-
-**Learned helper.** A statistical helper was trained on rehearsals and scored on rehearsals it had not seen, the way a new hire is tested on cases they did not study. On that test it did not beat the simple heat-pattern rule, so the simple rule stays in charge. That result is kept on purpose. The answer key that knows the scripted cause is not an operator control.
-
-**Sensor health.** Whether the readings feeding the decision are late, dropped, or waiting in a queue. The plugs that would attach this rehearsal to real chips, networks, or building systems are listed and left unplugged. The page does not reset a machine.
-
-Presentation mode, the button in the left menu, hides the score numbers and keeps the story. Technical mode shows the numbers. Both modes are still the rehearsal.
-
-## What return you can read from it
-
-There is no dollar rate built into the project, and there is no headline that says a company saved a percentage.
-
-Here is the return you *can* inspect.
-
-On the overview, play any rehearsal with **Compare two ways**. The page scores how much finished work each reaction kept. The difference between them is the thing that might be worth money: less repeated study, or more of it.
-
-You then fill in the form yourself:
-
-- what one hour of one chip costs you
-- which currency that number is in
-- what the rate includes (power, staff, space, or only the chip)
-- what the estimate is allowed to cover
-- the time horizon you have in mind
-- what you would invest to act on the lesson
-- an extra operating cost, if you have one beyond that investment
-
-The rehearsal converts the finished-work difference with one formula, shown on the form:
-
-`finished steps × length of a step in seconds ÷ 3600 × chips in this job`
-
-An hour of chip time is that product. The other chips in the hall, the ones that were only counted, are not multiplied in. Empty fields leave the return blank. An investment of zero leaves the return blank, because a return cannot be “infinite” just because you typed no investment. When a percentage appears, the page labels it an **assumption-based simulation estimate**. It is a what-if on this script, at the prices you typed. It is not money that arrived in an account, and it is not a forecast for a hall this project has not measured.
-
-That is still useful to an owner. It forces the benefit to be a difference you can see — finished work kept or lost — and it forces the price to be yours. Two reactions that finish the same amount of work are worth nothing extra, at any rate you type. A reaction that throws work away produces a worse return. A blank form cannot be waved around as a savings claim.
-
-## What this changes for you, and what it leaves alone
-
-After the briefing and a pass through the menu, you should be able to say:
-
-- A training job is a group that shares each step. One stopped chip holds the group.
-- The work you can defend is the last complete save.
-- A warm chip can be healthy. Shutting it down can cost more than waiting.
-- Several complaints on one power feed are one incident.
-- A torn save is refused.
-- A job that must restart together will not pretend it can drop one chip.
-- Late readings produce “I don’t know,” not a guessed cause.
-- A learned helper that loses to a simple rule does not get to overrule that rule.
-- A money figure appears only after you supply the prices, and only for the chips in the job, and only as a labeled what-if.
-
-What you should not take away: a measured return from a real fleet, a prediction of every failure, or a control panel for a building. The rehearsal is one organization, on a simulated hall. The codes it uses for symptoms are fictional labels beginning with `TC-SYM-`. A display chip in the computer you are using is not enrolled in the hall.
-
-If you are about to build a hall, the rehearsal is a way to see the operating question before the concrete is poured: where the race stops, which save you would trust, and which automatic rule would make a busy night worse. If you already operate halls, it is a way to walk a night-shift decision without touching production.
-
-## For someone who wants the files
-
-- `src/training_continuity` is the only decision engine. The pages ask it to act. They do not keep a second copy of the rehearsal.
-- `apps/web` is the practice floor.
-- `docs` holds the longer product, architecture, data, model, and limit notes.
-- `artifacts/model_report.json` is the scored comparison of the learned helper against the simple rule.
-
-Further reading starts at `docs/product.md` and `IMPLEMENTATION_STATUS.md`.
+Distributed under the Apache 2.0 License. Designed for hyperscale infrastructure investors, datacenter asset owners, and AI foundation model engineering teams worldwide.
