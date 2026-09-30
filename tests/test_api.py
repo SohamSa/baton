@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 import uuid
 
 from fastapi.testclient import TestClient
@@ -119,7 +120,8 @@ def test_background_story_returns_before_the_engine_finishes(tmp_path, monkeypat
     assert queued.json()["status"] == "queued"
     gate.set()
     body = queued.json()
-    for _ in range(40):
+    for _ in range(60):
+        time.sleep(0.05)
         body = client.get(f"/api/v1/runs/{started.json()['run_id']}", headers=headers).json()
         if body["status"] != "queued":
             break
