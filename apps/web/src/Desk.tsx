@@ -1,6 +1,16 @@
 import { FormEvent, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { EconomicsEstimate, FailureLevel, LiveFrame, OwnerPlaybook, RunView, StoryItem, estimateEconomics, stories } from "./api";
+import {
+  EconomicsEstimate,
+  FailureLevel,
+  LiveFrame,
+  OwnerPlaybook,
+  RunView,
+  StoryItem,
+  estimateEconomics,
+  stories,
+} from "./api";
+import { EXECUTIVE_QUESTIONS } from "./ExecutivePortfolioView";
 
 const REASONS: Record<string, string> = {
   currency_disabled_until_complete_accounting_configuration: "Currency stays off until the accounting configuration is complete.",
@@ -47,6 +57,21 @@ const INDUSTRY_PRESETS = [
   },
 ];
 
+const HIGHLIGHTED_SCENARIOS = [
+  "gradual_warning",
+  "abrupt_failure",
+  "power_cliff",
+  "wafer_lot_contagion",
+  "fractured_microbump",
+  "innocent_chip_dying_board",
+  "rack_thermal_shadow",
+  "cold_plate_torque_fracture",
+  "silent_subthreshold_cliff",
+  "silent_straggler",
+  "revolving_door",
+  "healthy_workload_shift",
+];
+
 export function Desk({
   token,
   run,
@@ -66,187 +91,485 @@ export function Desk({
   const [mode, setMode] = useState<"manual" | "automated">("manual");
   const [selected, setSelected] = useState("gradual_warning");
   const [activeRate, setActiveRate] = useState<number>(3.5);
+  const [activeTab, setActiveTab] = useState<"arena" | "battle" | "roi" | "cascade">("arena");
+
   const live = frames[frames.length - 1];
   const cluster = live?.cluster ?? run?.cluster;
   const placed = (live?.accelerators ?? []).filter((item) => !item.spare);
   const maxUseful = Math.max(...frames.map((frame) => frame.useful_new), 1);
   const currentStory = items.find((item) => item.id === selected) ?? (run?.story as StoryItem | undefined);
+  const currentQA = EXECUTIVE_QUESTIONS.find((q) => q.id === selected);
 
   useEffect(() => {
-    stories(token).then((payload) => setItems(payload.stories)).catch(() => setItems([]));
+    stories(token)
+      .then((payload) => setItems(payload.stories))
+      .catch(() => setItems([]));
   }, [token]);
+
+  const hasPendingAction = Boolean(run?.pending_action && !playing);
+  const hasBattleResults = Boolean(run?.comparison?.branches && run.comparison.branches.length > 0);
 
   return (
     <section className="desk">
+      {/* Top Header & Navigation Bar */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.5rem" }}>
-        <p className="eyebrow" style={{ margin: 0 }}>Practice Floor: 32,768-Accelerator Rehearsal Simulator</p>
-        <NavLink to="/" className="hero-secondary-btn" style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}>
+        <p className="eyebrow" style={{ margin: 0 }}>
+          🎮 Practice Floor: 32,768-Chip Datacenter Crisis Simulator
+        </p>
+        <NavLink
+          to="/"
+          className="hero-secondary-btn"
+          style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}
+        >
           🌟 Switch to Executive Portfolio & Q&A
         </NavLink>
       </div>
+
       <h1>When one machine stops, the whole job waits.</h1>
       <p className="lede">
-        Think of a relay race where the baton cannot move until every runner finishes the same leg. The runners here are accelerator chips, the special processors that do the heavy math inside a data center. If one runner stops, the race stops, even while the rest of the building is still powered and cooled.
-        This page rehearses that moment in a simulated hall of {cluster ? cluster.accelerator_count.toLocaleString() : "tens of thousands of"} chips. It is a practice floor. It is not connected to a building you own.
+        Think of a relay race where 32,768 athletes must hand off a fragile glass baton at the exact same millisecond. If one runner trips, overheats, or drops the baton, every single runner in the building must freeze in place while the electric meter burns $114,688 every hour.
+        Test and try permutations of real-world datacenter crises below to practice how automated micro-saves protect millions of dollars in compute capital.
       </p>
 
-      {/* 1. LIVE CAPITAL BURN TICKER */}
-      <BurnTicker
-        live={live}
-        run={run}
-        frames={frames}
-        activeRate={activeRate}
-      />
-
-      <div className="problems">
-        <article>
-          <h2>The stall</h2>
-          <p>One chip in the job stops, and the job stops with it. The other machines are still on. They are not producing the next piece of work. You are paying for a building that is waiting.</p>
-        </article>
-        <article>
-          <h2>The unsaved work</h2>
-          <p>Work that lives only in the machine’s memory is like a document you never saved. A half-finished save cannot be reopened. The only progress you can defend is the last complete save, and the gap since that save is what you stand to lose.</p>
-        </article>
-        <article>
-          <h2>The false alarm</h2>
-          <p>A busy spell makes chips warmer, the way a kitchen heats up during the dinner rush. A rule that shuts a machine down just because it is warm can throw away more work than the breakdown it was meant to prevent.</p>
-        </article>
+      {/* 4 Inner Tabs for Layman Business Owners */}
+      <div className="desk-tabs-bar" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "arena"}
+          className={`desk-tab-btn ${activeTab === "arena" ? "active" : ""}`}
+          onClick={() => setActiveTab("arena")}
+        >
+          🎮 Silicon Arena & Console
+          {hasPendingAction ? <span className="desk-tab-badge">🚨 Action Waiting!</span> : null}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "battle"}
+          className={`desk-tab-btn ${activeTab === "battle" ? "active" : ""}`}
+          onClick={() => setActiveTab("battle")}
+        >
+          ⚔️ Head-to-Head Battle (Two Strategies)
+          {hasBattleResults ? <span className="desk-tab-badge" style={{ background: "rgba(52, 211, 153, 0.2)", color: "#34d399", borderColor: "#34d399" }}>✓ Duel Ready</span> : null}
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "roi"}
+          className={`desk-tab-btn ${activeTab === "roi" ? "active" : ""}`}
+          onClick={() => setActiveTab("roi")}
+        >
+          📊 Financial ROI & Leak Calculator
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "cascade"}
+          className={`desk-tab-btn ${activeTab === "cascade" ? "active" : ""}`}
+          onClick={() => setActiveTab("cascade")}
+        >
+          🛡️ Hardware Diagnostics & Cascade
+        </button>
       </div>
 
-      {/* 2. PHYSICAL FAILURE CASCADE */}
-      <PhysicalCascade live={live} cluster={cluster} failureLevel={currentStory?.failure_level} />
+      {/* TAB 1: SILICON ARENA & MISSION CONTROL CONSOLE */}
+      {activeTab === "arena" ? (
+        <div>
+          {/* 1. LIVE CAPITAL BURN TICKER */}
+          <BurnTicker live={live} run={run} frames={frames} activeRate={activeRate} />
 
-      {/* 3. OWNER'S SOLUTION PLAYBOOK */}
-      <PlaybookCard playbook={currentStory?.owner_playbook} failureLevel={currentStory?.failure_level} />
+          {/* 2. THE 32,768-RUNNER RELAY TRACK */}
+          <RelayTrack live={live} frames={frames} />
 
-      {/* FAILURE HIERARCHY SUMMARY BANNER */}
-      {currentStory?.failure_level ? (
-        <div className="failure-hierarchy-banner">
-          <div className="fh-badge-row">
-            <span className="fh-pill tier-pill">
-              Hierarchy Tier: <strong>{currentStory.failure_level.tier}</strong>
-            </span>
-            <span className="fh-pill comp-pill">
-              Root Cause: <strong>{currentStory.failure_level.component}</strong>
-            </span>
+          {/* 3. TACTICAL COMMANDER'S DECISION ALERT (High-priority interactive pop when pending) */}
+          {hasPendingAction && run?.pending_action ? (
+            <CommanderAlert
+              action={run.pending_action}
+              onApprove={() => onDecide("approve")}
+              onReject={() => onDecide("reject")}
+              playing={playing}
+            />
+          ) : null}
+
+          {/* 4. MISSION CONTROL GAME DECK: SCENARIO LAB */}
+          <div className="game-control-deck">
+            <div>
+              <span className="deck-section-title">
+                <span>🎯 Step 1: Select Crisis Scenario to Test & Simulate</span>
+              </span>
+              <p className="muted" style={{ margin: "0.35rem 0 0.85rem", fontSize: "0.85rem" }}>
+                Click any crisis card below to test how different physical failures impact your 32,768-chip datacenter cluster:
+              </p>
+              <div className="incident-cards-grid">
+                {HIGHLIGHTED_SCENARIOS.map((scenarioId) => {
+                  const qa = EXECUTIVE_QUESTIONS.find((q) => q.id === scenarioId);
+                  const story = items.find((i) => i.id === scenarioId);
+                  const isSelected = selected === scenarioId;
+                  const icon = qa?.analogyIcon ?? "⚡";
+                  const title = story?.title ?? qa?.analogyTitle ?? scenarioId;
+                  const analogySnippet = qa?.analogyTitle ?? story?.summary ?? "";
+
+                  return (
+                    <button
+                      key={scenarioId}
+                      type="button"
+                      className={`incident-card-btn ${isSelected ? "active" : ""}`}
+                      onClick={() => setSelected(scenarioId)}
+                      disabled={playing}
+                    >
+                      <div className="incident-card-top">
+                        <span className="incident-icon">{icon}</span>
+                        <span className="incident-title">{title}</span>
+                      </div>
+                      <span className="incident-analogy-snippet">{analogySnippet}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Dropdown for All 17+ Scenarios */}
+              <div style={{ marginTop: "0.85rem", display: "flex", alignItems: "center", gap: "0.75rem", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "0.82rem", color: "var(--muted)", fontWeight: 600 }}>
+                  Or browse full catalog:
+                </span>
+                <select
+                  value={selected}
+                  onChange={(e) => setSelected(e.target.value)}
+                  disabled={playing || items.length === 0}
+                  style={{ maxWidth: "340px", fontSize: "0.85rem", padding: "0.35rem 0.6rem" }}
+                >
+                  {items.length === 0 ? <option value="gradual_warning">Loading stories from engine…</option> : null}
+                  {items.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Selected Story Analogy & Summary Box */}
+            <div className="selected-story-detail">
+              <div className="selected-story-detail-head">
+                <strong style={{ fontSize: "0.95rem" }}>
+                  {currentStory?.title ?? currentQA?.question ?? selected}
+                </strong>
+                {currentQA ? (
+                  <span className="selected-story-analogy-badge">
+                    {currentQA.analogyIcon} {currentQA.categoryLabel}: {currentQA.analogyTitle}
+                  </span>
+                ) : null}
+              </div>
+              <p style={{ margin: 0, fontSize: "0.88rem", lineHeight: 1.45, color: "var(--text)" }}>
+                {currentQA?.plainEnglish ?? currentStory?.summary ?? "Select a crisis scenario to observe its ripple effect across the cluster."}
+              </p>
+              {currentQA?.financialImpact ? (
+                <div style={{ fontSize: "0.82rem", color: "var(--ok)", fontWeight: 600 }}>
+                  💰 Financial Exposure: {currentQA.financialImpact}
+                </div>
+              ) : null}
+            </div>
+
+            {/* Strategy Selection & Launch Button Row */}
+            <div className="deck-row-controls">
+              <div>
+                <span className="deck-section-title" style={{ marginBottom: "0.4rem" }}>
+                  <span>🛡️ Step 2: Choose Defense Strategy</span>
+                </span>
+                <div className="game-mode-toggle">
+                  <button
+                    type="button"
+                    className={`mode-toggle-btn ${mode === "manual" ? "active" : ""}`}
+                    onClick={() => setMode("manual")}
+                    disabled={playing}
+                  >
+                    🎮 Interactive Command (You Decide)
+                  </button>
+                  <button
+                    type="button"
+                    className={`mode-toggle-btn ${mode === "automated" ? "active" : ""}`}
+                    onClick={() => setMode("automated")}
+                    disabled={playing}
+                  >
+                    ⚔️ Head-to-Head Duel (Compare Two Ways)
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  className="game-launch-btn"
+                  onClick={() => onPlay(selected, mode)}
+                  disabled={playing}
+                >
+                  {playing ? (
+                    <>
+                      <span className="arena-led" style={{ width: 10, height: 10, background: "#38bdf8" }} />
+                      Simulating 32,768-Chip Hall...
+                    </>
+                  ) : (
+                    <>
+                      <span>🚀</span> SIMULATE SCENARIO NOW
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
-          <div className="fh-grid">
-            <div className="fh-col">
-              <span className="fh-label">💥 Physical Blast Radius:</span>
-              <p className="fh-text">{currentStory.failure_level.blast_radius}</p>
+
+          {/* 5. LIVING SILICON ARENA FLOOR */}
+          <div className="hall-wrap">
+            <div className="arena-section-head">
+              <div>
+                <h2>Living Silicon Arena: Placed Accelerators in This Rehearsal Job</h2>
+                <p>
+                  {live
+                    ? `Step ${live.step + 1} of ${live.steps}. Cluster Job Status: ${live.job_state.toUpperCase()}. ${
+                        live.abstain
+                          ? "Telemetry readings are insufficient to name a root cause (Abstaining safely)."
+                          : `Active Diagnostics: ${live.hypothesis.replaceAll("_", " ")}.`
+                      }`
+                    : "Rehearsal standing by. Launch a scenario above to watch chips compute."}
+                </p>
+              </div>
             </div>
-            <div className="fh-col">
-              <span className="fh-label">🛡️ Redundancy Architecture:</span>
-              <p className="fh-text">{currentStory.failure_level.redundancy_strategy}</p>
+
+            <div className="arena-floor" role="img" aria-label="Placed accelerators in the simulated job">
+              {placed.length === 0 ? (
+                <p className="muted" style={{ gridColumn: "1 / -1", padding: "1.2rem", textAlign: "center" }}>
+                  Waiting for the first rehearsal step. Click <strong>"🚀 SIMULATE SCENARIO NOW"</strong> above to begin!
+                </p>
+              ) : (
+                placed.map((gpu) => {
+                  const gpuTone = tone(gpu);
+                  return (
+                    <div key={gpu.id} className={`arena-cell ${gpuTone}`} title={cellTitle(gpu)}>
+                      <div className="arena-cell-top">
+                        <span>Chip {gpu.id.split("-").slice(-1)[0]}</span>
+                        <span className="arena-led" />
+                      </div>
+                      <div className="arena-cell-temp">
+                        {gpu.temp === null ? "—" : `${gpu.temp.toFixed(0)}°C`}
+                      </div>
+                      <div className="arena-cell-status">
+                        {!gpu.functional
+                          ? "OFFLINE"
+                          : gpu.quarantined
+                          ? "QUARANTINED"
+                          : gpu.temp !== null && gpu.temp >= 75
+                          ? "CRITICAL HOT"
+                          : gpu.temp !== null && gpu.temp >= 62
+                          ? "WARMING"
+                          : "COMPUTING"}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
+
+            <div className="quiescent">
+              <span />
+              <p>
+                {cluster
+                  ? `${cluster.quiescent_accelerator_count.toLocaleString()} other chips in the same hall — ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} machines, ${cluster.fabric_domain_count} network spines. Counted like inventory boxes in a massive warehouse; all waiting in lockstep for this job's sync barrier.`
+                  : "The rest of the 32,768-chip hall is counted in lockstep. This rehearsal demonstrates the exact blast radius when one chip encounters trouble."}
+              </p>
+            </div>
+
+            <div className="spark" aria-label="Useful progress across the steps computed so far">
+              {frames.slice(-48).map((frame, index) => (
+                <i
+                  key={`${frame.step}-${index}`}
+                  style={{ height: `${Math.max(8, (frame.useful_new / maxUseful) * 100)}%` }}
+                  title={`Step ${frame.step + 1}: useful ${frame.useful_new.toFixed(2)}`}
+                />
+              ))}
+            </div>
+            <p className="muted" style={{ fontSize: "0.8rem", marginTop: "0.4rem" }}>
+              Progress bars show actual useful math completed so far. In a traditional uncoordinated crash, these bars wipe out back to the last complete save.
+            </p>
+          </div>
+
+          {/* 6. CURRENT JOB STATE CARDS */}
+          <div className="grid" style={{ marginTop: "1rem" }}>
+            <article className="card">
+              <h2>Current Job Activity</h2>
+              <p style={{ fontWeight: 700, fontSize: "1.1rem", textTransform: "capitalize", margin: "0.2rem 0" }}>
+                {live?.job_state ?? Object.values(run?.jobs ?? {})[0]?.state ?? "Waiting to start"}
+              </p>
+              {live ? (
+                <p className="muted">
+                  Useful new progress: <strong>{live.useful_new.toFixed(2)} steps</strong>. Forced recomputation: <strong>{live.recomputation.toFixed(2)} steps</strong>.
+                </p>
+              ) : (
+                <p className="muted">Launch a scenario above to observe live job computation.</p>
+              )}
+            </article>
+            <article className="card">
+              <h2>Last Verified Save</h2>
+              <p style={{ margin: "0.2rem 0" }}>{checkpointLine(live, run)}</p>
+              <p className="muted">
+                A half-finished save cannot be reopened. The only defended progress is the last verified save file.
+              </p>
+            </article>
+            <article className="card">
+              <h2>Simulation Command State</h2>
+              <p style={{ fontWeight: 700, margin: "0.2rem 0" }}>
+                {run?.pending_action
+                  ? "🚨 Awaiting Commander Decision (See Alert Box Above)"
+                  : run?.status ?? (playing ? "Stepping Rehearsal..." : "Rehearsal Ready")}
+              </p>
+              {run?.narrative ? <p className="muted">{run.narrative}</p> : null}
+            </article>
+          </div>
+
+          {/* 7. COLLAPSIBLE ACTIVITY TAPE */}
+          <details style={{ marginTop: "1.25rem", border: "1px solid var(--line)", borderRadius: "10px", padding: "0.75rem 1rem", background: "rgba(255,255,255,0.02)" }}>
+            <summary style={{ cursor: "pointer", fontWeight: 700, fontSize: "0.88rem", color: "var(--muted)" }}>
+              📋 Rehearsal Telemetry Tape Log ({frames.length} steps recorded)
+            </summary>
+            <ol className="tape" style={{ marginTop: "0.75rem" }}>
+              {frames.slice(-8).map((frame, index) => (
+                <li key={`${frame.step}-${index}`}>
+                  Step {frame.step + 1}: {frame.job_state}, {frame.abstain ? "abstaining (insufficient fresh telemetry)" : frame.hypothesis.replaceAll("_", " ")}
+                  {frame.pending ? " — [Paused for Commander Decision]" : ""}
+                  {frame.incident_scopes.length ? ` · Incident Scopes: ${frame.incident_scopes.join(", ")}` : ""}
+                </li>
+              ))}
+            </ol>
+          </details>
+        </div>
+      ) : null}
+
+      {/* TAB 2: HEAD-TO-HEAD BATTLE (TWO WAYS, ONE BREAKDOWN) */}
+      {activeTab === "battle" ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div className="panel" style={{ borderLeft: "4px solid #38bdf8" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.75rem" }}>
+              <div>
+                <span className="eyebrow">⚔️ Strategy Duel Benchmark</span>
+                <h2>The Tale of Two Managers: Smart Micro-Save vs Traditional Crash</h2>
+              </div>
+              <button
+                type="button"
+                className="game-launch-btn"
+                onClick={() => onPlay(run?.story?.id ?? selected, "automated")}
+                disabled={playing}
+                style={{ fontSize: "0.88rem", padding: "0.6rem 1.2rem" }}
+              >
+                {playing ? "⏳ Simulating Duel..." : "⚔️ Run Strategy Duel Now"}
+              </button>
+            </div>
+            <p className="muted" style={{ lineHeight: 1.5, fontSize: "0.92rem", margin: 0 }}>
+              <strong>The Business Owner's Dilemma:</strong> What happens when two different datacenter operations teams face the exact same physical crisis?
+              <strong> Strategy A (Smart Preemptive Micro-Save)</strong> detects the anomaly early and saves work in 12 seconds before cordoning the node.
+              <strong> Strategy B (Traditional Dumb Runbook)</strong> waits until the chip crashes, stalling all 32,768 accelerators and losing up to 45 minutes of training math.
+            </p>
+          </div>
+
+          <Comparison
+            run={run}
+            onCompare={() => onPlay(run?.story?.id ?? selected, "automated")}
+            playing={playing}
+          />
+
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem", background: "var(--panel)", borderRadius: "10px", border: "1px solid var(--line)" }}>
+            <div>
+              <strong>Ready to price the difference in dollars?</strong>
+              <p className="muted" style={{ margin: 0, fontSize: "0.85rem" }}>
+                Switch to the Financial ROI Calculator tab to see the exact cash return using industry presets.
+              </p>
+            </div>
+            <button
+              type="button"
+              className="hero-secondary-btn"
+              onClick={() => setActiveTab("roi")}
+              style={{ fontSize: "0.85rem", padding: "0.45rem 0.95rem" }}
+            >
+              ➔ Go to Financial ROI Tab
+            </button>
           </div>
         </div>
       ) : null}
 
-      <div className="panel controls">
-        <div className="row">
-          <label>
-            Story
-            <select value={selected} onChange={(event) => setSelected(event.target.value)} disabled={playing || items.length === 0}>
-              {items.length === 0 ? <option value="gradual_warning">Loading stories from the engine…</option> : null}
-              {items.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
-            </select>
-          </label>
-          <label>
-            How the decision is taken
-            <select value={mode} onChange={(event) => setMode(event.target.value as "manual" | "automated")}>
-              <option value="manual">You approve the serious action</option>
-              <option value="automated">Compare two ways on the same breakdown</option>
-            </select>
-          </label>
-          <button type="button" onClick={() => onPlay(selected, mode)} disabled={playing}>
-            {playing ? "The hall is moving" : "Run this story live"}
-          </button>
-        </div>
-        <p className="muted">{items.find((item) => item.id === selected)?.summary ?? "The opening rehearsal is a chip that runs hotter and hotter before it stops, like an engine gauge climbing. The run will pause and ask you whether to save the work."}</p>
-      </div>
-
-      <div className="hall-wrap">
-        <div className="hall-head">
-          <h2>Chips in this job</h2>
-          <p>
-            {live ? `Step ${live.step + 1} of ${live.steps}. The job is ${live.job_state}. ${live.abstain ? "The readings are not enough to name a cause." : `Best reading: ${live.hypothesis.replaceAll("_", " ")}.`}` : "The opening rehearsal is about to start. The chips update as each step is computed."}
-          </p>
-        </div>
-        <div className="floor" role="img" aria-label="Placed accelerators in the simulated job">
-          {placed.length === 0 ? <p className="muted">Waiting for the first step.</p> : placed.map((gpu) => (
-            <div key={gpu.id} className={`cell ${tone(gpu)}`} title={cellTitle(gpu)}>
-              <span>{gpu.id.split("-").slice(-1)[0]}</span>
-              <strong>{gpu.temp === null ? "—" : `${gpu.temp.toFixed(0)}°`}</strong>
-            </div>
-          ))}
-        </div>
-        <div className="quiescent">
-          <span />
-          <p>
-            {cluster
-              ? `${cluster.quiescent_accelerator_count.toLocaleString()} other chips in the same hall — ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} machines, ${cluster.fabric_domain_count} network neighborhoods. Counted, the way a warehouse counts boxes on the back shelves. They are not drawn one by one, and this page is not plugged into them.`
-              : "The rest of the hall is counted, the way a warehouse counts boxes on the back shelves. This page is not plugged into those machines."}
-          </p>
-        </div>
-        <div className="spark" aria-label="Useful progress across the steps computed so far">
-          {frames.slice(-48).map((frame, index) => (
-            <i key={`${frame.step}-${index}`} style={{ height: `${Math.max(8, (frame.useful_new / maxUseful) * 100)}%` }} title={`Step ${frame.step + 1}: useful ${frame.useful_new.toFixed(2)}`} />
-          ))}
-        </div>
-        <p className="muted">The bars are finished work in this practice job. They are a rehearsal score, not a reading from a building you operate, and they are not money saved.</p>
-      </div>
-
-      <div className="grid">
-        <article className="card">
-          <h2>What the job is doing</h2>
-          <p>{live?.job_state ?? Object.values(run?.jobs ?? {})[0]?.state ?? "Waiting to start"}</p>
-          {live ? <p className="muted">Useful new progress {live.useful_new.toFixed(2)} steps. Recomputation {live.recomputation.toFixed(2)}.</p> : null}
-        </article>
-        <article className="card">
-          <h2>Last verified save</h2>
-          <p>{checkpointLine(live, run)}</p>
-        </article>
-        <article className="card">
-          <h2>Decision</h2>
-          <p>{run?.pending_action ? "A person has to answer before the action is applied." : run?.status ?? (playing ? "Stepping" : "Not started")}</p>
-          {run?.narrative ? <p className="muted">{run.narrative}</p> : null}
-        </article>
-      </div>
-
-      {run?.pending_action && !playing ? (
-        <div className="panel decision">
-          <h2>This action is waiting for you</h2>
-          <p>{run.pending_action.action_type?.replaceAll("_", " ")} · {run.pending_action.scope}</p>
-          <p>{run.pending_action.reason}</p>
-          <div className="row">
-            <button type="button" onClick={() => onDecide("approve")} disabled={playing}>Approve and continue the run</button>
-            <button type="button" onClick={() => onDecide("reject")} disabled={playing}>Reject and continue the run</button>
+      {/* TAB 3: FINANCIAL ROI & LEAK CALCULATOR */}
+      {activeTab === "roi" ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div className="panel" style={{ borderLeft: "4px solid #34d399" }}>
+            <span className="eyebrow">📊 Financial Return On Investment</span>
+            <h2>Convert Saved Compute Steps into Cold, Hard Dollars</h2>
+            <p className="muted" style={{ lineHeight: 1.5, margin: "0.3rem 0 0" }}>
+              Every second a 32,768-GPU cluster sits idle at a sync barrier costs real cash in utility power, cooling towers, and facility depreciation ($114,688/hr). Calculate your net financial savings below using 1-click industry benchmark profiles or your own facility rates.
+            </p>
           </div>
-          <p className="muted">Approve, and the rehearsal continues from this moment. Reject, and the move is recorded as not taken. Neither button plugs into a machine in a real building.</p>
+
+          <ReturnPanel
+            token={token}
+            run={run}
+            live={live}
+            activeRate={activeRate}
+            onRateChange={setActiveRate}
+          />
         </div>
       ) : null}
 
-      <Comparison run={run} onCompare={() => onPlay(run?.story?.id ?? selected, "automated")} playing={playing} />
-      
-      {/* 4. ROI CALCULATOR WITH INDUSTRY PRESETS & 3-LEAK BREAKDOWN */}
-      <ReturnPanel
-        token={token}
-        run={run}
-        live={live}
-        activeRate={activeRate}
-        onRateChange={setActiveRate}
-      />
+      {/* TAB 4: HARDWARE DIAGNOSTICS & CASCADE */}
+      {activeTab === "cascade" ? (
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div className="panel" style={{ borderLeft: "4px solid #e2c07a" }}>
+            <span className="eyebrow">🛡️ Hardware Diagnostics & Root-Cause Blast Radius</span>
+            <h2>Physical Cascade: How a Component Glitch Halts All 32,768 Chips</h2>
+            <p className="muted" style={{ lineHeight: 1.5, margin: "0.3rem 0 0" }}>
+              In distributed AI training, every single chip must finish calculating each step before any chip can advance. Watch below how a tiny microscopic flaw—whether a cracked micro-wire or pinched coolant hose—ripples outward through the host, rack, and facility grid.
+            </p>
+          </div>
 
-      <ol className="tape">
-        {frames.slice(-6).map((frame, index) => (
-          <li key={`${frame.step}-${index}`}>
-            Step {frame.step + 1}: {frame.job_state}, {frame.abstain ? "abstaining" : frame.hypothesis.replaceAll("_", " ")}
-            {frame.pending ? ", waiting for a person" : ""}
-            {frame.incident_scopes.length ? `, incident scope ${frame.incident_scopes.join(", ")}` : ""}
-          </li>
-        ))}
-      </ol>
+          <PhysicalCascade live={live} cluster={cluster} failureLevel={currentStory?.failure_level} />
+
+          {currentStory?.failure_level ? (
+            <div className="failure-hierarchy-banner">
+              <div className="fh-badge-row">
+                <span className="fh-pill tier-pill">
+                  Hierarchy Tier: <strong>{currentStory.failure_level.tier}</strong>
+                </span>
+                <span className="fh-pill comp-pill">
+                  Root Cause: <strong>{currentStory.failure_level.component}</strong>
+                </span>
+              </div>
+              <div className="fh-grid">
+                <div className="fh-col">
+                  <span className="fh-label">💥 Physical Blast Radius:</span>
+                  <p className="fh-text">{currentStory.failure_level.blast_radius}</p>
+                </div>
+                <div className="fh-col">
+                  <span className="fh-label">🛡️ Redundancy Architecture:</span>
+                  <p className="fh-text">{currentStory.failure_level.redundancy_strategy}</p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          <PlaybookCard playbook={currentStory?.owner_playbook} failureLevel={currentStory?.failure_level} />
+
+          <div className="problems" style={{ marginTop: "0.5rem" }}>
+            <article>
+              <h2>The Stall Leak</h2>
+              <p>One chip in the job stops, and the whole 32k cluster stops with it. The electric and cooling meters keep spinning while the building waits.</p>
+            </article>
+            <article>
+              <h2>The Unsaved Work Leak</h2>
+              <p>Math that lives only in chip memory is lost the moment a node crashes. The gap since the last complete save is what you must pay to recompute.</p>
+            </article>
+            <article>
+              <h2>The False Alarm Leak</h2>
+              <p>Chips naturally run hotter during heavy math bursts. Naive static rules that shut down healthy working machines waste more money than the crashes they prevent.</p>
+            </article>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }
@@ -304,7 +627,115 @@ function BurnTicker({
 }
 
 /* =========================================================================
-   2. PHYSICAL FAILURE CASCADE COMPONENT
+   2. RELAY TRACK COMPONENT
+   ========================================================================= */
+function RelayTrack({ live, frames }: { live: LiveFrame | undefined; frames: LiveFrame[] }) {
+  const isStalled = live?.job_state === "stalled";
+  const currentStep = live ? live.step + 1 : 0;
+  const totalSteps = live?.steps ?? frames[0]?.steps ?? 10;
+  const progressPct = Math.min(100, Math.round((currentStep / Math.max(totalSteps, 1)) * 100));
+
+  return (
+    <div className="relay-track-container">
+      <div className="relay-track-header">
+        <div>
+          <strong style={{ fontSize: "0.95rem" }}>
+            {isStalled
+              ? "🚨 BATON DROPPED: Sync barrier stalled — all 32,768 chips waiting"
+              : live
+              ? "🏃 32,768 Runners Synchronized · Advancing with Baton"
+              : "🏃 32,768-Chip Relay Race Standing By"}
+          </strong>
+          <span style={{ marginLeft: "0.6rem", color: "var(--muted)", fontSize: "0.82rem" }}>
+            {live ? `Step ${currentStep} of ${totalSteps} (${progressPct}%)` : "Ready to launch"}
+          </span>
+        </div>
+        <span style={{ fontSize: "0.82rem", color: isStalled ? "#ef4444" : "#34d399", fontWeight: 700 }}>
+          {isStalled ? "⚠️ ALL RUNNERS FROZEN" : live ? "✓ LOCKSTEP SYNC NOMINAL" : "STANDBY"}
+        </span>
+      </div>
+      <div className="relay-track-bar">
+        <div
+          className={`relay-progress-fill ${isStalled ? "fill-stalled" : ""}`}
+          style={{ width: `${Math.max(5, progressPct)}%` }}
+        />
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--muted)" }}>
+        <span>Start: Initial Training Weight Shards</span>
+        <span>
+          {live
+            ? `Useful Work Completed: ${live.useful_new.toFixed(2)} steps · Recomputed: ${live.recomputation.toFixed(2)} steps`
+            : "No active rehearsal"}
+        </span>
+        <span>Goal: Sync Step {totalSteps}</span>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================================
+   3. TACTICAL COMMANDER DECISION ALERT
+   ========================================================================= */
+function CommanderAlert({
+  action,
+  onApprove,
+  onReject,
+  playing,
+}: {
+  action: NonNullable<RunView["pending_action"]>;
+  onApprove: () => void;
+  onReject: () => void;
+  playing: boolean;
+}) {
+  return (
+    <div className="commander-alert">
+      <div className="commander-alert-header">
+        <span>🚨</span>
+        <span>Tactical Commander Decision Required</span>
+      </div>
+      <h2 className="commander-question">
+        Preemptive Micro-Save: Isolate Warning Node & Protect In-Flight Work?
+      </h2>
+      <div style={{ fontSize: "0.9rem", color: "var(--text)" }}>
+        <strong>Proposed Action:</strong>{" "}
+        <code style={{ background: "rgba(0,0,0,0.3)", padding: "0.2rem 0.5rem", borderRadius: "4px" }}>
+          {action.action_type?.replaceAll("_", " ")} on {action.scope}
+        </code>
+      </div>
+      <div className="commander-analogy-callout">
+        <strong>🚗 Real-World Analogy:</strong> Your car engine's heat gauge is climbing into the red zone on the highway.
+        You can either pull over into the service bay for a 12-second oil top-up (Approve), or keep driving until the engine explodes and strands all 32,768 passengers (Reject).
+      </div>
+      <p style={{ margin: 0, fontSize: "0.88rem", color: "var(--text)" }}>
+        <strong>Hardware Reason:</strong> {action.reason}
+      </p>
+      <div className="commander-actions-row">
+        <button
+          type="button"
+          className="cmd-btn-approve"
+          onClick={onApprove}
+          disabled={playing}
+        >
+          🟢 APPROVE PREEMPTIVE MICRO-SAVE (Save 12 Seconds, Protect $115k/hr Run)
+        </button>
+        <button
+          type="button"
+          className="cmd-btn-reject"
+          onClick={onReject}
+          disabled={playing}
+        >
+          🔴 REJECT (Let Dumb Runbook Crash Job & Recompute from Zero)
+        </button>
+      </div>
+      <p className="muted" style={{ margin: 0, fontSize: "0.78rem" }}>
+        Safe sandbox rehearsal — no real hardware is impacted. Test what happens with each choice!
+      </p>
+    </div>
+  );
+}
+
+/* =========================================================================
+   4. PHYSICAL FAILURE CASCADE COMPONENT
    ========================================================================= */
 function PhysicalCascade({
   live,
@@ -468,7 +899,7 @@ function PhysicalCascade({
 }
 
 /* =========================================================================
-   3. OWNER'S SOLUTION PLAYBOOK COMPONENT
+   5. OWNER'S SOLUTION PLAYBOOK COMPONENT
    ========================================================================= */
 function PlaybookCard({
   playbook,
@@ -520,7 +951,7 @@ function PlaybookCard({
 }
 
 /* =========================================================================
-   COMPARISON & 3-LEAK COST BREAKDOWN
+   6. COMPARISON (TWO WAYS, ONE BREAKDOWN)
    ========================================================================= */
 function Comparison({ run, onCompare, playing }: { run: RunView | null; onCompare: () => void; playing: boolean }) {
   const branches = run?.comparison?.branches ?? [];
@@ -529,7 +960,9 @@ function Comparison({ run, onCompare, playing }: { run: RunView | null; onCompar
       <div className="panel">
         <h2>Two ways, one breakdown</h2>
         <p>Choose “Compare two ways” to play the same situation twice, like giving two managers the same incident. The difference in finished work is what the return panel can price. The price uses the chips in this job. It does not put a price on every chip in the hall, and it does not put a price on the industry.</p>
-        <button type="button" onClick={onCompare} disabled={playing || !run}>Compare two ways on this rehearsal</button>
+        <button type="button" onClick={onCompare} disabled={playing || !run}>
+          Compare two ways on this rehearsal
+        </button>
       </div>
     );
   }
@@ -556,7 +989,7 @@ function Comparison({ run, onCompare, playing }: { run: RunView | null; onCompar
 }
 
 /* =========================================================================
-   4. RETURN PANEL WITH INDUSTRY PRESETS & 3-LEAK COST BREAKDOWN
+   7. RETURN PANEL WITH INDUSTRY PRESETS & 3-LEAK COST BREAKDOWN
    ========================================================================= */
 function ReturnPanel({
   token,
@@ -703,7 +1136,7 @@ function ReturnPanel({
 
       {delta === undefined || delta === null ? (
         <p className="muted">
-          💡 <strong>Tip:</strong> Run <em>“Compare two ways”</em> above to produce the side-by-side delta. The presets will then immediately calculate your net dollar savings.
+          💡 <strong>Tip:</strong> Run <em>“Compare two ways”</em> in the Head-to-Head Battle tab to produce the side-by-side delta. The presets will then immediately calculate your net dollar savings.
         </p>
       ) : null}
 
