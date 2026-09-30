@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
+import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
   Adapter,
   CatalogAtlas,
@@ -24,6 +24,7 @@ import { startEngine, subscribeEngine } from "./browserEngine";
 import { AnomalyView } from "./AnomalyView";
 import { BoardView } from "./BoardView";
 import { Desk } from "./Desk";
+import { ExecutivePortfolioView } from "./ExecutivePortfolioView";
 import { FootprintView } from "./FootprintView";
 import { LineageView } from "./LineageView";
 import { MCMView } from "./MCMView";
@@ -34,28 +35,46 @@ import { YieldView } from "./YieldView";
 
 type Session = { token: string; role: string; username: string };
 
-const LINKS = [
-  ["/", "Cluster Overview"],
-  ["/stories", "Incident Rehearsals"],
-  ["/silicon", "Processor Health"],
-  ["/lineage", "Manufacturing Batches"],
-  ["/passport", "Digital Chip Passport"],
-  ["/anomalies", "AI Early Warning"],
-  ["/yield", "Factory Quality & Bins"],
-  ["/mcm", "Multi-Chip Assembly"],
-  ["/boards", "Baseboard Power"],
-  ["/racks", "Rack Plumbing & Power"],
-  ["/footprint", "Electric Bill & Grid"],
-  ["/dependencies", "Choir Ranks & Teamwork"],
-  ["/devices", "Sensor Telemetry"],
-  ["/incidents", "Downtime Incidents"],
-  ["/checkpoints", "Saved Progress"],
-  ["/recovery", "Operator Decisions"],
-  ["/audit", "Compliance Audit Trail"],
-  ["/experiments", "Strategy Comparison"],
-  ["/data", "Telemetry Dictionary"],
-  ["/models", "AI Helper Models"],
-  ["/monitoring", "Sensor Health"],
+const DEEP_DIVES = [
+  {
+    category: "Silicon & Batches",
+    links: [
+      ["/silicon", "Processor Health"],
+      ["/lineage", "Manufacturing Batches"],
+      ["/yield", "Factory Quality & Bins"],
+      ["/mcm", "Multi-Chip Assembly"],
+    ],
+  },
+  {
+    category: "Hardware & Racks",
+    links: [
+      ["/boards", "Baseboard Power"],
+      ["/racks", "Rack Plumbing & Power"],
+      ["/footprint", "Electric Bill & Grid"],
+    ],
+  },
+  {
+    category: "Intelligence & Provenance",
+    links: [
+      ["/passport", "Digital Chip Passport"],
+      ["/anomalies", "AI Early Warning"],
+      ["/models", "AI Helper Models"],
+    ],
+  },
+  {
+    category: "Operations & Telemetry",
+    links: [
+      ["/dependencies", "Choir Ranks & Teamwork"],
+      ["/devices", "Sensor Telemetry"],
+      ["/incidents", "Downtime Incidents"],
+      ["/checkpoints", "Saved Progress"],
+      ["/recovery", "Operator Decisions"],
+      ["/audit", "Compliance Audit Trail"],
+      ["/experiments", "Strategy Comparison"],
+      ["/data", "Telemetry Dictionary"],
+      ["/monitoring", "Sensor Health"],
+    ],
+  },
 ] as const;
 
 const PUBLIC_DEMO = import.meta.env.VITE_PUBLIC_DEMO === "true";
@@ -138,6 +157,10 @@ export function App() {
   }
 
   const [showTour, setShowTour] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
   return (
     <div className="shell">
@@ -148,35 +171,82 @@ export function App() {
         <button type="button" className="tour-nav-btn" onClick={() => setShowTour(true)}>
           ✦ 2-Min Executive Tour
         </button>
-        {LINKS.map(([path, label]) => (
-          <NavLink key={path} to={path} end={path === "/"}>
-            {label}
-          </NavLink>
-        ))}
-        <button type="button" onClick={() => setTheme((value) => (value === "dark" ? "light" : "dark"))}>
-          {theme === "dark" ? "Light theme" : "Dark theme"}
-        </button>
-        {PUBLIC_DEMO ? null : <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>}
+
+        <div className="nav-section-title">Executive Suite</div>
+        <NavLink to="/" end>🌟 Executive Portfolio</NavLink>
+        <NavLink to="/desk">⚡ Live Practice Floor</NavLink>
+        <NavLink to="/stories">💡 Executive Q&A (17)</NavLink>
+
+        <details className="nav-deep-dives" open={isDeepDive}>
+          <summary>System Diagnostics & Deep Dives (18) ▾</summary>
+          <div className="nav-deep-dives-list">
+            {DEEP_DIVES.map((group) => (
+              <div key={group.category}>
+                <div className="nav-section-title">{group.category}</div>
+                {group.links.map(([path, label]) => (
+                  <NavLink key={path} to={path}>
+                    {label}
+                  </NavLink>
+                ))}
+              </div>
+            ))}
+          </div>
+        </details>
+
+        <div style={{ marginTop: "auto", paddingTop: "1rem" }}>
+          <button type="button" onClick={() => setTheme((value) => (value === "dark" ? "light" : "dark"))}>
+            {theme === "dark" ? "Light theme" : "Dark theme"}
+          </button>
+          {PUBLIC_DEMO ? null : <button type="button" onClick={() => { setSession(null); setRun(null); }}>Sign out</button>}
+        </div>
       </nav>
       <main id="content">
-        <div className="tour-banner">
-          <div>
-            <strong>New to Datacenter Operations?</strong>
-            <p>See how 1 failing chip stalls a $150M cluster, and how continuity engineering saves millions.</p>
-          </div>
-          <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
-            ✦ Take the 2-Minute Executive Tour
-          </button>
+        <div className="view-mode-bar">
+          <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            🌟 Executive Portfolio & Q&A
+          </NavLink>
+          <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            ⚡ Live Practice Floor (32k Cluster)
+          </NavLink>
+          <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
+            💡 Incident Rehearsals (17)
+          </NavLink>
         </div>
 
-        <p className="banner">{PUBLIC_DEMO
-          ? "This page is a practice floor for the moment a data-center job has to stop or restart. It loads the decision engine in your browser and moves the rehearsal one step at a time. Nothing in a real building is plugged in. The scripted cause of each story stays off this page."
-          : "A practice floor for hardware trouble during a large training job. The simulated hall holds tens of thousands of chips. Detailed charts cover the chips in the job. Those chips are not plugged into this computer."}</p>
+        {location.pathname !== "/" ? (
+          <div className="tour-banner">
+            <div>
+              <strong>New to Datacenter Operations?</strong>
+              <p>See how 1 failing chip stalls a $150M cluster, and how continuity engineering saves millions.</p>
+            </div>
+            <button type="button" className="tour-action-btn" onClick={() => setShowTour(true)}>
+              ✦ Take the 2-Minute Executive Tour
+            </button>
+          </div>
+        ) : null}
+
         {PUBLIC_DEMO && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
+
         <Routes>
-          <Route path="/" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
+          <Route
+            path="/"
+            element={
+              <ExecutivePortfolioView
+                run={run}
+                frames={frames}
+                playing={playing}
+                onPlayRehearsal={(storyId) => {
+                  void play(storyId, "manual");
+                  navigate("/desk");
+                }}
+                onOpenPracticeFloor={() => navigate("/desk")}
+                onOpenTour={() => setShowTour(true)}
+              />
+            }
+          />
+          <Route path="/desk" element={<Desk token={session.token} run={run} frames={frames} playing={playing} onPlay={play} onDecide={decide} />} />
           <Route path="/stories" element={<Stories session={session} play={play} setError={setError} />} />
           <Route path="/silicon" element={<SiliconView run={run} />} />
           <Route path="/lineage" element={<LineageView run={run} />} />
@@ -205,6 +275,7 @@ export function App() {
             onRunDemo={() => {
               setShowTour(false);
               void play("gradual_warning", "manual");
+              navigate("/desk");
             }}
           />
         ) : null}
@@ -255,7 +326,7 @@ function Stories({ session, play, setError }: { session: Session; play: (id: str
     setError("");
     try {
       await play(id, mode);
-      navigate("/");
+      navigate("/desk");
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Run failed");
     }

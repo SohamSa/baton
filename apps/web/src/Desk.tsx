@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { EconomicsEstimate, FailureLevel, LiveFrame, OwnerPlaybook, RunView, StoryItem, estimateEconomics, stories } from "./api";
 
 const REASONS: Record<string, string> = {
@@ -77,7 +78,12 @@ export function Desk({
 
   return (
     <section className="desk">
-      <p className="eyebrow">A rehearsal for a data-center owner</p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.5rem" }}>
+        <p className="eyebrow" style={{ margin: 0 }}>Practice Floor: 32,768-Accelerator Rehearsal Simulator</p>
+        <NavLink to="/" className="hero-secondary-btn" style={{ fontSize: "0.85rem", padding: "0.4rem 0.85rem", textDecoration: "none" }}>
+          🌟 Switch to Executive Portfolio & Q&A
+        </NavLink>
+      </div>
       <h1>When one machine stops, the whole job waits.</h1>
       <p className="lede">
         Think of a relay race where the baton cannot move until every runner finishes the same leg. The runners here are accelerator chips, the special processors that do the heavy math inside a data center. If one runner stops, the race stops, even while the rest of the building is still powered and cooled.
