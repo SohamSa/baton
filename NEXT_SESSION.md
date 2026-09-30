@@ -19,3 +19,5 @@
 - The main URL starts with basics, followed by data and story. Foundations use `content/owner-foundations.json`. After dictionary changes, run `python scripts/build_learning_catalog.py` and commit `apps/web/public/learning-catalog.json`; tests verify exact backend parity. Keep the full catalog in the learning view, and specialist navigation optional.
 
 - Unified owner workspace: the same Basics, Data, Story, Plan, Rehearse, Operations, and My review navigation appears on reading and practical pages. Specialist tools use one expandable menu. Chapter and build/operate context survive tool navigation and reload; story passages offer contextual practical steps.
+
+- README now follows the unified Basics → Data → Story → Plan → Rehearse → Operations → My review journey. Shared foundations and every story passage are retained; practical narrative is maintained in `content/owner-readme-workspace.json`. Regenerate with `python scripts/build_owner_readme.py`. The five owner journey/foundations checks passed after this documentation change.

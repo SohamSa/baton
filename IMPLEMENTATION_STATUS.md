@@ -86,3 +86,5 @@ The main entrance teaches basic concepts before introducing essential data and t
 This foundations review passed 105 Python tests and both production builds. Browser checks confirmed the sequential learning flow and full catalog without engine startup.
 
 - Unified owner workspace: the same Basics, Data, Story, Plan, Rehearse, Operations, and My review navigation appears on reading and practical pages. Specialist tools use one expandable menu. Chapter and build/operate context survive tool navigation and reload; story passages offer contextual practical steps.
+
+- README now follows the unified Basics → Data → Story → Plan → Rehearse → Operations → My review journey. Shared foundations and every story passage are retained; practical narrative is maintained in `content/owner-readme-workspace.json`. Regenerate with `python scripts/build_owner_readme.py`. The five owner journey/foundations checks passed after this documentation change.
