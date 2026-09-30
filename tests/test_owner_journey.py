@@ -1,4 +1,4 @@
-"""The film's navigation and promises must stay connected to the project."""
+"""The reading journey's navigation and promises must stay connected to the project."""
 import importlib.util
 import json
 from pathlib import Path
@@ -26,6 +26,7 @@ def test_readme_is_the_same_story_and_finale_has_explained_choices():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     assert module.render() == (ROOT / 'README.md').read_text(encoding='utf-8')
+    assert module.render_reference() == (ROOT / 'docs/story-reference.md').read_text(encoding='utf-8')
     story = json.loads((ROOT / 'content/owner-journey.json').read_text())
     for turn in story['finale']:
         assert len(turn['options']) >= 2

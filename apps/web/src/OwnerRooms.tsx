@@ -29,7 +29,7 @@ export function RoomGuide() {
   const cast = story.characters.filter((c) => (ROOM_CAST[location.pathname] ?? []).includes(c.id));
   if (!cast.length) return null;
   const query = new URLSearchParams(location.search); const path = query.get("path") ?? "explore";
-  return <section className="owner-room-guide panel"><p className="eyebrow">A supporting room in the owner’s story</p><h2>{ROOM_TITLES[location.pathname] ?? "Follow the evidence"}</h2><p>Start with the question, inspect the evidence, and carry the lesson back to your chapter.</p>{cast.map((c) => <details key={c.id}><summary>{c.name}: {c.question}</summary><p>{c.lesson}</p><p><strong>Evidence:</strong> {c.fields.join(", ")}</p><p className="muted">{c.coverage}</p><div className="owner-actions"><Link to={`/journey/${c.chapter}?path=${path}`}>Return to this character’s chapter</Link><Link to={`/desk?scenario=${c.id}&chapter=${c.chapter}&path=${path}`}>Select this rehearsal</Link></div></details>)}</section>;
+  return <section className="owner-room-guide panel"><p className="eyebrow">A supporting room in the owner’s story</p><h2>{ROOM_TITLES[location.pathname] ?? "Follow the evidence"}</h2><p>Start with the question, inspect the evidence, and return to the investigation with what you found.</p>{cast.map((c) => <details key={c.id}><summary>{c.name}: {c.question}</summary><p>{c.lesson}</p><p><strong>Evidence:</strong> {c.fields.join(", ")}</p><p className="muted">{c.coverage}</p><div className="owner-actions"><Link to={`/journey/${c.chapter}?path=${path}`}>Return to the investigation</Link><Link to={`/desk?scenario=${c.id}&chapter=${c.chapter}&path=${path}`}>Select this rehearsal</Link></div></details>)}</section>;
 }
 
 const planKey = "baton-example-plan-v1";

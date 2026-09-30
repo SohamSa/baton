@@ -150,10 +150,11 @@ export function App() {
 
   if (!session) return <Login onSuccess={setSession} />;
 
+  const isReading = location.pathname === "/" || location.pathname.startsWith("/journey");
   const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
   return (
-    <OwnerToolsProvider token={session.token}><div className="shell">
+    <OwnerToolsProvider token={session.token}><div className={`shell ${isReading ? "shell-reading" : ""}`}>
       <a className="skip" href="#content">Skip to content</a>
       <nav aria-label="Primary">
         <strong>Baton</strong>
@@ -163,7 +164,7 @@ export function App() {
         </button>
 
         <div className="nav-section-title">Executive Suite</div>
-        <NavLink to="/" end>🎬 The Owner’s Story</NavLink>
+        <NavLink to="/" end>The Owner’s Story</NavLink>
         <NavLink to="/worksheet">My facility worksheet</NavLink>
         <NavLink to="/portfolio">🌟 Executive Portfolio</NavLink>
         <NavLink to="/fleet">🌐 Facility Map (4 Examples)</NavLink>
@@ -197,9 +198,10 @@ export function App() {
         </div>
       </nav>
       <main id="content">
+        {isReading ? <div className="reading-sitebar"><NavLink to="/">Baton</NavLink><div><NavLink to="/portfolio">Explore tools</NavLink><button type="button" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")}>{theme === "dark" ? "Light theme" : "Dark theme"}</button></div></div> : null}
         <div className="view-mode-bar">
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🎬 Owner’s Story
+            Owner’s Story
           </NavLink>
           <NavLink to="/worksheet">My facility worksheet</NavLink>
           <NavLink to="/portfolio" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>

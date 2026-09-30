@@ -70,3 +70,7 @@ Current catalog: 58 logical tables; 397 unique concepts, 2 aliases, 80 window ag
 ## Owner evidence and advanced rehearsals
 
 All 17 characters expose actual configuration values, rationale, simplifications, and sensitivities. The shared source generates the README and Python metadata. The worksheet starts blank, stores locally, and exports evidence requests and named follow-up owners; it does not score facility readiness. Package retries, lot-linked errors, persistent board faults, assembly strain, voltage validity, and power headroom have separate engine mechanisms. Challenge variants include unnecessary intervention, scarce spares, and stale evidence. Approval replay preserves the variant.
+
+## Connected reading revision
+
+The README and default dashboard now start with one stalled job and follow the same continuous investigation through seven passages. Terms are introduced in context. Suite navigation is hidden on reading routes, with optional tool access and one next passage. All scenario assumptions, fields, limits, and challenges remain in the generated `docs/story-reference.md` and closed dashboard evidence drawers. The final discussion remains a tabletop story rather than a new compound engine scenario.

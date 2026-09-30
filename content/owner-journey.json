@@ -1,97 +1,120 @@
 {
-  "title": "Baton: The Night the Datacenter Held Its Breath",
-  "subtitle": "An owner’s story of ambition, interruption, evidence, and recovery.",
+  "title": "Baton: The machines were busy. The work had stopped.",
+  "subtitle": "A datacenter owner follows one stalled job and discovers the systems keeping it alive.",
   "chapters": [
     {
       "id": "arrival",
-      "act": "Opening scene",
-      "title": "The lights come on",
+      "title": "The number that stopped moving",
       "paragraphs": [
-        "Before sunrise, you stand outside a building that once existed only in drawings. Inside are machines, cables, pumps, storage, and a team waiting to begin. You do not need to know how a chip is made to ask the question that matters: will this place turn resources into useful work?",
-        "You are the owner in this story. Perhaps this is your first facility. Perhaps you already manage a fleet. Either way, your role is to understand dependencies, ask for evidence, and make decisions with specialists. Baton is your rehearsal room.",
-        "The cast is fictional and the evidence is synthetic. The dilemmas are engineering questions worth exploring. Financial figures elsewhere in the dashboard are illustrative assumptions, not measured savings or promises."
+        "“Everything is running,” the report says. You look through the glass. Fans turn, lights blink, and the room hums with expensive activity. Then you notice the number showing completed work. It has not moved.",
+        "You own this place, but you cannot see inside its chips. The machines arrived with specifications, warranties, and promises. None of those tells you why this particular job has stopped tonight. You ask the engineer beside you a question that needs no technical vocabulary: “If they are all busy, what are we getting done?”",
+        "Her name is Mira. She points past the machines to the job they share. “Let’s follow the work,” she says. “A light tells us a machine is on. It doesn’t tell us the team is moving forward.”",
+        "Until now, you have thought of the datacenter as a collection of equipment. Tonight you will discover its relationships: who waits for whom, what they share, what can survive an interruption, and which apparent fixes create another problem. The investigation starts with that unmoving number."
       ],
       "question": "What must my team demonstrate before I trust the facility?",
       "route": "/planner",
-      "routeLabel": "Visit the planning room"
+      "routeLabel": "Visit the planning room",
+      "teaser": "The building looks alive. One number says otherwise."
     },
     {
       "id": "rhythm",
-      "act": "Act I",
-      "title": "Learn the rhythm before the silence",
+      "title": "The worker everyone waits for",
       "paragraphs": [
-        "On the floor, accelerators perform calculations. The network lets cooperating machines exchange results. Power keeps them alive; cooling carries heat away. Storage holds the work that must survive an interruption. People connect all of these systems through procedures.",
-        "Follow one training job, a team of assigned workers. Some workers must wait for their partners before the job advances. A server houses machines; a rack groups servers; a facility holds many racks and can run many jobs. Trouble in one dependent job does not automatically stop the whole building.",
-        "A checkpoint is a saved position in the journey. Returning to it may mean repeating work. Saving too often also takes time. Your first lesson is to distinguish activity from progress: busy machines can be repeating yesterday’s calculations."
+        "Mira opens a drawing of the job. Each accelerator is a worker doing calculations. Training is the repeated work of adjusting a model using examples. This job divides that work among several machines, which exchange results before moving on together. The network carries those exchanges. Fast workers can reach a meeting point and wait for the slowest member.",
+        "One worker still sends its heartbeat, the regular message that says it is present. Its calculations simply take longer than its peers. Nothing has disappeared. Yet the whole assigned team is losing pace. This is the Tired Runner: a machine that looks alive while making its partners wait.",
+        "“Then replace it,” you say. Mira asks where the job would resume. Its latest work exists across cooperating machines. Storage periodically collects their state into a checkpoint, a saved position from which the job can restart. Replacing a worker may require stopping, restoring that state, and repeating everything done since the save.",
+        "Now the tradeoff becomes visible. Save constantly and writing interrupts progress. Save rarely and an interruption can erase a longer stretch of work. Even a successful replacement takes time. The relevant measure is goodput: new useful work completed over elapsed time. Busy time and repeated work cannot substitute for it.",
+        "The drawing also changes your sense of scale. An accelerator sits in a server; servers sit in racks; racks sit in a facility. A job has its own cooperating membership. A failed worker can stall that job without stopping every other job in the building. Before accepting a claim about “the whole cluster,” you ask which work actually depends on the failed member.",
+        "You have found one reason the number can stop. Then an alarm sounds. One machine is getting hot, and someone is already proposing another replacement."
       ],
       "question": "Which machines must cooperate, and what progress can we actually restore?",
       "route": "/dependencies",
-      "routeLabel": "Meet the training team"
+      "routeLabel": "Meet the training team",
+      "teaser": "A room full of machines can be waiting on one."
     },
     {
       "id": "alarm",
-      "act": "Act II",
-      "title": "The first alarm",
+      "title": "The alarm and the expensive mistake",
       "paragraphs": [
-        "A temperature climbs. Someone reaches for the stop button. Across the room, another machine disappears without a warning. Two incidents, two different decisions. The owner discovers that resilience needs both early recognition and preparation for surprises.",
-        "Enter the Feverish Athlete, the Sudden Ghost, the Hard-Working Chef, and the Overzealous Referee. Their appearances can look similar on an alarm screen. Their consequences are very different.",
-        "Watch the evidence before choosing the response. A save may protect progress. A restart may restore a stopped job. A mistaken quarantine can interrupt healthy work. Ask what supports the action and what it could cost."
+        "The temperature curve rises sharply. A technician wants to remove the machine before it fails. Mira brings up the workload beside the temperature. The job has become busier; the machine is drawing more power and producing more heat. The cooling system must carry that heat away. A hot machine can be working hard, struggling, or both. The curve alone cannot tell you which.",
+        "This one is the Hard-Working Chef. Its heat rises with its workload. Stopping it merely because it crossed an arbitrary threshold can turn healthy work into an interruption. The Overzealous Referee is the decision that follows: a protective action with a cost nobody counted. Independent equipment safety protections still matter; the mistake is treating an isolated dashboard reading as a diagnosis.",
+        "Another machine tells a different story. Its temperature is higher than the workload and reported power would ordinarily explain in this simplified model. That unexplained difference is called a residual. The Feverish Athlete keeps working, but the comparison gives the team a reason to investigate and consider saving progress before trouble deepens. It does not tell them an exact time of failure.",
+        "You ask to see both possible responses. In a rehearsal, an early save can preserve work when warning evidence is useful. In another, unnecessary intervention sacrifices progress. “How many alarms did we catch?” is no longer enough. You also want to know how much useful work a response protected, interrupted, or forced the team to repeat.",
+        "Before the investigation is finished, a different worker goes silent. No helpful curve preceded it. The Sudden Ghost leaves you with the preparation already in place: a usable save, compatible replacement capacity, and a recovery procedure. An early-warning system cannot manufacture a warning the observations never contained.",
+        "Then several neighboring machines report trouble together. If each is an individual suspect, you will need several replacements. Mira asks whether you are looking at several failures or one shared cause."
       ],
       "question": "Is this a warning, a healthy surge, or a failure we must recover from?",
       "route": "/devices",
-      "routeLabel": "Inspect the sensor readings"
+      "routeLabel": "Inspect the sensor readings",
+      "teaser": "The same warning can lead to different decisions."
     },
     {
       "id": "suspects",
-      "act": "Act III",
-      "title": "The wrong suspect",
+      "title": "The replacement that changed nothing",
       "paragraphs": [
-        "The owner receives several alarms at once. Are several chips failing, or do they share one troubled dependency? Meanwhile, a sensor report arrives late and a checkpoint that looked complete is missing pieces.",
-        "The Kitchen Circuit Breaker, Missing-Pages Contract, Missing Choir Singer, Yesterday Weatherman, Tired Runner, and Revolving Door Patient complicate the investigation. The cheapest-looking response may be the most expensive mistake.",
-        "This act teaches restraint and preparedness together. Separate symptoms from causes. Check the age of evidence. Verify that a save is usable. Confirm what the runtime permits. Returning equipment needs a qualification process; a quick green light is not proof of health."
+        "The affected machines share an electrical supply. On the dependency map, their paths meet at the same power domain. The Kitchen Circuit Breaker makes its entrance through that common connection. Correlated symptoms are a reason to investigate the shared supply before treating every chip as an independent failure.",
+        "You follow the same reasoning down to a server. A chip has been replaced, yet the trouble returns. The board underneath it still supplies unstable power in the rehearsal. The Framed Innocent was never the whole problem. Buying another chip changes the accused component while leaving the modeled cause in place.",
+        "The team proposes a restart from the newest checkpoint. Its timestamp looks reassuring. Mira opens its status instead. Some pieces, or shards, are still being written. The Contract with Missing Pages cannot restore a coherent job just because a file exists. A usable save must be complete, verified, reachable, and compatible with the recovery being attempted.",
+        "An older verified save may be the supported option, with more work to repeat. If no save qualifies, the team must report that limit. A newer timestamp cannot recover state that was never successfully saved. You begin to understand why restore drills matter before an emergency, while there is still time to discover missing pieces.",
+        "Someone suggests dropping the failed worker and letting the others continue. But a rank is an assigned position in this cooperating job, and the current arrangement still needs that position. The Missing Choir Singer has left a required part. Changing membership depends on what the software runtime actually supports; spare machines elsewhere do not grant it that capability.",
+        "A facility report seems to settle the electrical question. Then you check its recording time. It describes an earlier state and arrived late. The Yesterday Weatherman sounds precise while answering the wrong moment. Missing or old evidence needs fresh corroboration, not a more confident interpretation. Reliable independent signs of liveness can still guide the response while diagnosis remains uncertain.",
+        "The repaired worker passes a quiet idle check, returns to the job, and fails again under load. The Revolving Door Patient teaches the last painful distinction: booting successfully is not the same as qualifying for this workload. In the rehearsal, a candidate that fails its defined stress test stays quarantined. If no compatible spare remains, recovery is blocked.",
+        "The replacement invoice was easy to understand. The work around it was not: finding the cause, choosing a usable save, matching the software capability, and qualifying the replacement. You ask Mira how many of those relationships were considered when the equipment was first installed."
       ],
       "question": "What shared dependency or missing evidence could change our response?",
       "route": "/checkpoints",
-      "routeLabel": "Inspect the saved progress"
+      "routeLabel": "Inspect the saved progress",
+      "teaser": "The fault may live outside the accused chip."
     },
     {
       "id": "origins",
-      "act": "Act IV",
-      "title": "The past enters the room",
+      "title": "What the machines brought with them",
       "paragraphs": [
-        "A technician asks whether the trouble began today. Perhaps the power system, circuit board, cooling installation, or an earlier assembly step left a clue. The investigation expands beyond the chip’s temperature.",
-        "The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.",
-        "Each origin character now has a distinct synthetic mechanism: package-link retries, lot-associated errors, board instability, spatial cooling, installation strain, voltage margin, and power capacity. Their assumptions explain what changes and why. These are teaching constructions, not validated microscopic diagnoses, manufacturer specifications, batch-failure forecasts, or facility controls. Learn which records to request and explore the challenge cases where a plausible intervention costs work or recovery is blocked."
+        "Mira brings installation records, batch identifiers, and a map of the racks. The chip is still a black box. You cannot see its microscopic construction, but you can ask about the world around it and the history it shares with other machines.",
+        "In one rack, upper positions run hotter while another rack remains comparatively unaffected. The Thermal Shadow becomes visible only when temperature is placed on a map beside reported cooling flow. Replacing a list of hot chips would miss a shared cooling restriction. The question becomes which machines share the affected path and what restoring that path requires.",
+        "The evening workload is also growing. When too much modeled demand reaches one power domain, it trips. The Midnight Power Cliff is a capacity problem rather than a lone hot chip. Pacing the workload can preserve continuity, but it also slows useful work. When sufficient headroom already exists, the same pacing can cost progress unnecessarily. Electrical protection, supply capacity, and the billing contract are related concerns with different evidence requirements.",
+        "Another worker stays present but retries exchanges and falls behind. The Cracked Solder Bead names a suspected weak connection, not something the dashboard has seen through a microscope. The rehearsal models retries and delay. A real retry signal could have several causes; it does not establish a particular physical defect. The owner can ask for corroboration without pretending to diagnose the package.",
+        "Two machines with a shared lot identifier report errors. The Edge-of-the-Oven Cookie asks whether their common manufacturing history matters. A lot identifier groups records; it does not declare a whole batch guilty. The model can make several members faulty, or only one. Replacing an entire cohort on weak evidence can remove healthy workers and spend more progress than it protects.",
+        "An assembly record suggests a different shared history. In the Over-Torqued Wrench rehearsal, an invented mounting condition produces strain as the machine warms. The lesson is why installation records and mechanical investigation can matter. A torque entry alone cannot prove a physical defect, and a teaching relationship is not a real installation limit.",
+        "The final clue is unsettling because the room still looks calm. In the Whispering Voltage Cliff rehearsal, computation becomes invalid before temperature would explain a problem. Validation catches a mismatch, and the model refuses to count invalid work as useful progress or save it as a valid checkpoint. A file can be intact while the calculations inside it are wrong. Slowing the worker helps in some invented conditions; in others it cannot restore validity.",
+        "You close the records with a different question from the one you brought in. Not “Which chip should I buy?” but “Which explanation fits the evidence, what would distinguish it from the alternatives, and what work would each response put at risk?” That evening, the alarms begin arriving together."
       ],
       "question": "What can we observe today, and what records or specialist evidence are missing?",
       "route": "/passport",
-      "routeLabel": "Open the evidence archive"
+      "routeLabel": "Open the evidence archive",
+      "teaser": "Today’s symptoms can have a longer history."
     },
     {
       "id": "finale",
-      "act": "Climax",
-      "title": "The night the clues collide",
+      "title": "Which work can we bring back?",
       "paragraphs": [
-        "The evening workload is rising. A warm machine attracts attention, but the most recent facility readings are delayed. A rank then stops responding. Someone proposes dropping it from the job. Someone else points to the newest checkpoint, still being written.",
-        "You have met these characters before. Now they share a scene. Choose what evidence to trust, which save to use, and which recovery to permit. This is an interactive tabletop exercise connecting earlier lessons, not a new compound engine simulation.",
-        "The resolution is earned through disciplined questions. Your job is to protect useful progress while refusing unsupported assumptions. No decision can recover a save that does not exist, or grant a runtime a capability it does not have."
+        "The workload is rising. A fresh temperature alarm draws everyone toward one machine. The facility report beside it is old. A worker stops responding. The newest checkpoint is still being written. Someone suggests removing the missing rank and carrying on.",
+        "Earlier, each message might have supplied an answer by itself: heat means replace, new means usable, many remaining workers means continue. Now you hear the unanswered questions inside each proposal.",
+        "You ask for current corroborating evidence and independent liveness checks. The alarm deserves attention, but the delayed report cannot establish tonight’s cause. You keep the distinction between a stopped worker and an uncertain diagnosis.",
+        "You ask which checkpoint the recovery can actually restore. The team checks completeness, verification, reachability, and compatibility. If an older save is the newest one that qualifies, the repeated work becomes part of the plan. If none qualifies, that absence becomes part of the report.",
+        "Finally, you ask what membership changes the runtime supports and whether compatible, qualified capacity is available. For the job in this account, the team has an older verified save and a compatible replacement that passed its defined checks. The runtime requires a coordinated restart. You accept the work that must be repeated and ask the team to confirm when new useful progress resumes. If those prerequisites had been absent, the plan would have had to name the blocker instead.",
+        "After the restart and the repeated work, the number begins moving beyond its old position. Mira points to it again. The relief is earned: the team can explain what was restored, what was lost, and why this recovery was supported. The room has not become simple. You have become harder to mislead. You can connect a warning to its evidence, an action to its prerequisites, and an apparent recovery to the work it really preserves."
       ],
       "question": "Can we assemble a supported recovery from trustworthy evidence?",
       "route": "/desk",
-      "routeLabel": "Open the rehearsal floor"
+      "routeLabel": "Open the rehearsal floor",
+      "teaser": "Now the clues have to support one decision."
     },
     {
       "id": "dawn",
-      "act": "Epilogue",
-      "title": "At dawn, you know what to ask",
+      "title": "The next building starts here",
       "paragraphs": [
-        "The facility is still a complex place. You now recognize the cast. A busy machine is not necessarily productive. A warning is not a diagnosis. A completed-looking save is not necessarily usable. A spare is useful only when the recovery can use it.",
-        "If you are building, take these questions into procurement, design reviews, and launch readiness. If you are operating, take them into incident reviews, restore drills, maintenance, and monitoring improvements.",
-        "The ending belongs to your next conversation. Leave with the evidence you need, the questions you will ask, and the practices your team should demonstrate. Return to any character when a new situation deserves a rehearsal."
+        "At dawn, the machines look much as they did when you arrived. Fans turn. Lights blink. But you no longer mistake their activity for the outcome. You know to follow useful work through the people, software, equipment, and shared systems that make it possible.",
+        "If your first datacenter is still a drawing, tonight’s questions belong in that drawing. Ask how jobs depend on power, cooling, network, and storage; which observations suppliers can actually provide; how saved state will be restored; and what compatible recovery capacity must be available. Ask the specialists to demonstrate the procedures before launch, while changing the design is still an option.",
+        "If you already operate facilities, bring a recent interruption into the review. Was the evidence current? Did the first diagnosis survive investigation? Could the selected save restore the job? Did the replacement pass a meaningful qualification? Did useful progress resume, or did the dashboard merely turn green?",
+        "Baton gives you a place to explore those questions using fictional facilities, invented evidence, and simplified simulations. It cannot certify a real design or replace site-specific engineering. What it can give you is a connected way to reason, recognize missing evidence, and participate in decisions you once had to accept on faith.",
+        "Your next step does not need to be a purchase. Choose one unanswered question about your facility. Name who can bring the evidence and what they should demonstrate. The worksheet turns that question into a review you can save, print, and carry into the room.",
+        "The next time someone says “Everything is running,” you know where to look. You follow the work."
       ],
       "question": "What will I ask my team to demonstrate next?",
       "route": "/data",
-      "routeLabel": "Explore the full data catalog"
+      "routeLabel": "Explore the full data catalog",
+      "teaser": "What you understand tonight changes what you ask tomorrow."
     }
   ],
   "characters": [

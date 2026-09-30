@@ -49,7 +49,7 @@ export function OwnerWorksheet() {
     download("baton-facility-review.md", lines.join("\n"), "text/markdown;charset=utf-8");
   }
   return <section className="owner-worksheet owner-story">
-    <p className="eyebrow">From the movie to your own review</p><h1>{story.worksheet.title}</h1><p className="lede">{story.worksheet.intro}</p>
+    <p className="eyebrow">From the investigation to your own review</p><h1>{story.worksheet.title}</h1><p className="lede">{story.worksheet.intro}</p>
     <section className="panel"><h2>Your review context</h2><div className="owner-inputs">
       <label>Facility or review label<input maxLength={200} value={worksheet.name} onChange={(e) => setWorksheet((w) => ({ ...w, name: e.target.value }))} /></label>
       <label>My situation<select aria-label="My situation" value={worksheet.stage} onChange={(e) => setWorksheet((w) => ({ ...w, stage: e.target.value }))}><option value="build">Planning or building</option><option value="operate">Operating existing equipment</option></select></label>
