@@ -32,7 +32,7 @@ export const DEEP_DIVE_TRANSLATIONS: Record<string, DeepDiveTranslation> = {
     analogyDesc:
       "Modern AI models require all chips to advance in unison. If just one chip slows down by 8% due to heat or silicon fatigue, every single chip in the building must wait for it, dragging down cluster speed in total silence.",
     financialImpact:
-      "A silent straggler chip burns $220,000/day ($1M–$3M/month on a 32k cluster) in wasted electric power and idle stall time across the building.",
+      "A silent straggler chip burns $220,000/day ($1M to $3M/month on a 32k cluster) in wasted electric power and idle stall time across the building.",
     continuityFix:
       "Cross-chip latency tracking detects the slow runner outlier in real time, cordons the degraded node, and gracefully drains it during the next save without interrupting active training.",
     relatedStoryId: "silent_straggler",
@@ -108,7 +108,7 @@ export const DEEP_DIVE_TRANSLATIONS: Record<string, DeepDiveTranslation> = {
     analogyDesc:
       "When one circuit breaker sags in a restaurant kitchen, all appliances on that counter shut off at once. Naive monitoring tools blame all 8 processors instead of identifying the single tripped power rail.",
     financialImpact:
-      "Prevents mistakenly dispatching technicians to replace 8 to 16 healthy $35,000 processors ($280k–$560k) when the real issue was simply a $40 voltage regulator module.",
+      "Prevents mistakenly dispatching technicians to replace 8 to 16 healthy $35,000 processors ($280k to $560k) when the real issue was simply a $40 voltage regulator module.",
     continuityFix:
       "Power-domain topology correlation groups all chip alarms on the same circuit into a single facility baseboard ticket.",
     relatedStoryId: "innocent_chip_dying_board",

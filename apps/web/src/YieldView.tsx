@@ -65,8 +65,8 @@ const YIELD_BINS = [
   {
     bin_name: "Bin 2: Standard Silicon (Elastic & Asynchronous Workloads)",
     allocation: "3,072 GPUs (9.4% of Hall)",
-    temp_envelope: "60.0°C – 66.0°C at 700W TDP",
-    leakage_envelope: "100 mA – 130 mA static leakage",
+    temp_envelope: "60.0°C to 66.0°C at 700W TDP",
+    leakage_envelope: "100 mA to 130 mA static leakage",
     assigned_workloads: "LoRA Fine-Tuning, Data Preprocessing, Inference Replicas",
     rationale: "Elastic fault tolerance; rank interruptions do not stall a cluster-wide collective barrier.",
     tone: "warn",
@@ -255,7 +255,7 @@ export function YieldView({
 
         <div className="dossier-box">
           <div className="dossier-header">
-            <strong>HARDWARE WARRANTY DEFECT REPORT — CLAIM #RMA-2026-081</strong>
+            <strong>HARDWARE WARRANTY DEFECT REPORT : CLAIM #RMA-2026-081</strong>
             <span>STATUS: TELEMETRY VERIFIED · ELIGIBLE FOR 100% CAPEX CREDIT</span>
           </div>
           <pre className="dossier-content">

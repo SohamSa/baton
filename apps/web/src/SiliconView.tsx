@@ -77,7 +77,7 @@ export function SiliconView({
         <span className="eyebrow">Processor Health & Batch Analytics</span>
         <h1>Processor Brains, Factory Batches & The Tired Runner Effect</h1>
         <p className="lede">
-          Think of modern AI processors as multiple miniature computer rooms combined into a single chip — computing brains paired with high-speed memory blocks.
+          Think of modern AI processors as multiple miniature computer rooms combined into a single chip: computing brains paired with high-speed memory blocks.
           Because chips are baked in large batches at the silicon factory, individual processors have subtle physical differences in how hot they run and how much electrical power they need.
           This view monitors every chip across the datacenter floor, identifies defective factory batches, and stops a single overheating "tired runner" from slowing down tens of thousands of chips.
         </p>
@@ -111,7 +111,7 @@ export function SiliconView({
 
         <div className="silicon-kpi-card kpi-info">
           <span className="kpi-label">Memory Health Early Warning</span>
-          <div className="kpi-val">24–48h Early Warning</div>
+          <div className="kpi-val">24 to 48h Early Warning</div>
           <p className="kpi-desc">
             Microscopic solder connections develop tiny stress fractures that produce minor, auto-corrected memory hiccups days before a sudden catastrophic crash.
           </p>
@@ -324,7 +324,7 @@ export function SiliconView({
         </div>
 
         <div className="calc-takeaway">
-          <strong>💡 Executive Takeaway:</strong> Traditional monitoring waits for a die to crash with an error code. But a silent thermal straggler never crashes—it just burns <strong>${Math.round(dailyBurn).toLocaleString()} every single day</strong> in hidden all-reduce synchronization wait. Detecting die-level patterns and cordoning the node at the next verified checkpoint saves millions.
+          <strong>💡 Executive Takeaway:</strong> Traditional monitoring waits for a die to crash with an error code. But a silent thermal straggler never crashes, it just burns <strong>${Math.round(dailyBurn).toLocaleString()} every single day</strong> in hidden all-reduce synchronization wait. Detecting die-level patterns and cordoning the node at the next verified checkpoint saves millions.
         </div>
       </div>
     </section>

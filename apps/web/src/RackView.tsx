@@ -222,7 +222,7 @@ export function RackView({
         <div className="panel rack-elevation-panel">
           <div className="elevation-header">
             <div>
-              <h2>Physical Rack Elevation (Rack #14 — 128 GPUs)</h2>
+              <h2>Physical Rack Elevation (Rack #14 · 128 GPUs)</h2>
               <p className="muted">
                 16 Server Shelves (1U-3U Form Factor) stacked vertically. Click any shelf to inspect cold plate & busbar telemetry.
               </p>

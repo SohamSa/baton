@@ -207,7 +207,7 @@ export function MCMView({
         <p className="lede">
           Think of a modern processor package like a miniature city on a silicon foundation: computing brain chiplets and memory towers are linked together by thousands of microscopic solder wires thinner than a human hair.
           When intense 80°C datacenter heat causes the metal to expand and contract, one of these tiny wires can crack.
-          Instead of throwing away an entire $28,000 multi-chip processor, our automated testing diagnoses the broken wire in <strong>45 seconds</strong> and instantly switches communication to a built-in backup spare wire — saving the processor from the scrap heap.
+          Instead of throwing away an entire $28,000 multi-chip processor, our automated testing diagnoses the broken wire in <strong>45 seconds</strong> and instantly switches communication to a built-in backup spare wire, saving the processor from the scrap heap.
         </p>
       </div>
 

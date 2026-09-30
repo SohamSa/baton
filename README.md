@@ -10,7 +10,7 @@
 
 Imagine you just invested in or built a brand-new, world-class artificial intelligence datacenter.
 
-You spent **$150 Million** on cutting-edge computing processors, and another **$40 Million** on high-voltage electrical substations, liquid cooling pumps, and backup generators. Outside your building, the utility power meter is spinning at **40 Megawatts**—enough electricity to power a city of 30,000 homes. 
+You spent **$150 Million** on cutting-edge computing processors, and another **$40 Million** on high-voltage electrical substations, liquid cooling pumps, and backup generators. Outside your building, the utility power meter is spinning at **40 Megawatts**, enough electricity to power a city of 30,000 homes. 
 
 Your monthly electric bill is **$2.1 Million**. Every single hour your facility is turned on, debt service, electricity, cooling water, and engineering staff burn **$114,688 in cash**.
 
@@ -20,7 +20,7 @@ Now, here is the secret that traditional datacenter operators learn the hard way
 > If an office worker gets the flu, the rest of the company keeps working.  
 > **AI does not work that way.**
 
-Modern AI pretraining is a **32,768-runner baton relay race**—or a **32,768-singer choir singing in four-part harmony**.
+Modern AI pretraining is a **32,768-runner baton relay race**, or a **32,768-singer choir singing in four-part harmony**.
 
 All 32,768 processors must calculate their piece of the mathematical puzzle and hand off a fragile glass baton at the **exact same millisecond**. 
 
@@ -36,7 +36,7 @@ The other 32,767 runners stand completely frozen on the track. But the lights, t
 
 ## 🎭 The 17 Characters: A Datacenter Hardware Drama
 
-Every datacenter failure is a character in an unfolding drama. Traditional monitoring tools panic, blame the wrong culprits, and throw millions of dollars away. Here are the **17 characters** who threaten your $150 Million investment—and how continuity engineering tames them.
+Every datacenter failure is a character in an unfolding drama. Traditional monitoring tools panic, blame the wrong culprits, and throw millions of dollars away. Here are the **17 characters** who threaten your $150 Million investment, and how continuity engineering tames them.
 
 ---
 
@@ -108,7 +108,7 @@ Every datacenter failure is a character in an unfolding drama. Traditional monit
 * **Who he is:** The athlete who doesn't collapse or trigger any alarms, but slowed down by just 8% due to minor silicon fatigue.
 * **The Drama:** Because all 32,768 runners must synchronize every mathematical step, every single runner is forced to match the pace of the slowest runner in total silence.
 * **The Continuity Fix:** Cross-chip latency tracking detects the slow runner outlier in real time, cordoning and draining him at the next scheduled save break without interrupting live training.
-* **The Dollar Shield:** Eliminates **$220,000/day ($1M–$3M/month)** in silent stall waste across the facility.
+* **The Dollar Shield:** Eliminates **$220,000/day ($1M to $3M/month)** in silent stall waste across the facility.
 
 ---
 
@@ -172,7 +172,7 @@ Every datacenter failure is a character in an unfolding drama. Traditional monit
 * **Who he is:** The invisible electrical dip that occurs when temperatures look completely normal (71°C).
 * **The Drama:** High-leakage chips fall off a timing cliff during compute bursts, quietly spitting out incorrect mathematical sums that corrupt the AI model without triggering any alarm.
 * **The Continuity Fix:** Silicon-context early warning pairs factory birth certificate minimum voltages (Vmin) with live sensor readings to pace computing bursts safely.
-* **The Dollar Shield:** Shields against **$500k–$1.5M** in silent weight corruption rollbacks.
+* **The Dollar Shield:** Shields against **$500k to $1.5M** in silent weight corruption rollbacks.
 
 ---
 
@@ -182,12 +182,12 @@ When you open the [live application](https://sohamsa.github.io/training-continui
 
 ```
 🌟 Executive Portfolio (#/)
-   ├── 🌐 Global Fleet Console (#/fleet) ── 131k Chips across VA, TX, OR, Norway
-   ├── 🏗️ Greenfield DC Planner (#/planner) ── Build-Your-Own Datacenter Wizard
-   ├── ⚡ Live Practice Floor (#/desk) ── 32,768-Chip Live Crisis Simulator
-   ├── ⚡ Utility Grid & PPA Scorecard (#/grid) ── Power Contracts, Ratchets & Curtailment
-   ├── 🔧 Boots-on-Ground Dispatch (#/dispatch) ── Field Operations & Floor Logistics
-   └── 💡 Executive Q&A Lounge (#/stories) ── 17 Business Analogies & Owner Answers
+   * 🌐 Global Fleet Console (#/fleet): 131k Chips across VA, TX, OR, Norway
+   * 🏗️ Greenfield DC Planner (#/planner): Build-Your-Own Datacenter Wizard
+   * ⚡ Live Practice Floor (#/desk): 32,768-Chip Live Crisis Simulator
+   * ⚡ Utility Grid & PPA Scorecard (#/grid): Power Contracts, Ratchets & Curtailment
+   * 🔧 Boots-on-Ground Dispatch (#/dispatch): Field Operations & Floor Logistics
+   * 💡 Executive Q&A Lounge (#/stories): 17 Business Analogies & Owner Answers
 ```
 
 ### 1. 🌟 The Executive Portfolio & Financial Pillars (`#/`)
@@ -230,7 +230,7 @@ Even if you never write a single line of code, reading this project gives you fi
 
 | # | Boardroom Takeaway | Why It Matters to Your Balance Sheet | What to Demand from Your Team |
 | :--- | :--- | :--- | :--- |
-| **1** | **The 2% Warm Standby Rule** | When a chip crashes, waiting 45 minutes for a human technician burns $86,000 in idle cluster time. | Maintain **1–2% warm unassigned standby nodes** per network spine with pre-staged software containers. Recovers cluster in 2 minutes. |
+| **1** | **The 2% Warm Standby Rule** | When a chip crashes, waiting 45 minutes for a human technician burns $86,000 in idle cluster time. | Maintain **1% to 2% warm unassigned standby nodes** per network spine with pre-staged software containers. Recovers cluster in 2 minutes. |
 | **2** | **PPA Demand Ratchet Safeguards** | Spiking power from 0 to 40 MW in 1 second triggers utility ratchet penalties that inflate your power bill for the next 12 months. | Enforce **automated 120-second paved ramp pacing** on all cluster restarts. Saves ~$385,000/year. |
 | **3** | **Power-Domain Topology Mapping** | When a circuit breaker sags, naive tools report 16 dead chips. Technicians throw away $560,000 in healthy silicon. | Demand that cluster monitoring correlates alerts by **underlying electrical circuit and PDU**. Replace the $40 breaker, not the chips. |
 | **4** | **Atomic Two-Phase Checkpoint Verification** | Resuming an AI job from a half-written save file silently corrupts model weights, burning weeks of training. | Enforce **cryptographic checksum verification** before advancing the resume pointer. Refuse damaged saves and roll back safely. |

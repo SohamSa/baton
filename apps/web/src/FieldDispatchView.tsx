@@ -405,7 +405,7 @@ export function FieldDispatchView({
           </div>
           <h1>Datacenter Field Operations & Work-Order Dispatch</h1>
           <p className="dispatch-lede">
-            Bridging software intelligence and physical datacenter reality. When silicon sensors detect a problem, this console instantly translates digital telemetry into actionable work-orders for your on-site facility technicians—complete with physical rack coordinates, blinking locator LEDs, warehouse part numbers, safety lockout steps, and post-repair canary stress tests.
+            Bridging software intelligence and physical datacenter reality. When silicon sensors detect a problem, this console instantly translates digital telemetry into actionable work-orders for your on-site facility technicians, complete with physical rack coordinates, blinking locator LEDs, warehouse part numbers, safety lockout steps, and post-repair canary stress tests.
           </p>
           {run ? (
             <div style={{ marginTop: "0.5rem" }}>

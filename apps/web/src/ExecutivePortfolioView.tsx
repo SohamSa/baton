@@ -80,7 +80,7 @@ export const EXECUTIVE_QUESTIONS: QAItem[] = [
     analogyTitle: "The Contract with Missing Last Pages",
     analogyIcon: "📄",
     plainEnglish:
-      "Saving a checkpoint across 32,768 chips takes massive storage bandwidth. If a network blip occurs mid-save, you end up with a half-baked save file—like a legal contract with the last three pages torn out. Trying to resume training from a corrupted save causes crash loops or silently corrupts the AI model's math.",
+      "Saving a checkpoint across 32,768 chips takes massive storage bandwidth. If a network blip occurs mid-save, you end up with a half-baked save file, like a legal contract with the last three pages torn out. Trying to resume training from a corrupted save causes crash loops or silently corrupts the AI model's math.",
     financialImpact: "Prevents catastrophic restarts into corrupted states that invalidate days or weeks of pretraining.",
     solution:
       "Atomic two-phase verification gates. The system inspects digital checksums across all machines before advancing the resume pointer, refusing damaged saves and safely rolling back to the last complete save.",
@@ -495,7 +495,7 @@ export function ExecutivePortfolioView({
             </p>
             <div className="leak-footer">
               <span>Financial Impact:</span>
-              <strong>$500k – $1.5M per corrupted run</strong>
+              <strong>$500k to $1.5M per corrupted run</strong>
             </div>
           </article>
 

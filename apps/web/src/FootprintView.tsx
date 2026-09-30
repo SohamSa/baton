@@ -99,7 +99,7 @@ export function FootprintView({
         <h1>Megawatts, Utility Grid & Standby Electric Waste</h1>
         <p className="lede">
           Think of leaving the stadium lights and air conditioners running in an empty arena:
-          A {hallGpus.toLocaleString()}-processor datacenter draws between 25 and 40 Megawatts of power — enough to power a city of 30,000 homes.
+          A {hallGpus.toLocaleString()}-processor datacenter draws between 25 and 40 Megawatts of power, enough to power a city of 30,000 homes.
           When the cluster stalls waiting for a crashed node, the chips do not shut off.
           They sit in standby burning over 6 Megawatts of electricity just keeping memory warm and liquid pumps circulating.
           This view monitors real-time electric load, tracks the dollars wasted burning power while waiting, and proves our watchdog software runs with virtually zero computing overhead (&lt; 0.02%).
@@ -200,7 +200,7 @@ export function FootprintView({
           </div>
         </div>
         <p className="muted">
-          A stalled cluster does not sleep—it burns millions of kilowatt-hours waiting for engineers to fix software bugs and restart nodes. See how power breaks down:
+          A stalled cluster does not sleep: it burns millions of kilowatt-hours waiting for engineers to fix software bugs and restart nodes. See how power breaks down:
         </p>
         <div className="table-wrap">
           <table className="footprint-table">
@@ -313,7 +313,7 @@ export function FootprintView({
         </div>
 
         <div className="calc-takeaway">
-          <strong>💡 Executive Energy Takeaway:</strong> Eliminating just 2 hours of cluster stall time per day saves over <strong>${Math.round(annualElectricityWaste * (2 / dailyStallHours)).toLocaleString()} every year</strong> in utility bills alone—before even counting the tens of millions in hardware depreciation and engineer payroll.
+          <strong>💡 Executive Energy Takeaway:</strong> Eliminating just 2 hours of cluster stall time per day saves over <strong>${Math.round(annualElectricityWaste * (2 / dailyStallHours)).toLocaleString()} every year</strong> in utility bills alone, before even counting the tens of millions in hardware depreciation and engineer payroll.
         </div>
       </div>
 

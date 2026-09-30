@@ -113,7 +113,7 @@ export function AnomalyView({
         <p className="lede">
           Think of water pressure dipping in a high-rise building causing upper-floor faucets to sputter:
           When thousands of processors do intense math bursts at once, electrical voltage sags slightly.
-          If the electrical pressure dips too low, a chip will quietly miscalculate a number without crashing — a silent math glitch that poisons AI training weights undetected for days until weeks of work must be thrown out.
+          If the electrical pressure dips too low, a chip will quietly miscalculate a number without crashing, a silent math glitch that poisons AI training weights undetected for days until weeks of work must be thrown out.
           Generic alarms miss this because temperatures look completely normal.
           Our smart AI watches each chip's electrical pressure cushion in real time, saves training progress, and gently paces chip clock speeds by 2% to restore safety margins before any calculations get corrupted.
         </p>
@@ -178,14 +178,14 @@ export function AnomalyView({
             className={`btn-chip-select ${selectedChipId === "gpu-r0-h0-d1" ? "active danger" : ""}`}
             onClick={() => { setSelectedChipId("gpu-r0-h0-d1"); setPacingSuccess(false); }}
           >
-            <span>gpu-r0-h0-d1 (Flagged: Bin 3 Edge Die — +11 mV Cliff)</span>
+            <span>gpu-r0-h0-d1 (Flagged: Bin 3 Edge Die: +11 mV Cliff)</span>
           </button>
           <button
             type="button"
             className={`btn-chip-select ${selectedChipId === "gpu-r0-h0-d0" ? "active ok" : ""}`}
             onClick={() => { setSelectedChipId("gpu-r0-h0-d0"); setPacingSuccess(false); }}
           >
-            <span>gpu-r0-h0-d0 (Nominal: Bin 1 Center Die — +54 mV Headroom)</span>
+            <span>gpu-r0-h0-d0 (Nominal: Bin 1 Center Die: +54 mV Headroom)</span>
           </button>
         </div>
       </div>

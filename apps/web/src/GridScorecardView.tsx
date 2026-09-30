@@ -40,7 +40,7 @@ export const PPA_SCENARIOS: PPAScenario[] = [
     usefulTokensRate: "100% Max Token Throughput",
     financialImpact: "Operating within contracted baseline. Zero penalties incurred.",
     gridStatus: "🟢 Normal Grid Load · 8.6 MW Headroom to Substation Cap",
-    analogy: "A cruise ship cruising at full speed on calm seas—every passenger has a meal and every engine is producing propulsion.",
+    analogy: "A cruise ship cruising at full speed on calm seas: every passenger has a meal and every engine is producing propulsion.",
     howWeSolve: "Telemetry monitors baseline efficiency; direct-to-chip liquid cooling maintains 1.19 PUE.",
   },
   {
@@ -60,7 +60,7 @@ export const PPA_SCENARIOS: PPAScenario[] = [
     usefulTokensRate: "High Risk: Breaker Trip / Crash Pending",
     financialImpact: "CRITICAL: Tripped 36 MW utility ratchet ceiling. Utility locks billing at 41 MW baseline for next 11 months ($385,000 penalty).",
     gridStatus: "🔴 CRITICAL BREACH: 41.0 MW exceeds 40.0 MW substation breaker cap!",
-    analogy: "Stomping the gas pedal on a 50-car semi-truck convoy at the exact same millisecond—snapping the driveshafts and blowing the highway bridge.",
+    analogy: "Stomping the gas pedal on a 50-car semi-truck convoy at the exact same millisecond, snapping the driveshafts and blowing the highway bridge.",
     howWeSolve: "Our Software Ramp Pacing staggers kernel launches by 5 milliseconds across racks, smoothing the spike into a gentle wave well under the 36 MW line.",
   },
   {
@@ -182,7 +182,7 @@ export function GridScorecardView({
         </div>
         <h1>Utility Grid & Power Purchase Agreement (PPA) Scorecard</h1>
         <p className="lede">
-          A 32,768-chip datacenter draws between 25 and 40 Megawatts of power—enough electricity to run a city of 30,000 homes.
+          A 32,768-chip datacenter draws between 25 and 40 Megawatts of power, enough electricity to run a city of 30,000 homes.
           In commercial datacenter agreements, electric bills aren't simple utility meters: they contain <strong>11-month peak ratchet penalties</strong>, <strong>ghost standby power leaks</strong>, and <strong>summer peak afternoon tariff surcharges</strong>.
           This scorecard monitors your substation contract in real time, models operational scenarios, and protects millions of dollars in power capital.
         </p>
@@ -438,7 +438,7 @@ export function GridScorecardView({
             <span className="trap-tag">TRAP #3</span>
             <h3>The Afternoon Peak Tariff Surcharge</h3>
             <p className="trap-analogy">
-              <strong>Analogy:</strong> Uber surge pricing during a rainstorm at rush hour—charging 400% more for the exact same ride.
+              <strong>Analogy:</strong> Uber surge pricing during a rainstorm at rush hour: charging 400% more for the exact same ride.
             </p>
             <p className="trap-desc">
               Electricity costs $0.045/kWh overnight, but jumps to $0.26/kWh between 2:00 PM and 7:00 PM on hot summer afternoons.
@@ -459,7 +459,7 @@ export function GridScorecardView({
               During heatwaves, the utility orders large users to cut power by 20%. Unprepared datacenters crash their training jobs.
             </p>
             <div className="trap-solution">
-              <strong>How We Fix It:</strong> Software reduces clock speeds dynamically, shedding 7.2 MW in 3 seconds without losing training progress—and collects a $45,000 utility reward!
+              <strong>How We Fix It:</strong> Software reduces clock speeds dynamically, shedding 7.2 MW in 3 seconds without losing training progress, and collects a $45,000 utility reward!
             </div>
           </div>
         </div>
@@ -600,7 +600,7 @@ export function GridScorecardView({
         </div>
 
         <div className="calc-summary-takeaway">
-          <strong>💡 Executive Financial Conclusion:</strong> For a {facilityMw} MW facility, eliminating ghost standby stalls and smoothing step-spikes protects over <strong>${Math.round(annualPowerProtected).toLocaleString()} every single year</strong> in utility cash flow—paying for continuity software in the first 45 days of operation.
+          <strong>💡 Executive Financial Conclusion:</strong> For a {facilityMw} MW facility, eliminating ghost standby stalls and smoothing step-spikes protects over <strong>${Math.round(annualPowerProtected).toLocaleString()} every single year</strong> in utility cash flow, paying for continuity software in the first 45 days of operation.
         </div>
       </div>
 

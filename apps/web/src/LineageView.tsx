@@ -127,7 +127,7 @@ export function LineageView({
         <p className="lede">
           Think of tracking an automaker recall: if an automaker discovers a batch of faulty airbags made on a specific factory Tuesday, they don't wait for every car on the highway to crash. They recall the sister cars with matching serial numbers.
           Silicon chips are baked in circular batches called wafers. If one chip has a hidden factory baking defect, its sister chips from the same batch will fail too.
-          By attaching a Digital Birth Certificate to every processor, our system immediately identifies genetic sister chips across the entire {totalGpus.toLocaleString()}-GPU datacenter and safely rotates them out during normal save breaks — preventing weeks of rolling crashes.
+          By attaching a Digital Birth Certificate to every processor, our system immediately identifies genetic sister chips across the entire {totalGpus.toLocaleString()}-GPU datacenter and safely rotates them out during normal save breaks, preventing weeks of rolling crashes.
         </p>
       </div>
 

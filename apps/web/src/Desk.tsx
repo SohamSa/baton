@@ -382,7 +382,7 @@ export function Desk({
                         <span className="arena-led" />
                       </div>
                       <div className="arena-cell-temp">
-                        {gpu.temp === null ? "—" : `${gpu.temp.toFixed(0)}°C`}
+                        {gpu.temp === null ? "N/A" : `${gpu.temp.toFixed(0)}°C`}
                       </div>
                       <div className="arena-cell-status">
                         {!gpu.functional
@@ -405,7 +405,7 @@ export function Desk({
               <span />
               <p>
                 {cluster
-                  ? `${cluster.quiescent_accelerator_count.toLocaleString()} other chips in the same hall — ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} machines, ${cluster.fabric_domain_count} network spines. Counted like inventory boxes in a massive warehouse; all waiting in lockstep for this job's sync barrier.`
+                  ? `${cluster.quiescent_accelerator_count.toLocaleString()} other chips in the same hall: ${cluster.rack_count.toLocaleString()} racks, ${cluster.host_count.toLocaleString()} machines, ${cluster.fabric_domain_count} network spines. Counted like inventory boxes in a massive warehouse; all waiting in lockstep for this job's sync barrier.`
                   : "The rest of the 32,768-chip hall is counted in lockstep. This rehearsal demonstrates the exact blast radius when one chip encounters trouble."}
               </p>
             </div>
@@ -466,7 +466,7 @@ export function Desk({
               {frames.slice(-8).map((frame, index) => (
                 <li key={`${frame.step}-${index}`}>
                   Step {frame.step + 1}: {frame.job_state}, {frame.abstain ? "abstaining (insufficient fresh telemetry)" : frame.hypothesis.replaceAll("_", " ")}
-                  {frame.pending ? " — [Paused for Commander Decision]" : ""}
+                  {frame.pending ? " : [Paused for Commander Decision]" : ""}
                   {frame.incident_scopes.length ? ` · Incident Scopes: ${frame.incident_scopes.join(", ")}` : ""}
                 </li>
               ))}
@@ -554,7 +554,7 @@ export function Desk({
             <span className="eyebrow">🛡️ Hardware Diagnostics & Root-Cause Blast Radius</span>
             <h2>Physical Cascade: How a Component Glitch Halts All 32,768 Chips</h2>
             <p className="muted" style={{ lineHeight: 1.5, margin: "0.3rem 0 0" }}>
-              In distributed AI training, every single chip must finish calculating each step before any chip can advance. Watch below how a tiny microscopic flaw—whether a cracked micro-wire or pinched coolant hose—ripples outward through the host, rack, and facility grid.
+              In distributed AI training, every single chip must finish calculating each step before any chip can advance. Watch below how a tiny microscopic flaw, whether a cracked micro-wire or pinched coolant hose, ripples outward through the host, rack, and facility grid.
             </p>
           </div>
 
@@ -672,7 +672,7 @@ function RelayTrack({ live, frames }: { live: LiveFrame | undefined; frames: Liv
         <div>
           <strong style={{ fontSize: "0.95rem" }}>
             {isStalled
-              ? "🚨 BATON DROPPED: Sync barrier stalled — all 32,768 chips waiting"
+              ? "🚨 BATON DROPPED: Sync barrier stalled: all 32,768 chips waiting"
               : live
               ? "🏃 32,768 Runners Synchronized · Advancing with Baton"
               : "🏃 32,768-Chip Relay Race Standing By"}
@@ -759,7 +759,7 @@ function CommanderAlert({
         </button>
       </div>
       <p className="muted" style={{ margin: 0, fontSize: "0.78rem" }}>
-        Safe sandbox rehearsal — no real hardware is impacted. Test what happens with each choice!
+        Safe sandbox rehearsal: no real hardware is impacted. Test what happens with each choice!
       </p>
     </div>
   );

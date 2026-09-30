@@ -359,7 +359,7 @@ export function PassportView({
         <div className="banner-top">
           <div className="banner-titles">
             <span className="passport-badge">DIGITAL PRODUCT PASSPORT</span>
-            <h2>{activePassport.chipId} — {activePassport.serialNumber}</h2>
+            <h2>{activePassport.chipId} : {activePassport.serialNumber}</h2>
             <p className="muted">
               ECID: <code>{activePassport.ecid}</code> · Physical Slot: <strong>{activePassport.currentLocation}</strong>
             </p>

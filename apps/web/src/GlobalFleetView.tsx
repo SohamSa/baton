@@ -68,7 +68,7 @@ export const GLOBAL_CAMPUSES: CampusData[] = [
     statusBadge: "⚡ DEMAND RESPONSE ACTIVE",
     statusTone: "info",
     headline: "Massive scale powered by Texas wind & solar with active grid curtailment rewards",
-    keyAdvantage: "Shed 12 MW in 3 seconds during 102°F heatwave without stopping training—earned $75,000 credit today.",
+    keyAdvantage: "Shed 12 MW in 3 seconds during 102°F heatwave without stopping training, earned $75,000 credit today.",
   },
   {
     id: "campus_cascade",
@@ -147,7 +147,7 @@ export function GlobalFleetView({
         </div>
         <h1>Global Multi-Campus Fleet & Portfolio Command</h1>
         <p className="lede">
-          Enterprise datacenter owners don't operate a single server room—they manage a global fleet of campuses spanning different electric utility grids, local climate zones, and power purchase agreements.
+          Enterprise datacenter owners don't operate a single server room; they manage a global fleet of campuses spanning different electric utility grids, local climate zones, and power purchase agreements.
           This console provides high-level capital visibility across all <strong>131,072 accelerators</strong>, balances power tariffs across regions, and enables cross-campus workload resilience.
         </p>
         <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap", marginTop: "1rem" }}>
