@@ -1,0 +1,31 @@
+{
+  "basicsTitle": "First, understand the world",
+  "basicsIntro": "Before the investigation begins, get to know the equipment, the work, and the systems they share. You do not need chip expertise to start.",
+  "basics": [
+    {"term":"Chip or accelerator","explanation":"A processor does calculations. In these rehearsals, an accelerator is one worker assigned to a training job. Its activity does not by itself prove that useful work is advancing."},
+    {"term":"Server, rack, and facility","explanation":"A server houses accelerators. A rack groups servers. A datacenter facility contains racks and supporting infrastructure. These are different scopes: a problem in one worker does not automatically stop the whole building."},
+    {"term":"Training job and rank","explanation":"Training adjusts a model using examples. A job assigns cooperating workers to that task. A rank is a worker’s assigned position. In a synchronized job, fast workers can wait for a missing or slow partner before the next step."},
+    {"term":"Network","explanation":"Connections carry the results workers exchange. Delays and retries can slow the team even when its chips remain present. A heartbeat is a regular message reporting that a worker is still responding."},
+    {"term":"Power and cooling","explanation":"Power supplies energy; cooling removes heat. Machines can share a power feed or cooling path. A dependency map shows those relationships, so a shared problem is not mistaken for many unrelated chip failures."},
+    {"term":"Storage and checkpoint","explanation":"A checkpoint is saved training state. A job may return to it after an interruption and repeat later work. The save must be complete, verified, reachable, and compatible. A recent file or a save still being written is not enough."},
+    {"term":"Recovery, compatible spares, and qualification","explanation":"Recovery depends on the software’s supported procedures and available compatible machines. Qualification tests whether a repaired candidate meets defined return-to-service conditions. A successful idle reboot is not proof of fitness for the workload."},
+    {"term":"Useful progress and tradeoffs","explanation":"Goodput means new useful progress per elapsed time. Repeated calculations do not count as new work. Saves, restarts, slower pacing, and unnecessary interventions all consume time; a response must be assessed against those costs."}
+  ],
+  "dataTitle":"Next, learn to read the evidence",
+  "dataIntro":"A catalog tells you what a field means and where it belongs. It is not a live feed and does not mean every listed measurement exists in every rehearsal.",
+  "dataPrinciples":[
+    "A table groups related records. A row is one record; a column is one factor. Shared identifiers connect records: a chip reading needs its chip identity and time; a saved state needs its job identity.",
+    "An observation is a reported reading. A derived field summarizes or compares readings. A control input describes an authored choice. Audit records document what happened. Latent truth and training labels are evaluator material, not evidence the operator may use.",
+    "Unknown is not zero. A null reading can mean missing or unsupported information. Zero is a measured value only when an observation actually supports it.",
+    "When something happened and when the report arrived are different times. Old evidence can be accurate about the past and still be unsuitable for a present decision.",
+    "The dictionary is broader than generated observations or model inputs. The operational decision uses a smaller supported evidence set. A definition alone does not establish that a sensor is connected or that a diagnosis is proven."
+  ],
+  "essentials":[
+    {"label":"Temperature, power, and workload","fields":["gpu_temp_c","power_draw_w","sm_util_ratio"],"why":"Read these together. Heat during hard work and heat unexplained by the work are different questions."},
+    {"label":"Identity and time","fields":["entity_id","event_step","availability_step"],"why":"Put a reading beside the right worker and moment, and check whether its delivery was delayed."},
+    {"label":"Pace and errors","fields":["step_latency_ms","nvlink_replay_total","ecc_sbe_total"],"why":"A worker can remain present while falling behind. Error and retry reports are clues, not proof of a microscopic cause."},
+    {"label":"Saved work","fields":["checkpoint_id","shards_present","shards_expected"],"why":"Check whether all pieces of a save exist. Restore eligibility also depends on verification, reachability, and compatibility."},
+    {"label":"Shared dependencies","fields":["power_domain_id","cooling_domain_id","job_id"],"why":"Find machines sharing a supply, a cooling path, or cooperating work before deciding how far a problem reaches."},
+    {"label":"Progress and decisions","fields":["useful_new","recomputation","precondition_hash"],"why":"Distinguish new work from repetition and preserve the conditions under which an action was reviewed."}
+  ]
+}

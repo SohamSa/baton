@@ -8984,3 +8984,16 @@ body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
 /* Keep owner rehearsal navigation inside the viewport on small screens. */
 .view-mode-bar { display: flex; width: auto; max-width: 100%; flex-wrap: wrap; }
 .rehearsal-lab, .interaction-review { min-width: 0; overflow-wrap: anywhere; }
+
+.foundation-basics { max-width: 65ch; }
+.foundation-basics section { margin: 2rem 0; }
+.foundation-basics h2 { font-size: 1.35rem; }
+.foundation-basics p, .foundation-essentials p { line-height: 1.8; }
+.foundation-essentials { display: grid; gap: 1.5rem; }
+.foundation-essentials section { border-left: 2px solid var(--line); padding-left: 1rem; }
+.foundation-essentials code { overflow-wrap: anywhere; }
+.foundation-catalog label { display: grid; gap: .5rem; margin: 1rem 0; }
+.foundation-catalog table { min-width: 660px; }
+.reading-tool-switch { position: relative; }
+.reading-tool-switch summary { cursor: pointer; }
+.reading-tool-switch > div { position: absolute; z-index: 20; right: 0; top: 2rem; min-width: 200px; display: grid; gap: 1rem; padding: 1rem; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }

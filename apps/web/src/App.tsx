@@ -1,9 +1,9 @@
+import { OwnerBasics, OwnerDataIntroduction } from "./OwnerFoundations";
 import { OwnerWorksheet } from "./OwnerWorksheet";
 import { FormEvent, useEffect, useState } from "react";
 import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import {
   Adapter,
-  CatalogAtlas,
   LiveFrame,
   ModelReport,
   Monitoring,
@@ -12,7 +12,6 @@ import {
   adapters,
   approve,
   audit,
-  catalog,
   getRun,
   login,
   models,
@@ -151,7 +150,7 @@ export function App() {
 
   if (!session) return <Login onSuccess={setSession} />;
 
-  const isReading = location.pathname === "/" || location.pathname.startsWith("/journey");
+  const isReading = location.pathname === "/" || location.pathname.startsWith("/journey") || location.pathname.startsWith("/learn") || location.pathname === "/data";
   const isDeepDive = DEEP_DIVES.some((group) => group.links.some(([path]) => location.pathname === path));
 
   return (
@@ -199,7 +198,7 @@ export function App() {
         </div>
       </nav>
       <main id="content">
-        {isReading ? <div className="reading-sitebar"><NavLink to="/">Baton</NavLink><div><NavLink to="/portfolio">Explore tools</NavLink><button type="button" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")}>{theme === "dark" ? "Light theme" : "Dark theme"}</button></div></div> : null}
+        {isReading ? <div className="reading-sitebar"><NavLink to="/">Baton</NavLink><div><details key={location.pathname} className="reading-tool-switch"><summary>Explore when ready</summary><div><NavLink to="/learn/basics">Basics</NavLink><NavLink to="/learn/data">Data catalog</NavLink><NavLink to="/journey/arrival">Story</NavLink><NavLink to="/desk">Rehearsals</NavLink><NavLink to="/worksheet">My facility review</NavLink><NavLink to="/portfolio">All supporting tools</NavLink></div></details><button type="button" onClick={() => setTheme((value) => value === "dark" ? "light" : "dark")}>{theme === "dark" ? "Light theme" : "Dark theme"}</button></div></div> : null}
         <div className="view-mode-bar">
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             Owner’s Story
@@ -228,7 +227,7 @@ export function App() {
           </NavLink>
         </div>
 
-        {!isDeepDive && location.pathname !== "/" && !location.pathname.startsWith("/journey") ? (
+        {!isDeepDive && !isReading ? (
           <div className="tour-banner">
             <div>
               <strong>New to Datacenter Operations?</strong>
@@ -241,14 +240,16 @@ export function App() {
         ) : null}
 
         <OwnerJourneyContext />
-        <ExecutiveDeepDiveHeader />
+        {!isReading ? <ExecutiveDeepDiveHeader /> : null}
 
         {PUBLIC_DEMO && playing && engineMessage ? <p role="status">{engineMessage}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         {playing ? <p role="status">The decision engine is stepping this story.</p> : null}
 
         <Routes>
-          <Route path="/" element={<OwnerJourney />} />
+          <Route path="/" element={<OwnerBasics />} />
+          <Route path="/learn/basics" element={<OwnerBasics />} />
+          <Route path="/learn/data" element={<OwnerDataIntroduction />} />
           <Route path="/journey" element={<OwnerJourney />} />
           <Route path="/journey/:chapter" element={<OwnerJourney />} />
           <Route
@@ -292,7 +293,7 @@ export function App() {
           <Route path="/recovery" element={<Recovery session={session} run={run} onDecide={decide} />} />
           <Route path="/audit" element={<AuditView session={session} run={run} />} />
           <Route path="/experiments" element={<Experiments run={run} />} />
-          <Route path="/data" element={<DataView session={session} />} />
+          <Route path="/data" element={<OwnerDataIntroduction />} />
           <Route path="/models" element={<Models session={session} />} />
           <Route path="/monitoring" element={<MonitoringView session={session} />} />
         </Routes>
@@ -476,82 +477,6 @@ function Experiments({ run }: { run: RunView | null }) {
   );
 }
 
-function DataView({ session }: { session: Session }) {
-  const [atlas, setAtlas] = useState<CatalogAtlas | null>(null);
-  const [counts, setCounts] = useState<Record<string, number | Record<string, number>> | null>(null);
-  const [shown, setShown] = useState<number | "all">("all");
-  const [error, setError] = useState("");
-  useEffect(() => {
-    catalog(session.token)
-      .then((payload) => {
-        setCounts(payload.counts);
-        setAtlas(payload.atlas);
-      })
-      .catch((reason: Error) => setError(reason.message));
-  }, [session.token]);
-  const tables = atlas ? (shown === "all" ? atlas.tables : atlas.tables.slice(0, shown)) : [];
-  return (
-    <section>
-      <h1>The data catalog</h1>
-      <p>This is the filing cabinet. Each drawer is a table. A row is one fact. A shared tag, usually a chip name or a job name plus the step, is how a temperature is laid next to the job it belongs to.</p>
-      {error ? <p role="alert">{error}</p> : null}
-      {!atlas || !counts ? <p role="status">Loading the catalog…</p> : (
-        <>
-          <p>{atlas.mapping}</p>
-          <p>Unique concepts {String(counts.unique_concepts)}. Second names for the same reading {String(counts.aliases)}. Window totals {String(counts.window_aggregations)}. Drawers {atlas.table_count}. Columns across every drawer {atlas.column_count}.</p>
-          <h2>The only columns that change a reaction</h2>
-          <p>{atlas.decision_plain}</p>
-          <table>
-            <thead>
-              <tr><th>Column</th><th>Drawer</th><th>What it is</th><th>What changes if it is included</th></tr>
-            </thead>
-            <tbody>
-              {atlas.decision_columns.map((column) => (
-                <tr key={`${column.source}.${column.name}`}>
-                  <td><code>{column.name}</code></td>
-                  <td>{column.source}</td>
-                  <td>{column.purpose}</td>
-                  <td>{column.impact}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <h2>Every drawer</h2>
-          <p>Choose how many drawers to open. All of them are defined. The ones past the choice are still in the cabinet.</p>
-          <div className="catalog-tools">
-            {[10, 20, 30, "all"].map((choice) => (
-              <button key={String(choice)} type="button" aria-pressed={shown === choice} onClick={() => setShown(choice as number | "all")}>
-                {choice === "all" ? `All ${atlas.table_count}` : String(choice)}
-              </button>
-            ))}
-          </div>
-          {tables.map((table) => (
-            <details key={table.id} className="panel drawer">
-              <summary>{table.title} · {table.column_count} columns</summary>
-              <p>{table.plain}</p>
-              <p>In a real hall this drawer would be filled by: {table.real_world}</p>
-              <p>Rows are tied to the rest of the cabinet by: {table.joins_on}.</p>
-              <table>
-                <thead>
-                  <tr><th>Column</th><th>What it is</th><th>What changes if it is included</th></tr>
-                </thead>
-                <tbody>
-                  {table.columns.map((column) => (
-                    <tr key={`${table.id}.${column.name}`}>
-                      <td><code>{column.name}</code>{column.in_final ? " · in the short list" : ""}</td>
-                      <td>{column.brief}</td>
-                      <td>{column.impact}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </details>
-          ))}
-        </>
-      )}
-    </section>
-  );
-}
 
 function Models({ session }: { session: Session }) {
   const [report, setReport] = useState<ModelReport | null>(null);

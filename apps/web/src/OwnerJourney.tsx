@@ -109,7 +109,7 @@ export function OwnerJourney() {
 
 export function OwnerJourneyContext() {
   const location = useLocation();
-  if (location.pathname === "/" || location.pathname.startsWith("/journey")) return null;
+  if (location.pathname === "/" || location.pathname.startsWith("/journey") || location.pathname.startsWith("/learn") || location.pathname === "/data") return null;
   const query = new URLSearchParams(location.search);
   const source = story.chapters.find((c) => c.id === query.get("chapter"));
   const path = pathFrom(location.search) ?? "explore";

@@ -26,3 +26,7 @@ The same `content/owner-journey.json` paragraphs appear in both experiences. `sc
 The practice floor reads supported controls and preset values from the Python engine. Owners change compatible capacity, save spacing, delivery delay, and supported warning strength, then launch either manual review or a paired comparison. A reusable URL preserves the chosen overrides. Completed runs display the actual effective inputs separately from the next-run controls. Pending approvals replay the original configuration.
 
 The concluding story links to Recovery Crossroads, a related compound engine scenario. The prose and tabletop questions remain a learning account, while the simulation exposes actual save states and response outcomes under selected conditions.
+
+## Foundations before navigation
+
+The main link now starts with basic concepts, then `/learn/data` introduces essential evidence and contains the complete searchable catalog. A single continuation leads into `/journey/arrival`. Both learning pages use the quiet reading layout. Supporting tools are in a closed menu; the data catalog at `/data` also preserves chapter return context. Catalog definitions are exported from the Python dictionary by `scripts/build_learning_catalog.py`, so reading them requires no simulation runtime.

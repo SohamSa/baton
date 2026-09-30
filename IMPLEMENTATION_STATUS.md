@@ -1,6 +1,6 @@
 # Implementation status
 
-Current verification: September 2026 Linux review. 103 Python tests passed; normal and public-demo production builds passed. This update adds explicit scenario assumptions, a persistent owner evidence worksheet, six distinct advanced synthetic mechanisms, and nine challenge variants. PostgreSQL, Docker, physical equipment, and empirical calibration remain untested. Earlier counts below are historical.
+Current verification: September 2026 Linux review. 105 Python tests passed; normal and public-demo production builds passed. This update adds explicit scenario assumptions, a persistent owner evidence worksheet, six distinct advanced synthetic mechanisms, and nine challenge variants. PostgreSQL, Docker, physical equipment, and empirical calibration remain untested. Earlier counts below are historical.
 
 ## Foundation
 
@@ -78,3 +78,9 @@ The README and default dashboard now start with one stalled job and follow the s
 ## Owner-directed and compound rehearsals
 
 Owner controls now use a shared Python whitelist and bounded validation. Effective inputs and configuration hashes persist through HTTP/outbox runs, browser execution, approval replay, and paired comparisons. Reusable URLs preserve overrides. Recovery Crossroads is the eighteenth engine-backed problem: delayed evidence, a warning, an interrupted save, two permanent failures, and compatible-capacity gates share one world. Observation delay, spare count, and save spacing independently alter the outcome. The compound policy reads observed snapshots and prevents permitted delivery lag from creating a false missing-heartbeat response.
+
+## Guided foundations
+
+The main entrance teaches basic concepts before introducing essential data and the complete in-page catalog. Definitions retain roles, units, missingness, purpose, and table relationships from the engine dictionary. Catalog learning uses a generated static definition export and does not start Pyodide. Existing story and supporting-tool routes remain available.
+
+This foundations review passed 105 Python tests and both production builds. Browser checks confirmed the sequential learning flow and full catalog without engine startup.
