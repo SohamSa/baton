@@ -17,6 +17,9 @@ class CauseFamily(str, Enum):
 
 class Mechanism(str, Enum):
     cooling_degradation = "cooling_degradation"
+    straggler = "straggler"
+    cooling_restriction = "cooling_restriction"
+    repair_instability = "repair_instability"
     memory_errors = "memory_errors"
     power_interruption = "power_interruption"
     link_degradation = "link_degradation"
@@ -32,6 +35,9 @@ class Mechanism(str, Enum):
 
 CAUSE_OF_MECHANISM = {
     Mechanism.cooling_degradation: CauseFamily.physical_hardware,
+    Mechanism.straggler: CauseFamily.physical_hardware,
+    Mechanism.cooling_restriction: CauseFamily.physical_hardware,
+    Mechanism.repair_instability: CauseFamily.physical_hardware,
     Mechanism.memory_errors: CauseFamily.physical_hardware,
     Mechanism.power_interruption: CauseFamily.physical_hardware,
     Mechanism.link_degradation: CauseFamily.physical_hardware,
@@ -98,9 +104,16 @@ class ActionType(str, Enum):
     restart = "restart"
     reconfigure = "reconfigure"
     return_capacity = "return_capacity"
+    replace_rank = "replace_rank"
+    restore_cooling = "restore_cooling"
+    qualified_restart = "qualified_restart"
 
 
 HIGH_IMPACT = {
+    ActionType.replace_rank,
+    ActionType.restore_cooling,
+    ActionType.qualified_restart,
+    ActionType.diagnose,
     ActionType.pause_job,
     ActionType.quarantine,
     ActionType.allocate_spare,
@@ -124,3 +137,4 @@ class Capability(str, Enum):
     independent = "independent"
     reconfigurable = "reconfigurable"
     redundant = "redundant"
+

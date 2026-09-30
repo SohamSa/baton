@@ -1,6 +1,6 @@
 # Implementation status
 
-Status reflects the local workspace after the Python suite and the frontend production build. PostgreSQL was not part of that run.
+Current verification: September 2026 Linux review. 52 Python tests passed; normal and public-demo production builds passed. Browser checks covered the cinematic journey, all owner rooms, the three distinct engine comparisons, shared planning inputs, blank financial defaults, negative financial outcomes, persistent assumptions, and mobile layout. PostgreSQL, Docker, and physical equipment were not tested. Earlier counts below are historical.
 
 ## Foundation
 
@@ -51,3 +51,18 @@ The default dashboard entrance is now the owner's story. `/portfolio` retains th
 Verified in this Linux review workspace: 43 Python tests passed (one existing Starlette deprecation warning); frontend TypeScript checking and both normal and public-demo production builds passed. The existing large-bundle warning remains. The journey contract tests verify the complete character mapping, existing route targets, and README parity. No PostgreSQL, Docker, physical hardware, or real-fleet validation was added.
 
 Browser verification passed: builder entrance, chapter navigation, character evidence expansion, rehearsal links with return context, both climax outcomes, notes surviving reload, print visibility, mobile layout without horizontal overflow, and no page errors. Verification used the local Vite public-demo preview. The browser inspection proxy required adjusted certificate handling for the existing Pyodide CDN.
+
+
+## Distinct rehearsals and coherent owner rooms
+
+- `silent_straggler`: observed per-rank latency slows new progress while the rank stays alive. `straggler_aware` requires a current usable save and a compatible spare for a coordinated rank replacement.
+- `rack_thermal_shadow`: reduced local flow heats upper positions of one rack; another rack supplies the healthy comparison. `cooling_aware` preserves a usable save before a synthetic maintenance pause.
+- `revolving_door`: premature restart of an unstable repaired rank causes relapse. `qualification_aware` waits for an isolated engine load test; a failed candidate stays quarantined and needs a compatible spare. Tests also cover a passing candidate and absent spare.
+
+These are deliberate synthetic mechanisms, not calibrated hardware models. The fault parameters, thresholds, spatial geometry, and qualification errors are illustrative. Other advanced physical diagnoses remain conceptual.
+
+The canonical character source now generates `src/baton/catalog/owner_metadata.py` as well as the README. Supporting rooms, scenario descriptions, and the executive Q&A use those same explanations. Unimplemented board repair, package certification, warranty submission, and lineage cordoning controls have been replaced with evidence questions and record inspection prompts. The short tour uses the same scope and assumptions.
+
+One fictional physical plan is shared by the design, facility-map, power, and portfolio rooms. PUE is applied once. Financial inputs start blank and persist between rooms in the current browser; the Python economics engine computes the explicit one-year illustration. It values owner-assumed interruption and repeated work for the affected job, subtracts upfront and annual costs, and keeps negative results visible. No measured cash savings are asserted.
+
+Current catalog: 58 logical tables; 397 unique concepts, 2 aliases, 80 window aggregations, 479 catalog rows. A catalog definition is not a promise that every field is physically measured or materialized.

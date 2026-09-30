@@ -10,6 +10,9 @@
 | risk_aware | Extra checkpoint when the residual and checkpoint age justify it |
 | capability_aware | Shorter timeout; reconfigure only when the runtime allows it |
 | combined | Quality gate, abstain on a workload shift, checkpoint on cooling, no thermal quarantine |
+| straggler_aware | Replace a sustained observed slow rank through a coordinated restart only at a current verified save with a compatible spare |
+| cooling_aware | Inspect rack-local temperature gradient and reported flow; preserve a usable save before synthetic cooling maintenance |
+| qualification_aware | Keep a repaired candidate isolated until the engine load test completes; failed candidates require compatible spare capacity |
 | force_reconfigure | Asks for a membership change even when the runtime rejects it |
 
 Automated runs store `actor_kind=automated_policy`. Manual high-impact actions wait for an approver. Preconditions are hashed and rechecked. A second in-flight action on the same scope conflicts. A worker that sees `effect_applied` does not repeat the effect.
@@ -25,3 +28,7 @@ Goodput is newly committed useful progress divided by elapsed wall seconds. Util
 ## Optional economics
 
 `evaluate_economics` returns ROI only when the caller supplies rates, currency, cost basis, scope, horizon, a non-zero investment, a matching benefit basis, and a useful-progress delta. Otherwise ROI is null. The label is `assumption-based simulation estimate`. Negative net benefit is allowed. No default dollar rate is shipped.
+
+
+
+The supporting-room financial illustration uses explicit owner assumptions for a one-year incident count, interruption and repeated-work hours, affected-job size, accelerator-hour value, upfront investment, and annual operating cost. It is separate from the rehearsal score and is not a tariff or electricity-bill model. Inputs are blank by default; both positive and negative outcomes are retained.

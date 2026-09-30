@@ -14,3 +14,8 @@ The frontend production build typechecks `apps/web`. A browser walkthrough of th
 
 
 `test_owner_journey.py` checks that all engine stories appear exactly once in the owner cast, chapter/tool links target existing routes, the climax contains explained alternatives, and the README matches the shared narrative source. The September owner-journey review ran the full suite: 43 passed. Earlier session counts above are historical.
+
+
+The follow-up review ran 52 tests. `test_distinct_rehearsals.py` checks alive-but-slow progress, checkpoint/spare gates, rack-local heating and an unaffected comparison rack, failed and passed qualification, relapse, absent spare, manual approval, hidden-truth independence, and ledger conservation. `test_owner_journey.py` also verifies generated Python metadata and public narrative parity.
+
+Both frontend builds passed. Browser checks executed all three comparisons using the public Python WebAssembly engine, visited every supporting owner room, confirmed shared planning assumptions and single PUE application, blank financial defaults, a negative one-year illustration, persistence, mobile layout, and no page errors. The original cinematic journey checks also passed. These checks validate software behavior, not the physical realism of the invented parameters.

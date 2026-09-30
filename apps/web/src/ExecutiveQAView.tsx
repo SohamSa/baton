@@ -20,12 +20,12 @@ export function ExecutiveQAView({
 
   const categories = [
     { id: "all", label: "All Questions (17)", icon: "📚" },
-    { id: "cooling", label: "High-Rise Cooling (3)", icon: "❄️" },
-    { id: "power", label: "Power & Grid (2)", icon: "⚡" },
-    { id: "board", label: "Hardware & Boards (3)", icon: "🔌" },
-    { id: "silicon", label: "Silicon & Batches (2)", icon: "🏭" },
-    { id: "ai", label: "Software & Guardrails (2)", icon: "🤖" },
-    { id: "sync", label: "Cluster Sync & Stalls (5)", icon: "🏃" },
+    { id: "cooling", label: "High-Rise Cooling", icon: "❄️" },
+    { id: "power", label: "Power & Grid", icon: "⚡" },
+    { id: "board", label: "Hardware & Boards", icon: "🔌" },
+    { id: "silicon", label: "Silicon & Batches", icon: "🏭" },
+    { id: "ai", label: "Software & Guardrails", icon: "🤖" },
+    { id: "sync", label: "Cluster Sync & Stalls", icon: "🏃" },
   ];
 
   const filteredQuestions = useMemo(() => {

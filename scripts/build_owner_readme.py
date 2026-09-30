@@ -77,7 +77,7 @@ def render():
         '### Run locally', '', '```bash', 'git clone https://github.com/SohamSa/baton.git', 'cd baton', 'python -m venv .venv', 'source .venv/bin/activate  # Windows: .venv\\Scripts\\activate', 'pip install -e ".[dev]"', 'python -m pytest', 'python scripts/stage_browser_engine.py', 'cd apps/web', 'npm ci', '```', '',
         'Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$env:VITE_PUBLIC_DEMO="true"; npm run dev`). For the authenticated API workflow, see [the quickstart](docs/quickstart.md).', '',
         '### Keep the story aligned', '',
-        '`content/owner-journey.json` supplies both the dashboard chapters and this README. After editing it, run `python scripts/build_owner_readme.py` and commit the regenerated README. The journey tests check character coverage, route targets, and narrative parity.', '',
+        '`content/owner-journey.json` supplies both the dashboard chapters and this README. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit both generated outputs. The journey tests check character coverage, route targets, and narrative parity.', '',
         'Read [the runtime boundaries](docs/runtime.md), [limitations](docs/limitations.md), [model card](docs/model-card.md), and [validation notes](docs/validation.md) for technical detail.', '',
         '**The final scene belongs to you:** take one question from this story into a real conversation, and ask your team to bring the evidence.', '']
     return '\n'.join(lines)

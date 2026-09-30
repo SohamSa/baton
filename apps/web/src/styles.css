@@ -8906,3 +8906,18 @@ nav.owner-chapters { display: grid; grid-template-columns: repeat(auto-fit, minm
 body:has(.owner-story) .view-mode-bar { flex-wrap: wrap; }
 .owner-finale fieldset { min-width: 0; }
 .owner-story { overflow-wrap: anywhere; }
+
+.owner-room { display: grid; gap: 1.25rem; max-width: 1050px; }
+.owner-room-guide { margin: 1rem 0; }
+.owner-room-guide details { padding: .7rem 0; }
+.owner-room-guide summary { cursor: pointer; color: var(--accent); }
+.owner-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 1rem; }
+.owner-inputs label { display: grid; gap: .4rem; }
+.owner-inputs input, .owner-inputs select, .owner-room select { width: 100%; background: var(--bg); border: 1px solid var(--line); padding: .6rem; border-radius: 8px; }
+.owner-room .panel { margin: .5rem 0; }
+.owner-table-scroll { overflow-x: auto; max-width: 100%; }
+.owner-evidence { margin: 1rem 0; }
+.owner-financial { margin: 1.5rem 0; }
+.owner-room button:disabled { opacity: .55; cursor: not-allowed; }
+body:has(.owner-room) .view-mode-bar { flex-wrap: wrap; }
+@media print { .owner-room-guide, .owner-room button, .owner-financial .owner-actions { display:none!important; } .owner-room, .owner-room .panel { color:#111;background:white; } }

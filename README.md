@@ -225,15 +225,15 @@ The forecast sounds confident until someone checks when it was recorded. Yesterd
 
 Everyone remains on the track, but one runner quietly loses pace. The finish line moves further away.
 
-**The clue:** Per-rank execution latency and collective waiting would reveal the slowdown.
+**The clue:** Compare recent observed per-rank latency with its peers while heartbeats remain present.
 
-**The revelation:** Performance degradation deserves investigation even without a crash.
+**The revelation:** A slow but functioning rank reduces synchronized useful progress. A compatible replacement at a verified checkpoint boundary has recovery overhead.
 
 **Ask your team:** Can we identify the slowest dependent ranks without confusing workload variation with damage?
 
-**Open the evidence drawer:** `step latency (proposed)`, `collective wait`, `workload phase`.
+**Open the evidence drawer:** `step_latency_ms`, `step_latency_ratio`, `heartbeat`, `checkpoint state`, `spare compatibility`.
 
-*Rehearsal scope: Conceptual story; existing rehearsal uses thermal degradation, not a latency-driven straggler model.*
+*Rehearsal scope: Engine rehearsal: a live rank slows the dependent job; a coordinated checkpoint restart replaces it with a compatible spare.*
 
 [Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=silent_straggler&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/silicon?chapter=suspects)
 
@@ -241,15 +241,15 @@ Everyone remains on the track, but one runner quietly loses pace. The finish lin
 
 A patient passes an idle check, returns to the race, and falters under load. Recovery is not the same as qualification.
 
-**The clue:** Seek load-test outcomes and repeat-failure history.
+**The clue:** An isolated load test emits a pass or fail with observed stress errors before the candidate can return.
 
-**The revelation:** Define evidence-based return-to-service criteria.
+**The revelation:** An idle reboot can hide instability. A failed candidate stays quarantined; supported recovery uses a compatible spare if available.
 
 **Ask your team:** What tests and approvals are required before repaired equipment rejoins production?
 
-**Open the evidence drawer:** `repair history (proposed)`, `qualification results (proposed)`, `actions`.
+**Open the evidence drawer:** `qualification_state`, `stress_error_count`, `diagnostics`, `checkpoint state`, `spare compatibility`.
 
-*Rehearsal scope: Conceptual qualification lesson; the current frontend canary is a demonstration timer.*
+*Rehearsal scope: Engine rehearsal: repaired equipment can fail isolated qualification; premature re-entry causes repeat failures, while the gated path uses a compatible spare.*
 
 [Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/suspects) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=revolving_door&chapter=suspects) · [Visit the supporting room](https://sohamsa.github.io/baton/#/dispatch?chapter=suspects)
 
@@ -266,7 +266,7 @@ A technician asks whether the trouble began today. Perhaps the power system, cir
 
 The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.
 
-These are conceptual investigations. Their existing rehearsals simplify the underlying mechanisms; they do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it.
+The Thermal Shadow now has a spatial cooling rehearsal. Other advanced investigations remain conceptual: their rehearsals simplify the underlying mechanisms and do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it.
 
 ### The Midnight Power Cliff
 
@@ -336,15 +336,15 @@ The chip receives the blame while its supporting board supplies unstable power. 
 
 One part of the building receives less cooling. The owner needs a map, not just a list of hot machines.
 
-**The clue:** Rack position, temperature patterns, and coolant measurements would establish the spatial story.
+**The clue:** Compare upper and lower rack positions, reported coolant-flow ratios, and the temperature gradient across related machines.
 
-**The revelation:** Shared cooling geometry can matter more than an individual chip reading.
+**The revelation:** A shared restriction heats upper positions while another rack remains unaffected. Saving and pausing for simulated cooling maintenance can prevent later stalls.
 
 **Ask your team:** Do our cooling maps and measurements reveal which machines share a vulnerable loop?
 
-**Open the evidence drawer:** `cooling_domain_id`, `gpu_temp_c`, `rack elevation (proposed)`, `flow or pressure (optional)`.
+**Open the evidence drawer:** `rack_id`, `rack_elevation_u`, `cooling_flow_ratio`, `gpu_temp_c`, `rack_gradient_c`.
 
-*Rehearsal scope: Conceptual spatial lesson; no modeled rack gradient or valve-flush action.*
+*Rehearsal scope: Engine rehearsal: reduced upper-rack flow creates a spatial temperature gradient; a saved job pauses for simulated cooling maintenance.*
 
 [Enter this character’s scene](https://sohamsa.github.io/baton/#/journey/origins) · [Open the rehearsal](https://sohamsa.github.io/baton/#/desk?scenario=rack_thermal_shadow&chapter=origins) · [Visit the supporting room](https://sohamsa.github.io/baton/#/racks?chapter=origins)
 
@@ -501,7 +501,7 @@ Start the browser demo with `VITE_PUBLIC_DEMO=true npm run dev` (PowerShell: `$e
 
 ### Keep the story aligned
 
-`content/owner-journey.json` supplies both the dashboard chapters and this README. After editing it, run `python scripts/build_owner_readme.py` and commit the regenerated README. The journey tests check character coverage, route targets, and narrative parity.
+`content/owner-journey.json` supplies both the dashboard chapters and this README. After editing it, run `python scripts/build_owner_metadata.py` and `python scripts/build_owner_readme.py`, then commit both generated outputs. The journey tests check character coverage, route targets, and narrative parity.
 
 Read [the runtime boundaries](docs/runtime.md), [limitations](docs/limitations.md), [model card](docs/model-card.md), and [validation notes](docs/validation.md) for technical detail.
 
