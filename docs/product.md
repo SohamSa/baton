@@ -30,3 +30,5 @@ The concluding story links to Recovery Crossroads, a related compound engine sce
 ## Foundations before navigation
 
 The main link now starts with basic concepts, then `/learn/data` introduces essential evidence and contains the complete searchable catalog. A single continuation leads into `/journey/arrival`. Both learning pages use the quiet reading layout. Supporting tools are in a closed menu; the data catalog at `/data` also preserves chapter return context. Catalog definitions are exported from the Python dictionary by `scripts/build_learning_catalog.py`, so reading them requires no simulation runtime.
+
+- Unified owner workspace: the same Basics, Data, Story, Plan, Rehearse, Operations, and My review navigation appears on reading and practical pages. Specialist tools use one expandable menu. Chapter and build/operate context survive tool navigation and reload; story passages offer contextual practical steps.
