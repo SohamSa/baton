@@ -206,7 +206,7 @@ export function App() {
       <main id="content">
         <div className="view-mode-bar">
           <NavLink to="/" end className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            🌟 Executive Portfolio & Q&A
+            🌟 Executive Portfolio
           </NavLink>
           <NavLink to="/desk" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
             ⚡ Live Practice Floor (32k Cluster)
@@ -218,7 +218,7 @@ export function App() {
             🔧 Field Operations & Dispatch
           </NavLink>
           <NavLink to="/stories" className={({ isActive }) => `view-mode-btn ${isActive ? "active" : ""}`}>
-            💡 Incident Rehearsals (17)
+            💡 Executive Q&A (17)
           </NavLink>
         </div>
 
