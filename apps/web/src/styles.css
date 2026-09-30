@@ -8857,3 +8857,52 @@ th, td { text-align: left; border-bottom: 1px solid var(--line); padding: 0.4rem
 }
 
 
+
+
+/* The owner's film: scoped so existing diagnostic rooms keep their layouts. */
+.owner-story { max-width: 1050px; margin: 0 auto; }
+.owner-masthead { padding: 2.5rem 2rem; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(130deg, var(--panel), var(--bg)); }
+.owner-masthead h1 { font-family: Georgia, serif; font-size: clamp(2rem, 4vw, 3.8rem); line-height: 1.12; max-width: 850px; margin: .7rem 0; }
+.owner-boundary { color: var(--muted); font-size: .9rem; max-width: 70ch; }
+.owner-opening, .owner-prose { max-width: 72ch; margin: 2rem auto; font-family: Georgia, serif; font-size: 1.18rem; line-height: 1.85; }
+.owner-opening p:first-child { font-size: 1.5rem; }
+.owner-prose blockquote { margin: 1.5rem 0; padding: 1rem 1.4rem; border-left: 4px solid var(--accent); background: var(--panel); }
+.owner-paths, .owner-cast { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; margin: 1.5rem 0; }
+.owner-paths h2 { font-size: 1.25rem; }
+.owner-button { display: inline-block; padding: .7rem 1rem; border: 1px solid var(--accent); border-radius: 8px; text-decoration: none; }
+nav.owner-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: .6rem; border: 0; padding: 1.2rem 0; }
+.owner-chapters a { padding: .8rem; border: 1px solid var(--line); }
+.owner-chapters span, .owner-chapters small { display: block; color: var(--muted); font-size: .8rem; }
+.owner-chapters a[aria-current] { border-color: var(--accent); }
+.owner-character { border-top: 3px solid var(--accent); }
+.owner-character h3 { font-family: Georgia, serif; font-size: 1.45rem; }
+.owner-character summary { cursor: pointer; color: var(--accent); padding: .6rem 0; }
+.owner-character h4 { margin-bottom: .3rem; }
+.owner-actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-top: 1rem; }
+.owner-fundamentals dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+.owner-fundamentals dt { font-weight: bold; }
+.owner-fundamentals dd { margin-left: 0; }
+.owner-finale, .owner-pack, .owner-next { margin: 1.5rem 0; padding: 1.5rem; }
+.owner-finale fieldset { border: 1px solid var(--line); padding: 1rem; margin: 1.5rem 0; border-radius: 8px; }
+.owner-finale legend { padding: 0 .5rem; font-weight: bold; }
+.owner-finale label { display: flex; align-items: baseline; gap: .6rem; margin: .7rem 0; cursor: pointer; }
+.owner-feedback { padding: 1rem; border-left: 3px solid var(--accent); background: var(--bg); }
+.owner-resolution { padding: 1rem; border: 1px solid var(--accent); border-radius: 8px; }
+.owner-pack li { margin: .7rem 0; }
+.owner-pack textarea { display: block; width: 100%; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; margin-top: .6rem; }
+.owner-pagination { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1.5rem 0; }
+.owner-context { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+.owner-context p { max-width: 75ch; margin: .4rem 0 0; color: var(--muted); font-size: .9rem; }
+@media (max-width: 700px) { .owner-masthead { padding: 1.3rem; } .owner-context { flex-direction: column; align-items: start; } }
+@media print {
+  body:has(.owner-pack) .shell { display: block; }
+  body:has(.owner-pack) .shell > nav, body:has(.owner-pack) .view-mode-bar, body:has(.owner-pack) .owner-chapters, body:has(.owner-pack) .owner-context, body:has(.owner-pack) .tour-banner, body:has(.owner-pack) .owner-pagination, body:has(.owner-pack) .owner-next, body:has(.owner-pack) .owner-pack button { display: none !important; }
+  body:has(.owner-pack), body:has(.owner-pack) main, body:has(.owner-pack) .panel, body:has(.owner-pack) .owner-masthead { color: #111; background: #fff; max-width: none; }
+  .owner-pack { border: 0; }
+  .owner-pack textarea { height: 12rem; background: #fff; color: #111; }
+}
+/* Keep the film readable on narrow screens, including the existing suite tabs. */
+.shell > main { min-width: 0; }
+body:has(.owner-story) .view-mode-bar { flex-wrap: wrap; }
+.owner-finale fieldset { min-width: 0; }
+.owner-story { overflow-wrap: anywhere; }

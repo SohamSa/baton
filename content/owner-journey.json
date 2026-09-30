@@ -1,0 +1,428 @@
+{
+  "title": "Baton: The Night the Datacenter Held Its Breath",
+  "subtitle": "An owner’s story of ambition, interruption, evidence, and recovery.",
+  "chapters": [
+    {
+      "id": "arrival",
+      "act": "Opening scene",
+      "title": "The lights come on",
+      "paragraphs": [
+        "Before sunrise, you stand outside a building that once existed only in drawings. Inside are machines, cables, pumps, storage, and a team waiting to begin. You do not need to know how a chip is made to ask the question that matters: will this place turn resources into useful work?",
+        "You are the owner in this story. Perhaps this is your first facility. Perhaps you already manage a fleet. Either way, your role is to understand dependencies, ask for evidence, and make decisions with specialists. Baton is your rehearsal room.",
+        "The cast is fictional and the evidence is synthetic. The dilemmas are engineering questions worth exploring. Financial figures elsewhere in the dashboard are illustrative assumptions, not measured savings or promises."
+      ],
+      "question": "What must my team demonstrate before I trust the facility?",
+      "route": "/planner",
+      "routeLabel": "Visit the planning room"
+    },
+    {
+      "id": "rhythm",
+      "act": "Act I",
+      "title": "Learn the rhythm before the silence",
+      "paragraphs": [
+        "On the floor, accelerators perform calculations. The network lets cooperating machines exchange results. Power keeps them alive; cooling carries heat away. Storage holds the work that must survive an interruption. People connect all of these systems through procedures.",
+        "Follow one training job, a team of assigned workers. Some workers must wait for their partners before the job advances. A server houses machines; a rack groups servers; a facility holds many racks and can run many jobs. Trouble in one dependent job does not automatically stop the whole building.",
+        "A checkpoint is a saved position in the journey. Returning to it may mean repeating work. Saving too often also takes time. Your first lesson is to distinguish activity from progress: busy machines can be repeating yesterday’s calculations."
+      ],
+      "question": "Which machines must cooperate, and what progress can we actually restore?",
+      "route": "/dependencies",
+      "routeLabel": "Meet the training team"
+    },
+    {
+      "id": "alarm",
+      "act": "Act II",
+      "title": "The first alarm",
+      "paragraphs": [
+        "A temperature climbs. Someone reaches for the stop button. Across the room, another machine disappears without a warning. Two incidents, two different decisions. The owner discovers that resilience needs both early recognition and preparation for surprises.",
+        "Enter the Feverish Athlete, the Sudden Ghost, the Hard-Working Chef, and the Overzealous Referee. Their appearances can look similar on an alarm screen. Their consequences are very different.",
+        "Watch the evidence before choosing the response. A save may protect progress. A restart may restore a stopped job. A mistaken quarantine can interrupt healthy work. Ask what supports the action and what it could cost."
+      ],
+      "question": "Is this a warning, a healthy surge, or a failure we must recover from?",
+      "route": "/devices",
+      "routeLabel": "Inspect the sensor readings"
+    },
+    {
+      "id": "suspects",
+      "act": "Act III",
+      "title": "The wrong suspect",
+      "paragraphs": [
+        "The owner receives several alarms at once. Are several chips failing, or do they share one troubled dependency? Meanwhile, a sensor report arrives late and a checkpoint that looked complete is missing pieces.",
+        "The Kitchen Circuit Breaker, Missing-Pages Contract, Missing Choir Singer, Yesterday Weatherman, Tired Runner, and Revolving Door Patient complicate the investigation. The cheapest-looking response may be the most expensive mistake.",
+        "This act teaches restraint and preparedness together. Separate symptoms from causes. Check the age of evidence. Verify that a save is usable. Confirm what the runtime permits. Returning equipment needs a qualification process; a quick green light is not proof of health."
+      ],
+      "question": "What shared dependency or missing evidence could change our response?",
+      "route": "/checkpoints",
+      "routeLabel": "Inspect the saved progress"
+    },
+    {
+      "id": "origins",
+      "act": "Act IV",
+      "title": "The past enters the room",
+      "paragraphs": [
+        "A technician asks whether the trouble began today. Perhaps the power system, circuit board, cooling installation, or an earlier assembly step left a clue. The investigation expands beyond the chip’s temperature.",
+        "The Midnight Power Cliff, Cracked Solder Bead, Edge-of-the-Oven Cookie, Framed Innocent, Thermal Shadow, Over-Torqued Wrench, and Whispering Voltage Cliff introduce the wider world around the accelerator.",
+        "These are conceptual investigations. Their existing rehearsals simplify the underlying mechanisms; they do not prove packaging diagnosis, voltage prediction, batch cordoning, or facility control. Some evidence would require manufacturer records or specialist instrumentation. Learn what to request, and recognize what remains unknowable without it."
+      ],
+      "question": "What can we observe today, and what records or specialist evidence are missing?",
+      "route": "/passport",
+      "routeLabel": "Open the evidence archive"
+    },
+    {
+      "id": "finale",
+      "act": "Climax",
+      "title": "The night the clues collide",
+      "paragraphs": [
+        "The evening workload is rising. A warm machine attracts attention, but the most recent facility readings are delayed. A rank then stops responding. Someone proposes dropping it from the job. Someone else points to the newest checkpoint, still being written.",
+        "You have met these characters before. Now they share a scene. Choose what evidence to trust, which save to use, and which recovery to permit. This is an interactive tabletop exercise connecting earlier lessons, not a new compound engine simulation.",
+        "The resolution is earned through disciplined questions. Your job is to protect useful progress while refusing unsupported assumptions. No decision can recover a save that does not exist, or grant a runtime a capability it does not have."
+      ],
+      "question": "Can we assemble a supported recovery from trustworthy evidence?",
+      "route": "/desk",
+      "routeLabel": "Open the rehearsal floor"
+    },
+    {
+      "id": "dawn",
+      "act": "Epilogue",
+      "title": "At dawn, you know what to ask",
+      "paragraphs": [
+        "The facility is still a complex place. You now recognize the cast. A busy machine is not necessarily productive. A warning is not a diagnosis. A completed-looking save is not necessarily usable. A spare is useful only when the recovery can use it.",
+        "If you are building, take these questions into procurement, design reviews, and launch readiness. If you are operating, take them into incident reviews, restore drills, maintenance, and monitoring improvements.",
+        "The ending belongs to your next conversation. Leave with the evidence you need, the questions you will ask, and the practices your team should demonstrate. Return to any character when a new situation deserves a rehearsal."
+      ],
+      "question": "What will I ask my team to demonstrate next?",
+      "route": "/data",
+      "routeLabel": "Explore the full data catalog"
+    }
+  ],
+  "characters": [
+    {
+      "id": "gradual_warning",
+      "name": "The Feverish Athlete",
+      "chapter": "alarm",
+      "scene": "A runner keeps moving, but their temperature rises beyond what the work alone explains. The team must decide whether to save before the interruption.",
+      "clue": "Look at temperature alongside power, workload, freshness, and a baseline.",
+      "lesson": "Early evidence can justify a save; it does not guarantee an exact failure time.",
+      "question": "Can you show how warning quality and checkpoint age influence an extra save?",
+      "fields": [
+        "gpu_temp_c",
+        "power_draw_w",
+        "residual_ewma",
+        "freshness_steps"
+      ],
+      "route": "/anomalies",
+      "coverage": "Engine rehearsal: thermal degradation and an extra checkpoint."
+    },
+    {
+      "id": "abrupt_failure",
+      "name": "The Sudden Ghost",
+      "chapter": "alarm",
+      "scene": "A worker vanishes without a farewell. There is no useful warning to discover; the test is whether the team prepared a recovery.",
+      "clue": "A missing heartbeat and a verified save matter more than a forecast.",
+      "lesson": "Some failures offer no observable warning. Prepare compatible recovery resources.",
+      "question": "Have we demonstrated a restart from a usable save with compatible capacity?",
+      "fields": [
+        "heartbeat",
+        "checkpoint state",
+        "runtime capability",
+        "spare compatibility"
+      ],
+      "route": "/recovery",
+      "coverage": "Engine rehearsal: abrupt failure and spare-assisted restart."
+    },
+    {
+      "id": "healthy_workload_shift",
+      "name": "The Hard-Working Chef",
+      "chapter": "alarm",
+      "scene": "The kitchen grows hot during a busy service. Pulling the chef out would stop a healthy dinner.",
+      "clue": "Temperature rises with workload and power, rather than an unexplained residual.",
+      "lesson": "Interpret heat in context while retaining independent safety protections.",
+      "question": "How do we distinguish healthy load from abnormal behavior?",
+      "fields": [
+        "sm_util_ratio",
+        "power_draw_w",
+        "gpu_temp_c",
+        "residual_ewma"
+      ],
+      "route": "/devices",
+      "coverage": "Engine rehearsal: a healthy workload shift."
+    },
+    {
+      "id": "harmful_preventive",
+      "name": "The Overzealous Referee",
+      "chapter": "alarm",
+      "scene": "A referee sees exertion and stops the game. A protective action becomes the interruption.",
+      "clue": "Compare completed useful work after intervention with a reasonable alternative.",
+      "lesson": "Evaluate the cost of false interventions, not just missed alarms.",
+      "question": "Do our reviews measure disruption caused by our own protective actions?",
+      "fields": [
+        "useful_new",
+        "recomputation",
+        "actions",
+        "interruption duration"
+      ],
+      "route": "/experiments",
+      "coverage": "Engine rehearsal: threshold quarantine can reduce useful progress."
+    },
+    {
+      "id": "shared_infrastructure",
+      "name": "The Kitchen Circuit Breaker",
+      "chapter": "suspects",
+      "scene": "Several appliances dim together. Replacing each appliance would miss their shared electrical supply.",
+      "clue": "Match correlated symptoms to power-domain membership.",
+      "lesson": "Investigate common dependencies before blaming individual devices.",
+      "question": "Can we map each affected machine to its shared power and cooling domains?",
+      "fields": [
+        "power_domain_id",
+        "power_limit_w",
+        "cooling_domain_id"
+      ],
+      "route": "/boards",
+      "coverage": "Engine rehearsal: shared power symptoms and grouped incidents."
+    },
+    {
+      "id": "incomplete_checkpoint",
+      "name": "The Contract with Missing Pages",
+      "chapter": "suspects",
+      "scene": "The courier returns a contract, but some pages never arrived. It cannot safely become the record everyone relies on.",
+      "clue": "Inspect shard completeness, verification state, reachability, and compatibility.",
+      "lesson": "A requested or partially written checkpoint is not a usable restore point.",
+      "question": "When did we last demonstrate a restore, including rejection of a bad save?",
+      "fields": [
+        "shards_present",
+        "shards_expected",
+        "checksum_ok",
+        "verified_at"
+      ],
+      "route": "/checkpoints",
+      "coverage": "Engine rehearsal: abstract completeness gates and checkpoint fallback; no real tensor files."
+    },
+    {
+      "id": "unsupported_local_recovery",
+      "name": "The Missing Choir Singer",
+      "chapter": "suspects",
+      "scene": "One singer leaves, but the arrangement still requires their part. Continuing needs a supported new arrangement.",
+      "clue": "The runtime capability and dependent rank groups constrain recovery.",
+      "lesson": "A desired smaller restart is not automatically a supported restart.",
+      "question": "What membership changes does our training framework actually support?",
+      "fields": [
+        "runtime capability",
+        "rank assignments",
+        "tp_size",
+        "topology_signature"
+      ],
+      "route": "/dependencies",
+      "coverage": "Engine rehearsal: unsupported reconfiguration is rejected."
+    },
+    {
+      "id": "stale_telemetry",
+      "name": "The Yesterday Weatherman",
+      "chapter": "suspects",
+      "scene": "The forecast sounds confident until someone checks when it was recorded. Yesterday’s evidence cannot settle tonight’s diagnosis.",
+      "clue": "Compare event time with availability time and identify missing independent confirmation.",
+      "lesson": "Abstain from uncertain diagnosis while pursuing fresh evidence and reliable liveness.",
+      "question": "How do we identify stale readings and separate sensor loss from machine failure?",
+      "fields": [
+        "event_step",
+        "availability_step",
+        "freshness_steps",
+        "heartbeat"
+      ],
+      "route": "/monitoring",
+      "coverage": "Engine rehearsal: delayed observations and abstention."
+    },
+    {
+      "id": "silent_straggler",
+      "name": "The Tired Runner",
+      "chapter": "suspects",
+      "scene": "Everyone remains on the track, but one runner quietly loses pace. The finish line moves further away.",
+      "clue": "Per-rank execution latency and collective waiting would reveal the slowdown.",
+      "lesson": "Performance degradation deserves investigation even without a crash.",
+      "question": "Can we identify the slowest dependent ranks without confusing workload variation with damage?",
+      "fields": [
+        "step latency (proposed)",
+        "collective wait",
+        "workload phase"
+      ],
+      "route": "/silicon",
+      "coverage": "Conceptual story; existing rehearsal uses thermal degradation, not a latency-driven straggler model."
+    },
+    {
+      "id": "revolving_door",
+      "name": "The Revolving Door Patient",
+      "chapter": "suspects",
+      "scene": "A patient passes an idle check, returns to the race, and falters under load. Recovery is not the same as qualification.",
+      "clue": "Seek load-test outcomes and repeat-failure history.",
+      "lesson": "Define evidence-based return-to-service criteria.",
+      "question": "What tests and approvals are required before repaired equipment rejoins production?",
+      "fields": [
+        "repair history (proposed)",
+        "qualification results (proposed)",
+        "actions"
+      ],
+      "route": "/dispatch",
+      "coverage": "Conceptual qualification lesson; the current frontend canary is a demonstration timer."
+    },
+    {
+      "id": "power_cliff",
+      "name": "The Midnight Power Cliff",
+      "chapter": "origins",
+      "scene": "The whole kitchen starts its ovens together. The owner discovers that workload changes also reach the electrical system.",
+      "clue": "Power over time, shared supply limits, and the actual contract determine the investigation.",
+      "lesson": "Electrical transients and billing demand windows are different questions.",
+      "question": "Have electrical specialists reviewed ramps, capacity, and our actual demand terms?",
+      "fields": [
+        "power_draw_w",
+        "power_domain_id",
+        "facility demand (proposed)"
+      ],
+      "route": "/grid",
+      "coverage": "Simplified shared-power rehearsal; no electrical transient or tariff-window model."
+    },
+    {
+      "id": "fractured_microbump",
+      "name": "The Cracked Solder Bead",
+      "chapter": "origins",
+      "scene": "A tiny connection becomes the suspected weak link. The visible error does not identify the microscopic cause on its own.",
+      "clue": "Memory and link symptoms need corroborating specialist diagnostics.",
+      "lesson": "Keep component-level causes as hypotheses until evidence distinguishes them.",
+      "question": "What diagnostic evidence would distinguish memory, packaging, board, and software faults?",
+      "fields": [
+        "ecc_sbe_total",
+        "ecc_dbe_total",
+        "nvlink_replay_total"
+      ],
+      "route": "/mcm",
+      "coverage": "Conceptual packaging story; existing rehearsal uses thermal degradation."
+    },
+    {
+      "id": "wafer_lot_contagion",
+      "name": "The Edge-of-the-Oven Cookie",
+      "chapter": "origins",
+      "scene": "One batch member fails. The owner asks whether the rest share a risk, rather than declaring every sibling guilty.",
+      "clue": "Trusted manufacturing identifiers and cohort comparisons would be needed.",
+      "lesson": "Shared history suggests an investigation, not proof of a defective batch.",
+      "question": "Can suppliers provide traceable lot records, and how would we test a cohort hypothesis?",
+      "fields": [
+        "wafer lot (optional supplier record)",
+        "cohort outcomes (proposed)"
+      ],
+      "route": "/lineage",
+      "coverage": "Conceptual lineage story; no implemented batch diagnosis or cohort cordoning."
+    },
+    {
+      "id": "innocent_chip_dying_board",
+      "name": "The Framed Innocent",
+      "chapter": "origins",
+      "scene": "The chip receives the blame while its supporting board supplies unstable power. An expensive replacement might leave the cause untouched.",
+      "clue": "Compare symptoms with board and shared-domain evidence.",
+      "lesson": "Investigate the surrounding system before replacing the accused component.",
+      "question": "What board-level evidence do we require before approving accelerator replacement?",
+      "fields": [
+        "power_domain_id",
+        "power_limit_w",
+        "board rail telemetry (optional)"
+      ],
+      "route": "/boards",
+      "coverage": "Conceptual board diagnosis; existing rehearsal uses thermal degradation."
+    },
+    {
+      "id": "rack_thermal_shadow",
+      "name": "The Thermal Shadow",
+      "chapter": "origins",
+      "scene": "One part of the building receives less cooling. The owner needs a map, not just a list of hot machines.",
+      "clue": "Rack position, temperature patterns, and coolant measurements would establish the spatial story.",
+      "lesson": "Shared cooling geometry can matter more than an individual chip reading.",
+      "question": "Do our cooling maps and measurements reveal which machines share a vulnerable loop?",
+      "fields": [
+        "cooling_domain_id",
+        "gpu_temp_c",
+        "rack elevation (proposed)",
+        "flow or pressure (optional)"
+      ],
+      "route": "/racks",
+      "coverage": "Conceptual spatial lesson; no modeled rack gradient or valve-flush action."
+    },
+    {
+      "id": "cold_plate_torque_fracture",
+      "name": "The Over-Torqued Wrench",
+      "chapter": "origins",
+      "scene": "An assembly mistake leaves a clue in an earlier chapter of the machine’s life. The owner asks for records before drawing conclusions.",
+      "clue": "Installation history and specialist mechanical evidence would be needed.",
+      "lesson": "Lifecycle records can support investigation but do not prove a physical defect.",
+      "question": "Which installation and assembly records are available, and who can interpret them?",
+      "fields": [
+        "assembly records (optional)",
+        "torque history (optional)",
+        "qualification results (proposed)"
+      ],
+      "route": "/passport",
+      "coverage": "Conceptual assembly story; no torque diagnosis or warranty automation."
+    },
+    {
+      "id": "silent_subthreshold_cliff",
+      "name": "The Whispering Voltage Cliff",
+      "chapter": "origins",
+      "scene": "The room looks calm, but correct-looking operation may conceal incorrect computation. A normal thermometer cannot answer every question.",
+      "clue": "Computation validation and electrical evidence would matter, not temperature alone.",
+      "lesson": "Protecting file integrity does not prove that the computations inside a file were correct.",
+      "question": "What checks could reveal silent computation errors before they enter our trusted saves?",
+      "fields": [
+        "computation validation (proposed)",
+        "voltage margin (specialist)",
+        "checkpoint integrity"
+      ],
+      "route": "/anomalies",
+      "coverage": "Conceptual correctness story; no voltage-margin predictor, weight-corruption model, or pacing control."
+    }
+  ],
+  "finale": [
+    {
+      "id": "evidence",
+      "prompt": "The temperature alarm is fresh, but the facility report is old. What do you tell the team?",
+      "options": [
+        {
+          "label": "Treat the old report as proof of the cause.",
+          "feedback": "The Yesterday Weatherman has misled the investigation. An alarm can warrant attention without establishing its cause.",
+          "supported": false
+        },
+        {
+          "label": "Request fresh corroboration and check independent liveness.",
+          "feedback": "You separate a symptom from its cause and pursue timely evidence. Keep independent hardware safety protections active.",
+          "supported": true
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "prompt": "A rank has stopped responding. The newest checkpoint is still being written. Which restore point do you consider?",
+      "options": [
+        {
+          "label": "Use the newest file because it has the latest timestamp.",
+          "feedback": "The Missing-Pages Contract is not ready. Writing or incomplete checkpoints cannot be trusted as restore points.",
+          "supported": false
+        },
+        {
+          "label": "Use the newest verified, complete, reachable, compatible save.",
+          "feedback": "You use the checkpoint gates. If none qualifies, recovery is blocked; report that explicitly rather than inventing saved progress.",
+          "supported": true
+        }
+      ]
+    },
+    {
+      "id": "recovery",
+      "prompt": "The job requires its current membership. Someone proposes removing the failed rank and continuing.",
+      "options": [
+        {
+          "label": "Drop the rank immediately; plenty of machines remain.",
+          "feedback": "The Missing Choir Singer still has a required part. Unsupported membership changes can leave dependent work unable to advance.",
+          "supported": false
+        },
+        {
+          "label": "Confirm capabilities and plan a coordinated supported restart.",
+          "feedback": "You match the response to the runtime, restore point, and compatible replacement capacity. Specialists must validate the actual procedure.",
+          "supported": true
+        }
+      ]
+    }
+  ]
+}

@@ -11,3 +11,6 @@ Tests live in `tests/` and are meant to fail when an invariant breaks.
 | `test_generation.py` | Parquet resume and a DuckDB count |
 
 The frontend production build typechecks `apps/web`. A browser walkthrough of the eight stories was not executed in the agent session that produced this file.
+
+
+`test_owner_journey.py` checks that all engine stories appear exactly once in the owner cast, chapter/tool links target existing routes, the climax contains explained alternatives, and the README matches the shared narrative source. The September owner-journey review ran the full suite: 43 passed. Earlier session counts above are historical.
